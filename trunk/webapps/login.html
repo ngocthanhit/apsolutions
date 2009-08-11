@@ -1,0 +1,209 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+  <title>Login Page</title>
+	<script type="text/javascript" src="js/actb.js"></script>
+	<script type="text/javascript" src="js/common.js"></script>
+	<script type="text/javascript">
+
+
+var applicationName = "bd77scjh5";
+
+
+function getCookie(Name){ //get cookie value
+	var re=new RegExp(Name+"=[^;]+", "i"); //construct RE to search for target name/value pair
+	if (document.cookie.match(re)) //if cookie found
+	return document.cookie.match(re)[0].split("=")[1] //return its value
+	return ""
+}
+
+function setCookie(name, value, days){ //set cookie value
+	var expireDate = new Date()
+	//set "expstring" to either future or past date, to set or delete cookie, respectively
+	var expstring=expireDate.setDate(expireDate.getDate()+parseInt(days))
+	document.cookie = name+"="+value+"; expires="+expireDate.toGMTString()+"; path=/";
+}
+  function returnQ(){
+
+  	window.location = "https://docorganiz.quickbase.com/db/"+applicationName;
+	}
+
+  function returnAC(){
+    //alert('Hello');
+
+	document.getElementById('lac').value='lac';
+
+	//pausecomp(500);
+	//	document.loginForm.submit();
+
+	//document.loginForm.submit();
+	//document.this.submit();
+	//return true;
+	}
+
+
+var resolutionArray = new Array(6);
+resolutionArray[0] ="XGA Dual";
+resolutionArray[1] ="SXGA Dual";
+resolutionArray[2] ="Widescreen";
+resolutionArray[3] ="Large";
+
+var imageHArray = new Array(6);
+imageHArray[0] ="1024";
+imageHArray[1] ="1280";
+imageHArray[2] ="840";
+imageHArray[3] ="800";
+
+
+var imageVArray = new Array(6);
+imageVArray[0] ="768";
+imageVArray[1] ="1024";
+imageVArray[2] ="1050";
+imageVArray[3] ="1200";
+
+
+	function setVar(){
+	  //alert('IN SET VAR')
+	     var obj11 = actb(document.getElementById('image'), resolutionArray);
+		 obj11.actb_lim = 5;
+		// obj11.actb_firstText = true;
+		 obj11.actb_mouse = true;
+	  }
+
+
+	var imageResolutionArray = new Array(resolutionArray,imageHArray, imageVArray);
+
+	function fillResolution(svn)
+	{
+		if(svn != null){
+	       for (i in imageResolutionArray) {
+		   		  for (j in imageResolutionArray[i]) {
+				  	  	 //alert('Found '+pcdivArray[0][j]);
+        			   	  if (imageResolutionArray[0][j] == svn.value){
+            		   	  	 //alert('Found '+svn.value+'found value of Div'+imageResolutionArray[1][j]);
+							 //aa.value=pcdivArray[1][j];
+							 //aa.innerHTML=imageResolutionArray[1][j];
+							 document.getElementById('imageH').value=imageResolutionArray[1][j];
+							 document.getElementById('imageV').value=imageResolutionArray[2][j];
+							 }
+				 }
+			}
+	  	}
+	}
+
+
+
+	function initialize(){
+
+
+		if(document.getElementById('login').value.length>2){
+			document.getElementById('loginButton').focus();
+		}else{
+			document.getElementById('login').focus();
+		}
+		//alert('Hello'+document.getElementById('login').value.length);
+		if (getCookie("image")!=""){
+					var imageVar = getCookie("image").replace("\"", "");
+					document.getElementById('image').value = imageVar.replace("\"", "");
+					}
+		if (getCookie("imageH")!="")
+					document.getElementById('imageH').value = getCookie("imageH").replace("\"", "");
+		if (getCookie("imageV")!="")
+							document.getElementById('imageV').value = getCookie("imageV").replace("\"", "");
+
+		if (getCookie("lastImageLocation")!=""){
+			//alert('lastImageLocation '+getCookie("lastImageLocation"));
+			document.loginForm.lastImageLocation.value = getCookie("lastImageLocation");
+		}
+
+
+
+	}
+
+	function removeFileName(svr){
+
+	//alert('svr '+svr);
+	if( (svr!='')||(svr!=null) ){
+		var fullLenth = svr.length;
+		var pdfString = svr.substring(fullLenth-4, fullLenth)
+		//alert('pdfString '+pdfString);
+		if(pdfString==".pdf"){
+			var pdfDirArray = svr.split('\\');
+			var tempDir="";
+				for(var i=0; i<(pdfDirArray.length-1);i++){
+					//alert('i '+i+' aray value '+pdfDirArray[i]);
+					tempDir = tempDir+pdfDirArray[i]+"\\";
+				}
+				//alert('tempDir '+tempDir);
+				document.getElementById('lastImageLocation').value = tempDir;
+				setCookie('lastImageLocation',tempDir,365);
+
+		}
+
+	}
+
+	}
+
+function pausecomp(millis)
+{
+	var date = new Date();
+	var curDate = null;
+
+	do { curDate = new Date(); }
+	while(curDate-date < millis);
+}
+
+
+</script>
+</head>
+<body onload='initialize();'>
+<FORM METHOD="POST" name="loginForm" action="login.jsp">
+<TABLE BORDER=1 align=center>
+
+	<TR>
+
+		<td width="80%" colspan=2 align="center" style="color:red" ><span id="msg"><%=msg%></span></td>
+	</TR>
+
+
+	<TR>
+		<TD ALIGN="right">Login:</TD>
+		<TD><INPUT TYPE="text" NAME='login'  ID='login' value='<%=cookieuid1+"@"+cookieuid2%>'  size="45" maxlength="45" ></INPUT></TD>
+	</TR>
+	<TR>
+		<TD ALIGN="right">Password:</TD>
+		<TD><INPUT TYPE="password" NAME="password" value='<%=cookiepassword%>' ></INPUT></TD>
+	</TR>
+	<TR>
+			<TD ALIGN="right">Image Window Resolution:</TD>
+			<TD><INPUT TYPE='text' NAME='image'  ID='image' value="<%=cookieimage%>" onfocus=setVar() onblur=fillResolution(this) size='56' maxlength='56' ></INPUT></TD>
+	</TR>
+	<TR>
+		<TD ALIGN="right">Select Image File Folder</TD>
+		<TD>
+			<INPUT TYPE='text' NAME='lastImageLocation'  ID='lastImageLocation' value="<%=cookielastImageLocation%>"  onChange=document.getElementById('lastImageLocation').value=this.value;  maxlength="100" size="70"></INPUT>
+			<input type=file name=browse style="display: none;">
+			<input type=button onClick="browse.click();lastImageLocation.value=browse.value;removeFileName(document.getElementById('lastImageLocation').value);"  value="Browse..">
+		</TD>
+	</TR>
+
+	<TR>
+		<TD ALIGN="right"></TD>
+		<TD><input id="loginButton" name="loginButton" type="submit" onClick="returnAC();" value="Login">
+
+
+		<button name="return" onClick="returnQ()">Return</button>
+		</TD>
+	</TR>
+
+</TABLE>
+	<INPUT TYPE="hidden" name="u" VALUE="<%=request.getParameter("u")%>"></INPUT>
+	<INPUT TYPE="hidden" name="ac" VALUE="<%=request.getParameter("ac")%>"></INPUT>
+	<INPUT TYPE="hidden" name="vid" VALUE="<%=request.getParameter("vid")%>"></INPUT>
+	<INPUT TYPE="hidden" name="lac" id="lac" value=""></INPUT>
+	<INPUT TYPE="hidden" NAME="imageH"  ID="imageH" value="<%=cookieimageH%>"  size="5" maxlength="5" ></INPUT>
+	<INPUT TYPE="hidden" NAME="imageV"  ID="imageV" value="<%=cookieimageV%>"  size="5" maxlength="5" ></INPUT>
+
+</FORM>
+</body>
+</html>
