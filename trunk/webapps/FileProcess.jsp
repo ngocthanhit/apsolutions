@@ -19,7 +19,7 @@ org.apache.commons.fileupload.FileUpload,
 org.apache.commons.fileupload.FileItem, 
 java.nio.channels.FileChannel,
 java.io.RandomAccessFile,
-com.intuit.quickbase.util.*,com.bke1.util.*,com.bke1.domain.*" %> 
+com.intuit.quickbase.util.*,com.bke1.util.*" %> 
 	      
 
 

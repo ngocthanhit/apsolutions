@@ -1,4 +1,4 @@
-  <%@ page language="java" import="com.intuit.quickbase.util.*,com.bke1.util.*,com.bke1.domain.*" %> 
+  <%@ page language="java" import="com.intuit.quickbase.util.*,com.bke1.util.*" %> 
   <%@ page buffer="256kb"%>  
   <%@ page import="java.util.*,java.io.*,java.text.*,java.sql.Timestamp"%>
   <%@ page import="java.text.SimpleDateFormat"%>      
