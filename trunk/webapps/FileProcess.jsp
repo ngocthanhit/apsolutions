@@ -53,11 +53,10 @@ com.intuit.quickbase.util.*,com.bke1.util.*" %>
 
 	System.out.println("ii >>"+ii);	
 
-		
+FileOutputStream fos = new FileOutputStream("C:\\Archana\\apache-tomcat-5.5.27\\webapps\\bke1\\"+toFile);
 
-
-//FileOutputStream fos = new FileOutputStream("C:\\jakarta-tomcat-5.0.30\\webapps\\bke1\\"+toFile);
-FileOutputStream fos = new FileOutputStream("/usr/local/apache-tomcat-5.5.23/webapps/bke1/"+toFile);
+//String toDir = "C:\\Archana\\apache-tomcat-5.5.27\\webapps\\bke1\\" ;
+//FileOutputStream fos = new FileOutputStream("/usr/local/apache-tomcat-5.5.23/webapps/bke1/"+toFile);
 
 	System.out.println("writing at  "+toFile);	
 	

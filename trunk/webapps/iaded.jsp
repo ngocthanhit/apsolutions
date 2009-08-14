@@ -28,8 +28,8 @@ com.intuit.quickbase.util.*,com.bke1.util.*" %>
 
 //org.apache.commons.fileupload.disk.DiskFileItemFactory,
 
-//String toDir = "C:\\jakarta-tomcat-5.0.30\\webapps\\bke1\\" ;
-String toDir = "/usr/local/apache-tomcat-5.5.23/webapps/bke1/" ;
+String toDir = "C:\\Archana\\apache-tomcat-5.5.27\\webapps\\bke1\\" ;
+//String toDir = "/usr/local/apache-tomcat-5.5.23/webapps/bke1/" ;
 
 DiskFileUpload upload = null;
 String successfullFile = "";
