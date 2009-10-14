@@ -1,0 +1,481 @@
+  <!--End of Invoice Table -->
+
+
+  <!--End of Invoice Table -->
+
+<%} else {
+	
+	
+	// Invoice Edit													
+	String queryAttributeList="84.3.83.86.91.18.20.23.24.26.29.25.27.30.31.58.33.107";
+	String sortAttributes="3";
+	String sortOrder="sortorder-AD";
+	Vector resultBillVector =lookup.getEditInfo(invoiceTableId,  "{'3'.EX."+vid+"}", queryAttributeList, sortAttributes, sortOrder);
+
+		// Get HashMap from Vector
+		HashMap hashmap4Bill = null;
+		
+            for(int ii = 0; ii <= resultBillVector.size() - 1; ii++)
+            {
+                hashmap4Bill = (HashMap)resultBillVector.elementAt(ii);
+						}
+
+ 		// Iterate over the keys in the map
+    
+    Iterator itKey = hashmap4Bill.keySet().iterator();
+
+	Iterator itKey1 = hashmap4Bill.keySet().iterator();
+
+     Object keyString =null;
+     Object valueString =null;
+
+   
+/*    
+    while (itKey1.hasNext()) {
+        // Get key
+        keyString = itKey1.next();
+        valueString = hashmap4Bill.get(keyString);
+        System.out.println(keyString.toString() +"\t" +valueString.toString());
+    }
+ */   
+/*
+Client Name Lookup      Company BB
+Status  Rework
+Client ID# Lookup       2
+Franchise Identifier Lookup     OM001
+Inv Amt 139.00
+Notes
+Header ID#      13
+ApprovedAmt
+Invoice #       17483
+Inv Due 1239148800000
+Vendor Lookup   The Baltimore Guide
+BillURL
+Franchise Name  OM Test Franchise 1
+ReworkAmt
+Vendor ID#      13
+UnclassAmt
+Inv Date        1236556800000
+DisapprovedAmt
+
+
+*/
+    
+//1
+String clientName =(String) hashmap4Bill.get(itKey.next());
+//2
+String toStatus =(String) hashmap4Bill.get(itKey.next());
+
+//3
+String clientId =(String) hashmap4Bill.get(itKey.next());
+
+//4
+String franchiseId =(String) hashmap4Bill.get(itKey.next());
+
+//5
+String invoiceAmt =(String) hashmap4Bill.get(itKey.next());
+
+//6
+String billNotes =(String) hashmap4Bill.get(itKey.next());
+
+//7
+String billId =(String) hashmap4Bill.get(itKey.next());
+
+//8
+String paymentAmtStr =(String) hashmap4Bill.get(itKey.next());
+String paymentAmt="0.0";
+if(paymentAmtStr.length()>0){
+	paymentAmt=paymentAmtStr;
+}
+
+//9
+String invoiceNumber =(String) hashmap4Bill.get(itKey.next());
+
+//10
+String invoiceDueDateStr =(String) hashmap4Bill.get(itKey.next());
+
+//Convert Date format
+String invoiceDueDate = new SimpleDateFormat  (  "MM/dd/yyyy"  ).format(new Date(Long.parseLong(invoiceDueDateStr) + 86400000l));
+
+//11
+String vendorName =(String) hashmap4Bill.get(itKey.next());
+//12
+String imageURL =(String) hashmap4Bill.get(itKey.next());
+
+//13
+String franchiseName =(String) hashmap4Bill.get(itKey.next());
+
+//14
+String reworkAmtStr =(String) hashmap4Bill.get(itKey.next());
+
+double reworkAmt=0.0;
+if(reworkAmtStr.length()>0){
+			reworkAmt=Double.parseDouble(reworkAmtStr);
+}
+
+//15
+String vendorId =(String) hashmap4Bill.get(itKey.next());
+
+//16
+String unclassAmtStr =(String) hashmap4Bill.get(itKey.next());
+
+double unclassAmt=0.0;
+if(unclassAmtStr.length()>0){
+			unclassAmt=Double.parseDouble(unclassAmtStr);
+}
+
+//17
+String invoiceDateStr =(String) hashmap4Bill.get(itKey.next());
+String invoiceDate = new SimpleDateFormat  (  "MM/dd/yyyy"  ).format(new Date(Long.parseLong(invoiceDateStr) + 86400000l));
+
+//18
+String disapprovedAmtStr =(String) hashmap4Bill.get(itKey.next());
+
+double disapprovedAmt=0.0;
+if(disapprovedAmtStr.length()>0){
+			disapprovedAmt=Double.parseDouble(disapprovedAmtStr);
+}
+   
+double residualAmtFloat=reworkAmt+unclassAmt+disapprovedAmt;
+String residualAmt = ""+residualAmtFloat;
+	%>
+
+
+<table class="groupTbl" cellpadding="2" width="100%" bgcolor="#ffffff" border="1">
+  
+<input type=hidden name=voucher_date id=voucher_date >
+<input type=hidden name=status_date id=status_date >
+  <tr >
+    <td width="6%" nowrap><span class=rqrd>*</span>Client Name:</td>
+    <td width="14%">    	
+    	<TextArea rows="2" cols="20"  maxlength="20" size="20" name="clientName" id="clientName" class="inps" onfocus="clientNameFocus(this);" onblur="clientNameBlur(this);" ><%=clientName%></textArea>
+    	<input  value="<%=clientId%>" type=hidden name=clientId id=clientId >
+	</td>
+	  <td width="9%" nowrap><span class=rqrd>*</span>Franchise Name:</td>
+    <td width="10%">    	
+		 <span id='franchiseName' style='align : middle;'> <%=franchiseName%></span> 
+		</td>
+	<td width="1%" align="left" nowrap><span class=rqrd>*</span>Id:</td>
+    <td width="5%">
+    	<span id='franchiseId' style='align : middle;'>  <%=franchiseId%>  </span>
+	  		<input value="<%=franchiseId%>" type=hidden name="franchiseIdh" id="franchiseIdh" >
+    </td> 
+    <td width="3%">    	
+    		<IMG id="voucherCommb" style="align: right;" height=24 alt="" onclick="commentWindow('Comment.html','voucherComm');"  onselect="commentWindow('Comment.html','voucherComm');"  <%if ( true ){%>  src="/bke1/images/notes1.png"  <%}else{%> src="/bke1/images/notes.png" <%}%> width=20 border=1>    		
+        <input value="<%=billNotes%>"  type="hidden" name="voucherCommh" id="voucherCommh" ></input>    	
+    		<input type="hidden" name="voucherComm" id="voucherComm" ></input>
+		</td>
+ </tr>
+</table>
+
+
+<!--- Begining of Invoice Info --->
+
+<table class="InvoiceTbl" cellpadding="2" width="100%" bgcolor="#ffffff" border="1">
+	
+  <tr valign="top">  	
+		<input type=hidden  name='invoiceId' id='invoiceId'  value="<%=billId%>"  >
+	  <td width="5%" nowrap><span class=rqrd>*</span>Vendor:</td>
+    <td width="20%">    	
+    	
+  <TextArea  rows="2" cols="20"  maxlength="20" size="20" name="vendor" id="vendor" class="inps" onfocus="vendorFocus(this);" onblur="vendorBlur(this);"   ><%=vendorName%></textArea>
+    	<!--
+    	<input name="vendor" id="vendor" onfocus="vendorFocus(this);" onblur="vendorBlur(this);"  class="inps" maxlength="45" size="45">
+    	-->
+		<input  value="<%=vendorId%>"  type=hidden  name='vendorId' id='vendorId'>
+		</td>  	
+	  <td width="10%" nowrap><span class=rqrd>*</span>Invoice #:</td>
+    <td width="10%">    	
+    	<input  value="<%=invoiceNumber%>" name="invoiceNumber" id="invoiceNumber" onfocus="invoiceNumberFocus(this);" onblur="invoiceNumberBlur(this);"  class="inps" maxlength="24" size="24"></td>
+		</td>  	
+	  <td width="10%" nowrap><span class=rqrd>*</span>Inv Date:</td>
+    <td width="15%">    	
+    	<input  value="<%=invoiceDate%>" type="text" name="invoiceDate" id="invoiceDate"   onfocus="invoiceDateFocus(this);"  onblur="invoiceDateBlur(this);"  class="inps" maxlength="15" size="15">
+    	
+    	<img src="/bke1/images/dateImg.gif" id="invoiceDateImg" style="cursor: pointer; border: 1px solid red;" title="Invoice Date selector"  onmouseover="this.style.background='red';" onmouseout="this.style.background=''" />
+    	
+    	</td>
+		</td>
+  </tr>
+  
+  <tr valign="top">  	
+	  <td width="10%" nowrap><span class=rqrd>*</span>Inv Amt:</td>
+    <td width="15%">    	
+    	<input  value="<%=invoiceAmt%>" name="invoiceAmt" id="invoiceAmt" onfocus="invoiceAmtFocus(this);" onblur="invoiceAmtBlur(this);"  class="inps" maxlength="15" size="15"></td>
+		</td>  	
+	  <td width="10%" nowrap><span class=rqrd>*</span>Pay Amt #:</td>
+    <td width="15%">    	
+    	<span id=payAmt> </span>
+			<input  value="<%=paymentAmt%>" type=hidden  name='payAmtH' id='payAmtH'>
+		
+		</td>  	
+	  <td width="10%" nowrap><span class=rqrd>*</span>Inv Due:</td>
+    <td width="15%">    	
+    	<input  value="<%=invoiceDueDate%>" name="invoiceDueDate" id="invoiceDueDate" onfocus="invoiceDueDateFocus(this);" onblur="invoiceDueDateBlur(this);"  class="inps" maxlength="15" size="15">
+    	
+    	<img src="/bke1/images/dateImg.gif" id="invoiceDueDateImg" style="cursor: pointer; border: 1px solid red;" title="Invoice Date selector"  onmouseover="this.style.background='red';" onmouseout="this.style.background=''" />
+    	
+		</td>
+  </tr>
+  
+  <tr valign="top">  	
+	  <td width="10%" nowrap><span class=rqrd>*</span>Status:</td>
+    <td width="15%">
+    	<input value="<%=toStatus%>"  name="status"  id="status" onfocus="statusFocus(this);" onblur="statusBlur(this);"  class="inps" maxlength="15" size="15">    	
+    </td>  	
+	  <td width="10%" nowrap><span class=rqrd>*</span>Residual Amt:</td>
+    <td width="20%">    	
+    	
+    	<span id=residualAmt></span>   	
+    	<input value="<%=residualAmt%>"  type=hidden name='residualAmtH' id='residualAmtH'>
+    	
+    </td>
+		<td width="3%" nowrap>
+	  		<IMG id="invoiceCommb" style="align: right;" height=24 alt="" onclick="commentWindow('Comment.html','invoiceComm');"  onselect="commentWindow('Comment.html','invoiceComm');"  <%if ( true ){%>  src="/bke1/images/notes1.png"  <%}else{%> src="/bke1/images/notes.png" <%}%> width=20 border=1>
+		</td>
+    
+    <td width="3%" align=right>    	
+    <input type=hidden name='invoiceImageURL1' id='invoiceImageURL1'>
+		<IMG style="Z-INDEX: 100; align: right; POSITION: 100" height=24 alt="" name="addImage1"  id="addImage1" onClick="popGetImage('1');"  src="/bke1/images/image.png" width=20 border=1>	  
+	  </td>
+  
+  </tr>
+</table>    	
+    
+
+<!--- End of Invoice Info --->
+
+
+
+<!--- Begining of Line Item Info --->
+
+<table  id="LineItemTbl"  cellpadding="2" width="100%" class="vouch"  bgcolor="#ffffff" border="1">
+  <tr valign="top">  	
+		<td width="5%" nowrap align=middle>Ln # </td>
+    <td width="10%" nowrap  align=middle>Amount </td>
+    <td width="10%" nowrap align=middle>Number</td>
+    <td width="15%" nowrap align=middle>Account Name</td>
+    <td width="15%" nowrap align=middle>Memo(Description)</td>
+    <td width="3%"  align=middle>Line Status</td>
+    <td width="3%" nowrap align=middle>Notes</td>
+  </tr>
+
+
+<%
+
+
+int	invoiceCtr = 1;
+
+int	invRowCtr  = 1;
+/*
+
+//INVOICE
+////String  groupId_ColID = "6";
+String  clientId_ColID = "82";
+
+String  vendorId_ColID = "18";
+String  invoiceNumber_ColID = "23";
+String  invoiceDate_ColID = "24";
+String  invoiceAmt_ColID = "26";
+String  invoiceDueDate_ColID = "25";
+String  invoiceStatus_ColID = "46";
+
+
+//LINE
+String  headerId_ColID = "6"; //InvoiceId
+String  ln_ColID = "14";
+String  amount_ColID = "22";
+String  accountId_ColID = "28";
+String  lineDesc_ColID = "15";
+String  lineStatusId_ColID = "47";
+String  lineStatusTrail_ColID = "24"; //Status String
+
+*/
+
+
+//Item Edit
+
+   queryAttributeList="14.3.22.28.15.23.27";
+	 sortAttributes="14";
+	 sortOrder="sortorder-AD";
+	Vector resultItemVector =lookup.getEditInfo(itemTableId,  "{'6'.EX."+billId+"}", queryAttributeList, sortAttributes, sortOrder);
+
+		// Get HashMap from Vector
+		HashMap hashmap4Item = null;
+		int lineItemCounter=1;
+            for(int ii = 0; ii <= resultItemVector.size() - 1; ii++)
+            {
+                hashmap4Item = (HashMap)resultItemVector.elementAt(ii);
+                
+                itKey = hashmap4Item.keySet().iterator();
+                itKey1 = hashmap4Item.keySet().iterator();
+                
+                
+                /*
+                
+Line Status     APP
+Amount  139.00
+Account ID#     19
+Ln #    1
+Description     Ad Insertions
+Notes
+Line Item ID#   25
+                
+                
+                */
+                
+                /*
+                while (itKey1.hasNext()) {
+        							// Get key
+        							keyString = itKey1.next();
+        							valueString = hashmap4Item.get(keyString);
+        							System.out.println(keyString.toString() +"\t" +valueString.toString());
+    						}
+    						*/
+
+String lineStatus=(String) hashmap4Item.get(itKey.next());
+
+String itemAmount=(String) hashmap4Item.get(itKey.next());
+String accountId=(String) hashmap4Item.get(itKey.next());
+
+String lineNumber=(String) hashmap4Item.get(itKey.next());
+
+String lineDescription=(String) hashmap4Item.get(itKey.next());
+
+String lineNotes=(String) hashmap4Item.get(itKey.next());
+
+String lineItemId=(String) hashmap4Item.get(itKey.next());
+
+/*
+
+x0.width="5%";
+    		x0.align="middle";
+        x0.innerHTML="<input type='hidden' id='lineItemId"+nextCtr+"'  name='lineItemId"+nextCtr+"' value='III'><label>"+nextCtr+"</label><input type='hidden' name='lineNumber"+nextCtr+"'  id='lineNumber"+nextCtr+"' value="+nextCtr+">";
+//alert('>>>>>>>> 2');
+        var x1=x.insertCell(1)
+    		x1.width="10%"; 
+    		x1.align="middle";
+        x1.innerHTML="<input type='text' name='lineItemAmt"+nextCtr+"'  id='lineItemAmt"+nextCtr+"'  class='inps' onfocus='lineItemAmtFocus(this,"+nextCtr+");'  onblur='lineItemAmtBlur(this,"+nextCtr+");'   maxlength='15' size='15'> ";
+
+//alert('>>>>>>>> 3');
+				var x2=x.insertCell(2)
+    		x2.width="10%";
+    		x2.align="middle";
+        x2.innerHTML="<input type='hidden' id='accountId"+nextCtr+"'  name='accountId"+nextCtr+"'><input name='accountNumber"+nextCtr+"'  id='accountNumber"+nextCtr+"' class='inps' onfocus='accountNumberFocus(this,"+nextCtr+");'  onblur='accountNumberBlur(this,"+nextCtr+");' value=''   maxlength='12' size='8'>";
+//alert('>>>>>>>> 4');
+        var x3=x.insertCell(3)
+    		x3.width="15%";
+    		x3.align="middle";
+    		x3.innerHTML="<TextArea name='accountName"+nextCtr+"'  id='accountName"+nextCtr+"' class='inps' onfocus='accountNameFocus(this,"+nextCtr+");'  onblur='accountNameBlur(this,"+nextCtr+");' value=''   rows='2' cols='20'></TextArea>";
+//alert('>>>>>>>> 5');
+        var x4=x.insertCell(4)
+    		x4.width="15%";
+    		x4.align="middle";
+        x4.innerHTML="<TextArea name='lineItemDesc"+nextCtr+"'  id='lineItemDesc"+nextCtr+"' class='inps' onfocus='lineItemDescFocus(this,"+nextCtr+");'  onblur='lineItemDescBlur(this,"+nextCtr+");'   rows='2' cols='20'></TextArea>";
+//alert('>>>>>>>> 6');		    			
+				var x5=x.insertCell(5)
+    		x5.width="3%";
+    		x5.align="middle";
+    		x5.innerHTML="<input name='lineStatus"+nextCtr+"'  id='lineStatus"+nextCtr+"' class='inps' onfocus='lineStatusFocus(this,"+nextCtr+");'  onblur='lineStatusBlur(this,"+nextCtr+");'   maxlength='12' size='10'>";
+//alert('>>>>>>>> 7');
+				var x6=x.insertCell(6)
+    		x6.width="3%";
+    		x6.align="middle";																						
+     		x6.innerHTML="<IMG id='lineItemComm"+nextCtr+"b' style='align: right; ' height=24 alt='' onclick=commentWindow('Comment.html','lineItemComm"+nextCtr+"');  onselect='commentWindow('Comment.html','lineItemComm"+nextCtr+"');' src='/bke1/images/notes.png' width=20 border=1><input   type='hidden' name='lineItemComm"+nextCtr+"h' id='lineItemComm"+nextCtr+"h' ></input><input type='hidden' name='lineItemComm"+nextCtr+"' id='lineItemComm"+nextCtr+"' ></input>";
+//alert('>>>>>>>> 8');
+
+*/
+                
+%>
+
+
+<tr valign="middle">  	
+		<input type=hidden  name='lineItemId+<%=lineItemCounter%>' id='lineItemId1+<%=lineItemCounter%>' value='<%=lineItemId%>' >
+    
+    <td width="5%" nowrap align=middle> 
+    	<input value='<%=lineNumber%>'  type='hidden' id='lineNumber+<%=lineItemCounter%>'  name='lineNumber+<%=lineItemCounter%>'  >
+    		<span id='lineNumber+<%=lineItemCounter%>' style='align : middle;'><%=lineNumber%></span>
+    </td>
+    
+    <td width="10%" nowrap  align=middle>
+    	<input  value='<%=itemAmount%>' name="lineItemAmt+<%=lineItemCounter%>"  id="lineItemAmt+<%=lineItemCounter%>" class="inps" onfocus=lineItemAmtFocus((this,'<%=lineItemCounter%>');  onblur=lineItemAmtBlur(this,'<%=lineItemCounter%>');  maxlength="15" size="15">
+    </td>
+    
+    <td width="10%" nowrap align=middle>
+    	<input value='<%=accountId%>'  type='hidden' id='accountId+<%=lineItemCounter%>'  name='accountId+<%=lineItemCounter%>'  >
+    	<input type="text" name="accountNumber+<%=lineItemCounter%>"  id="accountNumber+<%=lineItemCounter%>" class="inps" onfocus="accountNumberFocus(this);"  onblur="accountNumberBlur(this);" size="8">
+    </td>
+    
+    <td width="15%" nowrap align=middle>
+    		<TextArea name="accountNumber+<%=lineItemCounter%>"  id="accountNumber+<%=lineItemCounter%>" class="inps" onfocus="accountNameFocus(this,"+nextCtr+");"  onblur="accountNameBlur(this,"+nextCtr+");"  rows="2" cols="20"></TextArea>
+    </td>
+    <td width="15%" nowrap align=middle>
+    		<TextArea rows="2" cols="20"  maxlength="20" size="20" name="lineItemDesc+<%=lineItemCounter%>" id="lineItemDesc+<%=lineItemCounter%>" class="inps" onfocus="lineItemDescFocus(this,"+nextCtr+");" onblur="lineItemDescBlur(this,"+nextCtr+");" ></textArea>
+    </td>
+    <td width="3%"  align=middle>
+    		<input name="lineStatus+<%=lineItemCounter%>"  id="lineStatus+<%=lineItemCounter%>" onfocus=lineStatusFocus(this,'<%=lineItemCounter%>');  onblur=lineStatusBlur(this,'<%=lineItemCounter%>'); class="inps"   maxlength="12" size="10">
+    </td>
+    <td width="3%" nowrap align=middle>
+    		<IMG id="lineItemComm<%=lineItemCounter%>b" style="align: right;" height=24 alt="" onclick="commentWindow('Comment.html','<%=lineItemCounter%>');"  onselect="commentWindow('Comment.html','lineItemComm1');" src="/bke1/images/notes.png" width=20 border=1>
+    </td>
+</tr>
+
+
+<%
+} // End of Item For Loop
+%>
+
+  
+   
+
+	<!-- Invoice tbl tr-->
+  <tr>
+  	<td align="left" colspan="8">  		   				
+ 			<button name='addAllocation' id='addAllocation' class='tbutton'  onClick='insertLineItemRow();'>Line Item</button>
+ 			<button name='duplicate1' id='duplicate1' class='tbutton'  onClick='duplicate();'>Duplicate</button>
+ 			</td> 	
+ 		</tr>
+  </table>
+ </td>
+</tr> 
+ 			    
+  
+ 	<!--endof Invoice Row -->
+ 
+<%				
+				
+			%>
+
+  <!--Begining of Invoice Button Row -->
+<table  name=InvoiceButtonTbl  id=InvoiceButtonTbl width="100%" bgcolor="#ffffff" border="1"  >
+  <tr vAlign=top>
+		<td align="middle" style="color:red"  width="100%" ><b>*</b> required fields
+
+
+		<button name='return' id='return' class='tbutton'  onKeyDown=buttonAlert(this)  onClick= >Next Bill</button>
+
+			<%if(ac.equals("ad")){%>
+				<button name='return' class='tbutton' onKeyDown=buttonAlert(this)  onClick=saveAndReturn('sr')>Save & Return</button>
+				<button name='return' class='tbutton' onKeyDown=buttonAlert(this)  onClick=saveAndNext()>Save & Next</button>
+
+				<button name='skip' class='tbutton' onKeyDown=buttonAlert(this)  onClick=skip1()>Skip</button>
+			<%}%>
+			<button name='return' class='tbutton'  onKeyDown=buttonAlert(this) onClick=returnQ()>Return</button>
+	    </td>
+   </tr>
+   
+ </table>     
+ 	<input type=hidden name=invCtr id=invCtr <%if(ac.equals("ad")){%>value=1<%}else{%>value=<%=(invoiceCtr-1)%> <%}%> >
+ 	<input type=hidden name=invRowCtr id=invRowCtr  <%if(ac.equals("ad")){%>value=2<%}else{%>value=<%=invRowCtr%> <%}%> >
+ 	<input type=hidden name=lineCtr id=lineCtr  <%if(ac.equals("ad")){%>value=0<%}else{%>value=<%=invRowCtr%> <%}%> >
+ 	
+
+  <!--End of Invoice Button Row -->
+ 			
+</table>
+
+  <!--End of Invoice Table -->
+
+
+  <!--End of Invoice Table -->
+
