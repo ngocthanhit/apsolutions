@@ -1,0 +1,24 @@
+/*
+General CSS for the demos of DHTMLSuite
+*/
+table.vouch{
+	font-family: Trebuchet MS, Lucida Sans Unicode, Arial, sans-serif;
+	font-size:0.9em;
+	margin:1px;
+}
+table.allo{
+	font-family: Trebuchet MS, Lucida Sans Unicode, Arial, sans-serif;
+	font-size:0.8em;
+	margin:1px;
+}
+
+a{
+	color:red;
+	text-decoration:underline;
+}
+
+button.tbutton  {
+	font-family: Trebuchet MS, Lucida Sans Unicode, Arial, sans-serif;
+	font-size:0.72em;
+	font-weight:bold;
+}

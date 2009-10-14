@@ -1,0 +1,586 @@
+<html>
+<head>
+<title>Docorganiz Image Management</title>
+<meta name="GENERATOR" content="Microsoft Visual Studio .NET 7.1">
+<meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5">
+<script id="clientEventHandlersJS" language="javascript">
+
+<!--
+
+var jsFileName;
+
+//var Object1;
+function fixPath( s )
+{
+	 return s.replace(/\\/g, "\\\\");
+}
+
+function getThisFileFromServer(ctr){
+
+			var imageLocation  = dir+"\\"+availableFilesArray[ctr];
+			//alert('Image  '+imageLocation);
+			//insertRow(imageLocation);
+			jsFileName=imageLocation;
+			return imageLocation;
+}
+
+function ld(fName) {
+		//fName = fixPath(fName);
+
+ 		document.uploadForm.fromDir.value=fName;
+ 		document.getElementById('fromDir1').value = fName;
+
+ 		removeFileName(fName);
+
+ 		jsFileName = fName;
+		//alert(' fName value '+fName);
+		//alert(' fromDir value '+document.getElementById('fromDir').value);
+		var pdfObject = document.getElementById('Object1');
+		//document.uploadForm.Object1.zoomType = zoomtype.fitP;
+ 		pdfObject.src = fName;
+ 		if(document.getElementById('Object1').src !=null){
+ 			//alert('Has Image Set now ');
+			document.getElementById("message").style.backgroundColor='white';
+			document.getElementById("message").innerHTML = "";
+ 		}
+return true;
+}
+
+
+function removeFileName(svr){
+
+	//alert('In Remove File Name '+svr);
+	if( (svr!='')||(svr!=null) ){
+		var fullLenth = svr.length;
+		var pdfString = svr.substring(fullLenth-4, fullLenth)
+		//alert('pdfString '+pdfString);
+		if(pdfString==".pdf"){
+			var pdfDirArray = svr.split('\\');
+			var tempDir="";
+				for(var i=0; i<(pdfDirArray.length-2);i++){
+					//alert('i '+i+' aray value '+pdfDirArray[i]);
+					tempDir = tempDir+pdfDirArray[i]+"\\";
+				}
+				document.getElementById('lastImageLocation').value = tempDir;
+				//alert('tempDir '+tempDir);
+				setCookie('lastImageLocation',tempDir,360);
+				//alert('tempDir '+getCookie('lastImageLocation'));
+		}
+	}
+
+}
+
+
+function nextclick() {
+//document.getElementById('Object1').gotoNextPage();
+}
+
+function prevclick() {
+//document.getElementById('Object1').gotoPreviousPage();
+}
+
+
+//-->
+</script>
+
+<script type="text/javascript">
+
+
+function isFileSkipped(availableFile){
+
+	if( (skipArray==null)||(skipArray=="") ){
+//		alert('skipArray.length >> '+skipArray.length);
+		return false;
+	}
+
+
+
+		//var skipArrayTemp = skipArray.split(",");
+
+//		alert(' value of skipArray   '+skipArray);
+
+		for(var i=1; i<=(skipArray.length);i++){
+//				alert(' skipArray[i]  ->'+skipArray[i]+'availableFile ->'+availableFile);
+				if((skipArray[i]!=null)&&(skipArray[i]!="")&&(skipArray[i].length>1)){
+					//if(availableFile.endsWith(skipArrayTemp[i])){
+					if(availableFile.indexOf(skipArray[i],0)!=-1)	{
+//						alert(' Similar found   '+skipArray[i]);
+						return true;
+					}
+				}
+
+		}
+
+//			alert(' None Found Similar in skipArray  ');
+			return false;
+}
+
+
+
+var imagesLength;
+
+var invoiceIdVar ;
+
+
+var toFile;
+
+
+
+
+var availableFilesArray=new Array();
+
+var dir = getCookie("lastImageLocation");
+
+function loadAFile(){
+
+imagesLength = document.docorganiz.imageArrayLength;
+
+if(imagesLength<=0){
+	document.getElementById("message").style.backgroundColor='red';
+	document.getElementById("message").innerHTML = "There are no more images in your current folder.";
+	return true;
+}else{
+//alert('lastAccesedDir  '+dir);
+	if( (dir==null) || (dir=="") || (dir=="null")  ){
+
+		document.getElementById("message").style.backgroundColor='red';
+		document.getElementById("message").innerHTML = "No Image directory set.";
+
+	}else{
+
+		if((document.getElementById('Object1').src=="")&&(dir.length>0)){
+		//alert('INN');
+
+
+			var imageLocation  = "";
+
+		//alert('availableFilesArray.length '+imagesLength+' skipArrayLength '+skipArrayLength +' skipArray '+skipArray );
+			if(skipArrayLength>imagesLength){
+				document.getElementById("message").style.backgroundColor='red';
+				document.getElementById("message").innerHTML = "There are no more images in your current folder.";
+				return;
+			}
+
+
+			for(var i=1; i<(availableFilesArray.length);i++){
+				imageLocation=dir+"\\"+availableFilesArray[i];
+				//alert(' availableFilesArray '+imageLocation+availableFilesArray[i]);
+			//	alert('isFileSkipped(imageLocation) = '+imageLocation);
+//				alert(' Skipped? '+availableFilesArray[i]);
+
+				if(isFileSkipped(availableFilesArray[i])) {
+//					alert('Yes '+imageLocation+' Skipped');
+					//continue;
+				}else{
+//					alert('NO '+imageLocation+' NOT Skipped So Load');
+					jsFileName=imageLocation;
+					break;
+				}
+			}
+
+			ld(imageLocation);
+
+		}
+	}
+
+}
+return true;
+}
+
+function getFileName(){
+	var strPath = 'C:\Documents and Settings\BSPROGS\Desktop\DeVry\Previous work\BIS 440\ESSS_Case_Study.zip';
+	var strPathArray = strPath.split('\\');
+	//alert('strPathArray'+strPathArray);
+
+	//alert('strPathArray[0]'+strPathArray[0]);
+
+	var strFileName = strPathArray[strPathArray.length-1];
+	return strFileName;
+}
+
+function loadThisFile(ctr){
+			var imageLocation  = dir+"\\"+availableFilesArray[ctr];
+			//alert('Image  '+imageLocation);
+			//insertRow(imageLocation);
+			jsFileName=imageLocation;
+			ld(imageLocation);
+}
+
+
+var skipArrayObject = eval("self.opener.document.voucherInvoiceAllocation.skipArray");
+var skipArray = skipArrayObject.value.split(",");
+var skipArrayLength = 0;
+
+var originalSkipArrayLength = skipArray.length;
+var routineCounter = 0;
+var skipArrayTempLength = 0;
+var skipArrayTemp = new Array();
+
+		if((skipArray.length==1)&&(skipArray[0].length)){
+			skipArrayLength=0;
+		}else{
+			skipArrayLength=skipArray.length;
+		}
+
+function skipPressed(){
+	//alert(' skipArray; '+skipArray);
+	//alert(' skipArrayLength.size() '+skipArray.length);
+	//alert(' skipArray.length '+skipArray.length);
+	//alert(' originalSkipArrayLength; '+originalSkipArrayLength);
+
+	var imageCounter = getCurrentImageIndex();
+		//alert(' skipArray; '+skipArray);
+		//alert(' skipArrayLength '+skipArrayLength);
+		//alert('routineCounter '+routineCounter);
+
+	if(skipArrayLength>imagesLength){
+		document.getElementById("message").style.backgroundColor='red';
+		document.getElementById("message").innerHTML = "There are no more images in your current folder.";
+		return false;
+	}
+
+
+	if((imageCounter>imagesLength)){
+		//alert('imageCounter>imagesLength '+imageCounter+' > '+imagesLength);
+		return false;
+	}else{
+		//skipArray[originalSkipArrayLength]=skipArray+availableFilesArray[imageCounter]+',';
+		//skipArrayObject.value =skipArrayObject.value+skipArray;
+		//skipArrayTemp[routineCounter] = availableFilesArray[imageCounter];
+		skipArray[skipArrayLength]=availableFilesArray[imageCounter];
+		//alert('skipArrayTemp  '+skipArrayTemp);
+		//skipArray[originalSkipArrayLength]=availableFilesArray[imageCounter];
+		//alert('skipArrayTemp  '+skipArrayTemp)
+		skipArrayObject.value =skipArray;
+	}
+	//originalSkipArrayLength++;
+	//alert('imageCounter '+imageCounter+'Total imagesLength '+imagesLength );
+	//loadThisFile(imageCounter+1);
+	if( imageCounter >= imagesLength ){
+		document.getElementById("message").style.backgroundColor='red';
+		document.getElementById("message").innerHTML = "There are no more images in your current folder.";
+		return false;
+	} else {
+
+		skipArrayLength++;
+		routineCounter++;
+		loadThisFile(imageCounter+1);
+		//skipArrayTempLength++;
+	}
+
+
+}
+
+
+
+function getCurrentImageIndex(){
+	var currentImageIndex=0;
+	var currentImageArray = document.uploadForm.Object1.src.split('\\')
+	var currentImage =currentImageArray[currentImageArray.length-1];
+
+	for(i=1; i<=imagesLength; i++){
+			//alert('i'+i+'availableFilesArray[i]  '+availableFilesArray[i]);
+		if(availableFilesArray[i]==currentImage){
+			currentImageIndex=i;
+			//alert(' i found '+i);
+			break;
+		}else{
+			continue;
+		}
+	}
+
+	return currentImageIndex;
+}
+
+
+
+function loadFiles(dir){
+	if(dir.length>0){
+		
+		var allFilesStr = document.docorganiz.getAllFiles(dir);
+		var filesArray=new Array();
+
+		imagesLength = document.docorganiz.imageArrayLength;
+
+		//imagesLength = imagesLength*1;
+
+		if (imagesLength == 0){
+			//alert('imagesLength == 0 '+imagesLength);
+			document.getElementById("message").style.backgroundColor='red';
+			document.getElementById("message").innerHTML = "There are no more images in your current folder.";
+			return true;
+		}else if(imagesLength > 0){
+				//alert('imagesLength > 0 ');
+				filesArray=allFilesStr.split('&');
+				availableFilesArray=filesArray;
+
+		}
+
+		if(imagesLength == 1){
+					document.getElementById("message").style.backgroundColor='yellow';
+					document.getElementById("message").innerHTML = "This is the last image in your current folder.";
+		}else if(imagesLength > 1){
+				document.getElementById("message").innerHTML = "";
+		}
+	}
+	return true;
+}
+
+
+function initialize(){
+
+	var successfullFile = document.getElementById('successfullFile').value;
+
+	var lastAccesedDir = document.getElementById('lastImageLocation').value;
+
+//	alert('lastAccesedDir'+lastAccesedDir);
+
+	if( (lastAccesedDir!="") ) {
+//			alert('lastAccesedDir Inside '+lastAccesedDir);
+			setCookie("lastAccesedDir", lastAccesedDir, 360);
+			loadFiles(lastAccesedDir);
+	}
+	return true;
+}
+
+function delcall(successfullFile)
+{
+	
+	//var invCtr1 = eval("self.opener.document.voucherInvoiceAllocation.inim.value");
+	var invoiceNumberVar = eval("self.opener.document.voucherInvoiceAllocation.invoiceNumber.value");
+	
+	if((successfullFile.length>1)&&(invoiceNumberVar!="")){
+  
+	//		alert('invoiceNumberVar '+invoiceNumberVar+' successfullFile  >'+successfullFile);
+	
+    	document.getElementById("message").innerHTML=document.docorganiz.delFile(successfullFile);
+  //  		alert('In Del Call  Done deleting');
+		
+	}
+}
+
+
+function sendImageCall()
+{
+
+	var fromFile = document.getElementById('fromDir1').value;
+	var invoiceId = document.getElementById('invoiceId').value ;
+
+	//alert(' invoiceId val from via panel '+invoiceId);
+	//alert(' invoiceId val from via panel '+document.getElementById('invoiceId').value);
+	//var currentInvoiceCount = self.opener.document.voucherInvoiceAllocation.currentInvoiceCount.value;
+	
+	//alert('currentInvoiceCount  '+currentInvoiceCount);
+	
+	//var addImageObject=eval("self.opener.document.voucherInvoiceAllocation.addImage"+currentInvoiceCount);
+//var addImageObject=eval("self.opener.document.voucherInvoiceAllocation.addImage");
+
+	var submissionResult = "";
+
+		if( (fromFile.length>1)&&(invoiceId!='III')){
+			//alert ('Ready to submit file ');
+			//pausecomp(100);
+			var toFileTemp=Math.floor(Math.random()*10000);
+			toFile=toFileTemp+invoiceId+".pdf";
+			document.getElementById('fileName').value=toFile;
+			submissionResult=document.docorganiz.sendFile(fromFile,toFile,invoiceId);
+				
+		}
+		if (fromFile.length>0) {
+			//alert ('Ready to delete file ');
+			//pausecomp(100);
+			//alert ('Ready to delete file '+fromFile);
+			
+			delcall(fromFile);
+			
+			//addImageObject.src='/bke1/images/image1.png';
+		}else{
+			//alert ('Cannot delete File ');
+
+		}
+}
+
+
+function pausecomp(millis)
+{
+	var date = new Date();
+	var curDate = null;
+	do { curDate = new Date(); }
+	while(curDate-date < millis);
+}
+
+
+function submitImage(){
+	//	alert('Called Submit Image ');
+		//setImage();
+	//	var currentInvoiceCount = self.opener.document.voucherInvoiceAllocation.currentInvoiceCount.value;
+	//	var invoiceIdObject=eval("self.opener.document.voucherInvoiceAllocation.invoiceId"+currentInvoiceCount);
+		
+		var parentInvoiceId = self.opener.document.voucherInvoiceAllocation.invoiceId.value;
+		
+	//		var invoiceIdObject=eval("self.opener.document.voucherInvoiceAllocation.invoiceId");
+		
+	//	alert('invoice Id for count = '+currentInvoiceCount+' is >> '+invoiceIdObject.value);
+		
+	//	alert('parentInvoiceId '+parentInvoiceId);
+		//
+		document.getElementById('invoiceId').value =parentInvoiceId;
+
+		//alert('FROM DIR1 '+document.getElementById('fromDir1').value);
+
+		var successfullFile = document.getElementById('successfullFile').value;
+		//lert('b4Image CA');
+		sendImageCall();
+	//	alert('After Image Call');
+		document.uploadForm.submit();
+        pausecomp(100);
+}
+
+
+function setImage(){
+	var invoice="";
+	var invCtr="";
+	invCtr =  eval("self.opener.document.voucherInvoiceAllocation.inim.value");
+	//alert('Current InvCtr in Image Window '+invCtr)
+	if (getCookie("invoiceVar")!="") //if cookie exists with name = "invoiceVar"
+	{
+		//alert('Has Cookie '+getCookie("invoiceVar"))
+	   pausecomp(500);
+		document.getElementById('in').value = getCookie("invoiceVar");
+		//alert('invoiceVar  '+getCookie("invoiceVar"));
+		setCookie("invoiceVar", "", 30)
+
+	}else{
+		//alert('No Cookie '+invCtr)
+		//alert('Last invoice '+invCtr)
+		document.getElementById('in').value  =  eval("self.opener.document.voucherInvoiceAllocation.invoice_no"+invCtr+".value");
+
+	}
+		//alert('Last invoice '+invCtr)
+
+	//alert('Invoice ID value '+eval("self.opener.document.voucherInvoiceAllocation.invoiceId"+invCtr+".value"));
+	invoiceIdVar = eval("self.opener.document.voucherInvoiceAllocation.invoiceId"+invCtr+".value");
+    //alert('Invoice ID IS >>>>   '+invoiceIdVar);
+	document.getElementById('invoiceId').value = invoiceIdVar;
+	//document.getElementById('vo').value =  eval("self.opener.document.voucherInvoiceAllocation.voucher_no.value");
+
+
+}
+
+function getCookie(Name){ //get cookie value
+	var re=new RegExp(Name+"=[^;]+", "i"); //construct RE to search for target name/value pair
+	if (document.cookie.match(re)) //if cookie found
+	return document.cookie.match(re)[0].split("=")[1] //return its value
+	return ""
+}
+
+function setCookie(name, value, days){ //set cookie value
+	var expireDate = new Date()
+	//set "expstring" to either future or past date, to set or delete cookie, respectively
+	var expstring=expireDate.setDate(expireDate.getDate()+parseInt(days))
+	document.cookie = name+"="+value+"; expires="+expireDate.toGMTString()+"; path=/";
+}
+
+
+document.onkeydown = function(){
+
+
+	   //ENTER key = 13
+	   //BackSpace = 8
+	   //alert('window.event  '+window.event.keyCode);
+
+
+	  if( (window.event && window.event.keyCode == 34)&&(document.uploadForm.Object1!=null)&&(document.uploadForm.Object1.src!="") )
+	  {
+            	document.getElementById('Object1').gotoNextPage();
+	  }
+
+
+	 if( (window.event && window.event.keyCode == 33)&&(document.uploadForm.Object1!=null)&&(document.uploadForm.Object1.src!="") )
+	 {
+				document.getElementById('Object1').gotoPreviousPage();
+	 }
+
+}
+
+
+function init(){
+
+	initialize();
+
+	<%if( (new File(writeURL).exists())&&(!mv.equals("clear")) ) {%>
+		document.getElementById('Object1').src='<%=finalURL%>';
+	<%}%>
+	var uac = '<%=uac%>';
+	if(uac.length>0){
+		//alert('has uac '+uac);
+		if(uac=='ad'){
+				loadAFile();
+		}
+	}else{
+		//alert('has no uac '+uac);
+	}
+	//var currentInvoiceCount = self.opener.document.voucherInvoiceAllocation.currentInvoiceCount.value;
+	if( uac=='ad' ){
+		
+	}
+  //window.
+  //opener.focus();
+	return true;
+}
+
+</script>
+</head>
+
+<body onload="init();" >
+
+<form  name="uploadForm" action="iaded.jsp"  method="POST" enctype="multipart/form-data">
+
+<span id="message" ></span>
+<table  id="ImageTable" >
+	<tr>
+		<td align="left">
+			<input  type="file" name="fromDir"  id="fromDir" ONCHANGE="ld(this.value);" >
+			<input type="button"  class='tbutton' name="submitButton" id="submitButton"  onClick="submitImage();" value="Submit">
+			Invoice # :<span id="invoiceNumber" name="invoiceNumber"></span>
+		</td>
+	</tr>
+
+
+
+	<!--
+			<button name="submitButton" id="submitButton" class="tbutton"  onClick="submitImage();" >Submit</button>
+	-->
+
+	<input type="hidden"  name="mv" id="mv" value="<%=mv%>">
+	<input type="hidden"  name="url2" id="url2"  value='<%=url%>'>
+	<input  type="hidden" name=fileName  id=fileName  value='<%=fileName%>'>
+	<input  type="hidden" name=fromDir1  id=fromDir1 >
+	<input type="hidden"  name="vo" id="vo" value='<%=vo%>'>
+	<input type="hidden"  name="in" id="in" value='<%=in%>'>
+	<input type="hidden"  name="invoiceId" id="invoiceId">
+	<input type=hidden  name="toDir" id="toDir"  >
+	<input type=hidden  name="successfullFile" id="successfullFile" value="<%=successfullFile%>" >
+	<input type=hidden  name="lastAccesedDir" id="lastAccesedDir"  value="<%=lastAccesedDir%>">
+	<input type=hidden  name="lastImageLocation" id="lastImageLocation"  value="<%=lastImageLocation%>">
+
+
+	<tr>
+		<td colspan='3'>
+<OBJECT id="Object1"  name="Object1" WIDTH="<%=imageHi*0.75%>" HEIGHT="<%=imageVi*0.78%>" classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" VIEWASTEXT>
+
+				<param name="_cx" value="<%=imageHx%>">
+				<param name="_cy" value="<%=imageVy%>">
+			</OBJECT>
+
+			<APPLET CODE="FileDeleteApplet.class" archive="DelApplet.jar" NAME="docorganiz" WIDTH=0.0px HEIGHT=0.0px >
+			</APPLET >
+
+		</td>
+	</tr>
+
+
+</form>
+
+</body>
+</html>

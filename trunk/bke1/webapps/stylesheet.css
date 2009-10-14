@@ -1,0 +1,88 @@
+
+body {
+	font-family: Verdana, Arial, Helvetica, sans-serif; 
+	background-color: #FFFFFF; 
+	color: #000000; 
+	font-size: .7em
+}
+
+h1 {
+  font-weight : bolder;
+	font-size : 1.16em;
+	background-color: whitesmoke;
+	color: #333333;
+ 	margin-bottom: 0em;
+}
+
+h2 {
+	font-weight : bold;
+	font-size : 1.02em;
+	margin-bottom: 0.25em;
+}
+
+p {
+	margin-top: 0px;
+	margin-bottom: 1em;
+}
+		   
+a:active 	{color: #0000FF}
+a:link 		{color: #0000FF}
+a:visited {color: #0000FF}
+
+
+table {
+	font-size: 1em; 
+	margin-top: 1em; 
+	margin-bottom: 1em;
+	border-width: 0px;
+}
+
+th {
+  background-color: #DDDDDD; 
+  text-align: left; 
+  vertical-align: bottom;
+  border-width: 0px;
+}
+
+tr {
+	vertical-align: top;
+	border-width: 0px;
+}
+
+td {
+	vertical-align: top; 
+	margin-top: .25em;
+	border-width: 0px;
+}
+
+li {
+	margin-top: .2em;
+	margin-bottom: .2em;
+	margin-right: 5em;
+	border-width: 0px;
+}
+
+small {
+	font-size: .85em;
+}
+
+tt {
+	font-family: monospace;
+}
+
+pre {
+	font-family: monospace;
+	font-size: 1.1em;
+}
+
+.footer {
+	color: #333333;
+	background-color: whitesmoke;
+	margin-top: 7em;
+	border-top: .5em;
+	font-size: .85em;
+	font-style: normal;
+	xborder-top: 1px solid #000000;
+	xborder-bottom: 1px solid #000000;
+}
+

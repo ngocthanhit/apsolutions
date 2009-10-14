@@ -1,0 +1,575 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-Control" content="no-cache">
+	<meta http-equiv="Content-Type" content="text/html">
+	<title>Charge Detail</title>
+	<link rel="stylesheet" href="css/demos.css" media="screen" type="text/css">
+	<style type="text/css">
+		table {
+			font-family: Trebuchet MS, Lucida Sans Unicode, Arial, sans-serif;
+			font-size:0.9em;
+			margin:1px;
+		}
+		button  {
+			font-family: Trebuchet MS, Lucida Sans Unicode, Arial, sans-serif;
+			font-size:0.72em;
+			font-weight:bold;
+		}
+	span.rqrd		{ color:red; font-weight:bold; margin-right:5px};
+	</style>
+	<script type="text/javascript" src="js/actb.js"></script>
+ 	<script type="text/javascript" src="js/editInfo.js"></script>
+	<script type="text/javascript" src="js/addInfo.js"></script>
+	<script type="text/javascript" src="js/validateTableComplete.js"></script>
+	<script type="text/javascript" src="js/common.js"></script>
+	<script type="text/javascript">
+
+
+
+	
+	var depArray = new Array(12);
+  	depArray[0] ='AC';
+	depArray[1] ='BE';
+	depArray[2] ='BS';
+	depArray[3] ='CC';
+	depArray[4] ='CS';
+	depArray[5] ='IS';
+	depArray[6] ='LG';
+	depArray[7] ='LS';
+	depArray[8] ='MK';
+	depArray[9] ='OF';
+	depArray[10] ='PM';
+	depArray[11] ='TR';
+
+
+
+	function setDep(sv1){
+	        var oo3 = actb(sv1,depArray);
+			 oo3.actb_lim = 5;
+			 oo3.actb_firstText = true;
+			 oo3.actb_mouse = true;
+
+		  }
+
+
+	var aId=2;
+
+
+ function deleteRow()
+    {
+
+//Logic would check where ever there is a check box
+//search for all checks
+//for each check call deleteInfo
+//on successfull delete then remove from UI
+
+	}
+
+
+ function insertAgentRow()
+    {
+	var inc = document.getElementById('agnCtr').value
+	//alert('InvoiceCount '+inc)
+	inc++
+	//alert('InvoiceCount '+inc)
+
+
+    var x=document.getElementById('AgentTable').insertRow(inc)
+    x.valign="top"
+  	var x0=x.insertCell(0)
+    x0.align="center"
+    x0.width="10%"
+ 		x0.innerHTML="<td><input type='hidden' name='agentId"+inc+"' value='III' id='agentId"+inc+"'><span name='empId"+inc+"' id='empId"+inc+"' /></td>"   
+    var x1=x.insertCell(1)
+    x1.align="center"
+    x1.width="20%"
+  	x1.innerHTML="<td><span name='empName"+inc+"' id='empName"+inc+"' /></td>"
+	  var x2=x.insertCell(2)
+    x2.align="center"
+    x2.width="30%"
+  	x2.innerHTML="<td><span name='labCat"+inc+"' id='labCat"+inc+"'  /></td>"
+    var x3=x.insertCell(3)
+    x3.align="center"
+    x3.width="10%"
+  	x3.innerHTML="<td><span name='labDesc"+inc+"' id='labDesc"+inc+"' /></td>"
+    var x4=x.insertCell(4)
+    x4.align="center"
+    x4.width="10%"
+		x4.innerHTML="<td><span name='hours"+inc+"' id='hours"+inc+"'   /></td>"
+    var x5=x.insertCell(5)
+    x5.align="center"
+    x5.width="10%"
+	  x5.innerHTML="<td><span style='text-align : right;' name='agent_amount"+inc+"' id='agent_amount"+inc+"' /></td>"
+	  var x6=x.insertCell(6)
+    x6.align="center"
+    x6.width="10%"
+		x6.innerHTML="<IMG id='cmt"+inc+"b' style='align: right;' height=24  alt=''  onclick=commentWindow('cvu.html','cmt"+inc+"');  onselect='commentWindow('cvu.html','cmt"+inc+"')' src='/docorganiz5/images/notes.png' width=20 border=1><input   type='hidden' name='cmt"+inc+"h' id='cmt"+inc+"h' ></input><input type='hidden' name='cmt"+inc+"' id='cmt"+inc+"' ></input>";
+	
+  document.getElementById('agnCtr').value=inc;
+	 //document.getElementById('empId'+inc).focus();
+}
+
+
+function save(){
+
+         self.opener.document.voucherInvoiceAllocation.fromAwindo.value='true'
+
+
+         var len = document.getElementById('agnCtr').value
+
+		 var empIdArray="";
+		 var empNameArray="";
+		 var labCatArray="";
+		 var labDescArray="";
+		 var agentNoArray="";
+		 var agentIdArray="";
+		 var agentAmtArray="";
+		 var hoursArray="";
+		 var agentActArray="";
+		 var agentChgArray="";
+		 var agentDepArray="";
+		 var agentCommArray="";
+
+		 var hasValue='false';
+
+  	for(var i=1; i<=len;i++){
+
+			 //alert('IN loop i >>>'+document.getElementById('agentId'+i).value+'<<<< ' );
+
+			  agentIdArray = agentIdArray+"&"+document.getElementById('agentId'+i).value
+
+
+/*
+
+			  if(document.getElementById('labCat'+i).value.length==0){
+			  break;
+			  }	else {hasValue='true';}
+
+			  
+//alert('agentIdArray >> '+agentIdArray);
+			  empIdArray = empIdArray+"&"+document.getElementById('empId'+i).value
+			  
+//alert('empIdArray >> '+empIdArray);
+				empNameArray = empNameArray+"&"+document.getElementById('empName'+i).value
+			  labCatArray = labCatArray+"&"+document.getElementById('labCat'+i).value
+			  labDescArray = labDescArray+"&"+document.getElementById('labDesc'+i).value
+  			hoursArray = hoursArray+"&"+document.getElementById('hours'+i).value
+	  		
+	  		tmp = document.getElementById('agent_amount'+i).value;
+			  tmp = filterNum(tmp)
+			   //alert('amout  '+tmp)
+	  		agentAmtArray =  agentAmtArray+"&"+tmp
+
+
+//alert('3');
+			  		var a0 =eval("self.opener.document.voucherInvoiceAllocation.agentId"+aa1)
+			  		a0.value=agentIdArray
+//alert('3');
+			  		var a1 =eval("self.opener.document.voucherInvoiceAllocation.empId"+aa1)
+			  		a1.value=empIdArray
+//alert('3a');			  		
+			  		var a2 =eval("self.opener.document.voucherInvoiceAllocation.empName"+aa1)
+			  		a2.value=empNameArray
+//alert('3a');			  		
+			  		var a3 =eval("self.opener.document.voucherInvoiceAllocation.labCat"+aa1)
+			  		a3.value=labCatArray
+//alert('3a');			  		
+			  		var a4 =eval("self.opener.document.voucherInvoiceAllocation.labDesc"+aa1)
+			  		a4.value=labDescArray
+//alert('3a');			  		
+			  		var a5 =eval("self.opener.document.voucherInvoiceAllocation.hours"+aa1)
+			  		a5.value=hoursArray
+//alert('3a');			  		
+			  		var a6 =eval("self.opener.document.voucherInvoiceAllocation.agent_amount"+aa1)
+			  		a6.value=agentAmtArray
+
+*/
+
+	  		  if(document.getElementById('cmt'+i).value.length>0){
+	  		  	agentCommArray =  agentCommArray+"&"+document.getElementById('cmt'+i+'h').value+"&"+document.getElementById('cmt'+i).value;
+	  		  }else{
+	  		  	agentCommArray =  agentCommArray+"&"+document.getElementById('cmt'+i+'h').value;	  		  	
+	  		  }
+	  		  //agentCommArray =  agentCommArray+"&"+document.getElementById('cmt'+i).value
+
+  		}
+
+			var addAgentObj =eval("self.opener.document.voucherInvoiceAllocation.addAgent"+aa1);
+			
+		  if(empIdArray.length > 2 ){
+	  	
+ 													addAgentObj.src='/docorganiz5/images/popup1.png';
+	  	}
+
+//alert('5');
+         window.close();
+
+
+}
+
+
+    function cancelAndReturn(){
+				 //if (!comentwindow.closed && comentwindow.location) 
+					//comentwindow.close();
+        
+        window.close();
+    }
+
+    
+	var comentwindow;
+	function commentWindow(url,hiddenName)
+	{
+		document.getElementById('comm').value = hiddenName
+		comentwindow=window.open(url,'Comment','scrollbars=no,status=no,height=200,width=450');
+		if (window.focus) {comentwindow.focus()}
+	}
+
+	var vendor_id ="";
+	var vendor_name="";
+	var approval_status="";
+	var voucher_no="";
+
+  var purchaseAmt;
+
+	
+	var allocPK = "";
+	var aa1;
+	var bb1;
+
+
+
+	
+	function setEmpId(sv1){
+		//alert(sv1.name)
+	     var oo1 = actb(sv1,empIdLookupArray);
+			 oo1.actb_lim = 5;
+			 oo1.actb_firstText = true;
+			 oo1.actb_mouse = true;
+		  }
+
+	
+	function setEmpName(sv1){
+	     var oo1 = actb(sv1,empNameLookupArray);
+			 oo1.actb_lim = 5;
+			 oo1.actb_firstText = true;
+			 oo1.actb_mouse = true;
+		  }
+function setLabCat(sv1){
+	     var oo1 = actb(sv1,labCatLookupArray);
+			 oo1.actb_lim = 5;
+			 oo1.actb_firstText = true;
+			 oo1.actb_mouse = true;
+		  }
+function setLabDesc(sv1){
+	     var oo1 = actb(sv1,labDescLookupArray);
+			 oo1.actb_lim = 5;
+			 oo1.actb_firstText = true;
+			 oo1.actb_mouse = true;
+		  }
+
+		
+  var empIdLookupArray = "";
+  var empNameLookupArray = "";
+  var labCatLookupArray = "";
+  var labDescLookupArray = "";
+  
+
+	var agent_amountArray=new Array();
+	var empIdArray=new Array();	
+	var empNameArray=new Array();
+	var labDescArray=new Array();
+	var labCatArray=new Array();
+	var hoursArray=new Array();
+	var agentCommArray=new Array();
+	var agentIdArray=new Array();
+	
+	
+	var agent_amountStr="";
+	var empIdStr="";	
+	var empNameStr="";
+	var labDescStr="";
+	var labCatStr="";
+	var hoursStr="";
+	var agentCommStr="";
+	var agentIdStr="";
+	
+	function focus(){
+
+
+	aa1=self.opener.document.voucherInvoiceAllocation.aa1.value;
+	bb1=self.opener.document.voucherInvoiceAllocation.bb1.value;
+
+
+///alert('aa1  '+aa1+' bb1 '+bb1);
+		 document.getElementById('empId1').focus();
+			
+/*			var fromAwindowFocusObject = eval("self.opener.document.voucherInvoiceAllocation.fromAwindowFocus");
+			if(fromAwindowFocusObject.value=='0'){
+				fromAwindowFocusObject.value='1';			
+			}			
+ */
+
+		 	 allocPK = eval("self.opener.document.voucherInvoiceAllocation.allocationId"+aa1).value;
+
+///			alert('Allocation allocPK >> '+allocPK);
+			 vendor_id=self.opener.document.voucherInvoiceAllocation.vendor_id.value
+			 vendor_name=self.opener.document.voucherInvoiceAllocation.vendor_name.value
+			 approval_status=self.opener.document.voucherInvoiceAllocation.process_status.value
+			 voucher_no=self.opener.document.voucherInvoiceAllocation.voucher_no.value
+			 var purchaseAmt1 =  eval("self.opener.document.voucherInvoiceAllocation.purchase_amt"+aa1)
+			 //alert('Loading time purchaseAmt '+purchaseAmt1)
+	
+			//Parse drop downs
+
+		     empIdLookupArray = eval("self.opener.document.voucherInvoiceAllocation.empId").value.split('&');
+		     empNameLookupArray = eval("self.opener.document.voucherInvoiceAllocation.empName").value.split('&');
+		     labCatLookupArray = eval("self.opener.document.voucherInvoiceAllocation.labCat").value.split('&');
+		     labDescLookupArray=eval("self.opener.document.voucherInvoiceAllocation.labDesc").value.split('&');
+		     			
+	
+
+		     agentIdStr = eval("self.opener.document.voucherInvoiceAllocation.agentId"+aa1);
+		     empIdStr = eval("self.opener.document.voucherInvoiceAllocation.empId"+aa1);
+		     empNameStr = eval("self.opener.document.voucherInvoiceAllocation.empName"+aa1);
+		     labCatStr=eval("self.opener.document.voucherInvoiceAllocation.labCat"+aa1);
+		     labDescStr=eval("self.opener.document.voucherInvoiceAllocation.labDesc"+aa1);
+		     hoursStr=eval("self.opener.document.voucherInvoiceAllocation.hours"+aa1);
+		     agent_amountStr=eval("self.opener.document.voucherInvoiceAllocation.agent_amount"+aa1);
+
+	
+				 if(agentCommTemp==null){
+		   	 	//return;
+		   	 }//else
+	
+		   	 if( (agentIdStr!=null) && (agentIdStr.value.length>1) ){
+		     	agentIdArray=agentIdStr.value.split('&');
+		     	empIdArray=empIdStr.value.split('&');
+		     	empNameArray=empNameStr.value.split('&');
+		     	labCatArray=labCatStr.value.split('&');
+		     	labDescArray=labDescStr.value.split('&');
+		     	hoursArray=hoursStr.value.split('&');
+		     	agent_amountArray=agent_amountStr.value.split('&');
+			   }
+
+///			 alert('agentIdArray   --> '+agentIdArray);
+
+	
+		   	 var agentCommTemp = eval("self.opener.document.voucherInvoiceAllocation.agentComm"+aa1);
+		   	 	 //alert('agentCommTemp   --> '+agentCommTemp);
+		   	 if( (agentCommTemp!=null) && (agentCommTemp.value.length>1) ){
+		     	agentCommArray=agentCommTemp.value.split('&');
+		   	 	 //alert('agentCommArray   --> '+agentCommArray);
+			   }
+	
+					
+					var i=1;
+		
+		//alert(' empIdArray.length   --> '+empIdArray.length);	
+		     				
+					
+		     for(var ii=1; ii<=(empIdArray.length-1);ii++){
+		//alert(' agent_amountArray['+ii+']   --> '+agent_amountArray[i]);	
+		     	
+		     	
+		
+		     	document.getElementById('agentId'+i).value=agentIdArray[i];
+		     	document.getElementById('empId'+i).innerHTML=empIdArray[i];
+		     	document.getElementById('empName'+i).innerHTML=empNameArray[i];
+		     	document.getElementById('labCat'+i).innerHTML=labCatArray[i];
+		     	document.getElementById('labDesc'+i).innerHTML=labDescArray[i];
+		     	document.getElementById('hours'+i).innerHTML=hoursArray[i];
+		     	document.getElementById('agent_amount'+i).innerHTML=agent_amountArray[i];
+		     	
+		     			     	
+		     	if(agentCommArray[i]!=null){
+		     		//alert(' agentCommArray[i]   --> '+agentCommArray[i]);		     		
+						document.getElementById('cmt'+i+'b').src='/docorganiz5/images/notes1.png';
+		     	  document.getElementById('cmt'+i+'h').value=agentCommArray[i];
+					}
+					
+		     	if(agentCommArray[i]==null){
+		     		//alert(' agentCommArray[i]   --> '+agentCommArray[i]);		     		
+						document.getElementById('cmt'+i+'b').src='/docorganiz5/images/notes.png';
+		     	  document.getElementById('cmt'+i+'h').value="";
+					}
+		
+		     		if(ii!=(empIdArray.length-1)){
+				 			insertAgentRow();			
+				 		}
+				  	
+ 					i++;
+ 					
+		     }
+
+			//alert('Length morethan 0 '+document.getElementById('agent_number1').value.length)
+			 //if(document.getElementById('agentId1').value.length!=0)
+			 //tally()
+			//window.focus();
+			//return false;
+	}
+ 
+
+var agentTableId = 'bdyvk9utf';
+var agentNumberCID = 9;
+var empIdCID = 11;
+var agentAmountCID = 10;
+var accountCID = 35;
+//var chargeCodeCID =11;
+var depCID = 12;
+
+
+
+</script>
+</head>
+
+<body onLoad="focus();">
+<form method="POST" action="dprv.jsp" name="AgentForm">
+
+<table class=vouch>
+<tr>
+<td width="80%" align="center" style="color:red" ><span id="errorMessage"></span></td>
+</tr>
+
+
+
+<tr>
+	<td>
+<table cellspacing="2" cellpadding="2" width="100%" bgcolor="#ffffff" border="1">
+  <tr valign="top">
+    <td width="87">Group ID :</td>
+    <td width="136"><script>document.write(self.opener.document.voucherInvoiceAllocation.voucher_no1.value);</script></td>
+	<td width="112">Status :</td>
+    <td><script>document.write(self.opener.document.voucherInvoiceAllocation.process_status.value);</script></td>
+  </tr>
+  <tr valign="top">
+    <td width="87">Vendor ID :</td>
+    <td width="136"><script>document.write(self.opener.document.voucherInvoiceAllocation.vendor_id.value);</script></td>
+  <td width="117">Vendor Name :</td>
+    <td width="150"><script>document.write(self.opener.document.voucherInvoiceAllocation.vendor_name.value);</script></td>
+  </tr>
+  <tr valign="top">
+    <td width="87"> Invoice #:</td>
+    <td width="136"><script>document.write(self.opener.document.voucherInvoiceAllocation.invoice_no.value);</script></td>
+    <td width="150">Internal Acct :</td>
+    <td width="150"><script>document.write(self.opener.document.voucherInvoiceAllocation.internalAccount.value);</script></td>
+  </tr>
+</table>
+  </td>
+</tr>
+
+<tr>
+	<td>
+ 	<table cellspacing="2" id=AgentTable cellpadding="2" border="1">
+        <tr valign="top">
+          <td width="10%"><span class=rqrd>*</span>EmpID</td>
+          <td width="20%"><span class=rqrd>*</span>Name</td>
+          <td width="30%"><span class=rqrd>*</span>Lab Cat</td>
+          <td width="10%">Lab Desc</td>
+          <td width="10%"><span class=rqrd>*</span>Hours</td>          
+          <td width="10%"><span class=rqrd>*</span>Trans Amt</td>
+          <td width="10%"%">Notes</td>
+		</tr>
+		
+		<tr valign="top">
+<!-- aght-->         
+          
+             
+          <td width="10%" align=center>
+          <!--
+          	<input  name="empId1" id="empId1" class="inps" size="8"  onfocus="setCount(1);this.style.backgroundColor='SkyBlue';setEmpId(this);"  onBlur="fillOther(this,1);this.style.backgroundColor='White';empIdBlur(this,1);" ></td>
+          -->
+          
+          	<span  name="empId1" id="empId1" ></span> 
+          	
+          </td>
+          
+          <td width="20%" align=center>
+          <!--
+          	<input  name="empName1" id="empName1" class="inps" size="16"  onfocus="setCount(1);this.style.backgroundColor='SkyBlue';setEmpName(this);"  onBlur="fillOther(this,1);this.style.backgroundColor='White';" >
+          -->
+          	<span  name="empName1" id="empName1" ></span>
+          </td>
+          
+   		  <td width="30%" align=center>
+   		  	<input name="agentId1" id="agentId1" type="hidden" value="III">
+   		  <!--	
+   		  <input name="labCat1" id="labCat1" class="inps" onfocus="setCount(1);this.style.backgroundColor='SkyBlue';setLabCat(this);" onBlur="fillOther(this,1);this.style.backgroundColor='White';" size="5" maxlength="5">
+         -->
+         	<span  name="labCat1" id="labCat1" ></span>
+         </td> 		 
+         
+          <td width="10%" align=center>
+          	<!--
+          	<input name="labDesc1" id="labDesc1"   onfocus="setCount(1);this.style.backgroundColor='SkyBlue';setLabDesc(this);" onBlur="fillOther(this,1);this.style.backgroundColor='White';" class="inps" size="12">
+          	-->
+          	<span  name="labDesc1" id="labDesc1" ></span>
+          	</td>
+          
+          <td width="10%" align="center">
+          	<!--
+          	<input name="hours1" id="hours1"  onfocus="setCount(1);this.style.backgroundColor='SkyBlue';"   class="inps" size="2"  onBlur="this.style.backgroundColor='White';" >
+          	-->
+          	<span  name="hours1" id="hours1" ></span>
+          	</td>
+         
+          <td width="10%" align=center>
+          	<!--
+          	<input style='text-align : right;'  onfocus="setCount(1);this.style.backgroundColor='SkyBlue';"  name="agent_amount1" id="agent_amount1" onBlur="agentAmtChange(this);agentAmtBlur(this,1);transAmountBlur(this,1);"   class="inps" size="18" maxlength="18">
+          	-->
+          	<span  name="agent_amount1" id="agent_amount1" ></span>
+          	
+          	</td>
+              
+          <td width="10%" align=center>
+         	<IMG id="cmt1b" style="align: right;" height=24 alt="" onclick="commentWindow('cvu.html','cmt1');"  onselect="commentWindow("cvu.html","cmt1");" src="/docorganiz5/images/notes.png" width=20 border=1>
+					<input   type="hidden" name="cmt1h" id="cmt1h"></input>    	
+    			<input type="hidden" name="cmt1" id="cmt1"></input> 
+  
+
+          </td>		 
+         </tr>
+          		
+          		
+	      <tr>
+	      	<td align=center>
+	      		<label><p wrap="true">Line Item Amt:</p></label>
+	      	</td>
+
+	      	<td colspan=1 valign="top"><script>document.write(self.opener.document.voucherInvoiceAllocation.lineItemAmount.value);</script>
+	      	</td>
+	  			
+	  			<td valign="top" align=center>
+	        		<label><p wrap="true">Residual Allocation :</p></label>
+	        </td>
+	        
+	        <td  colspan=1 valign="top">
+	        	<span id=residualAmount></span>
+	        </td>
+	        
+	      	<td align=center><label><p wrap="true">Trans Total :</p></label></td>
+	      	<td valign="top"  align=right><span id=agentTotal></span> <input type=hidden name="agentTot" value="0"></td>
+	        
+	      </tr>
+	      
+	      
+
+	      <tr>
+	      	<input type=hidden name=agnCtr id=agnCtr value=1>
+		  	
+		  	<td colspan=7 align=center>
+		  		
+		  	<button name=return id=return  onfocus=this.style.backgroundColor='SkyBlue'; onBlur=this.style.backgroundColor='white';  onclick=cancelAndReturn();>Return</button>
+		  </td></tr>
+
+	</table>
+	</td>
+  </tr>
+</table>
+		<input type=hidden name=currentAgentCount id=currentAgentCount value=1>	
+		  <input type=hidden name=comm id=comm>
+</form>
+
+</body>
+</html>

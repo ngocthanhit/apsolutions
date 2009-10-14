@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<!-- ************************************************************************** -->
+<!--                       DocOrganiz Application BUILD SCRIPT                                     -->
+<!-- ************************************************************************** -->
+<project name="bke1" default="all" basedir=".">
+	<!-- =========================================================== -->
+	<!--                      Global Settings                        -->
+	<!-- =========================================================== -->
+	<!-- Set the path of the required libraries for this project. -->
+	<path id="libs">
+		<fileset dir="webapps/WEB-INF/lib">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+	
+ <target name="all" depends="clean,init-project,build-webapp"/>
+
+	<!-- =========================================================== -->
+	<!--                          Clean                              -->
+	<!-- =========================================================== -->
+
+	<target name="clean">
+		<delete dir="output"/>
+		<mkdir  dir="output"/>
+		<delete dir="webapps/WEB-INF/classes"/>
+
+	</target>
+
+
+	<!-- =========================================================== -->
+	<!--                          Init                               -->
+	<!-- =========================================================== --> 
+ 	<target name="init-project">
+ 		<mkdir dir="webapps/WEB-INF/classes"/>
+		<mkdir dir="output"/>
+ 	</target>
+	        
+
+	<!-- =========================================================== -->
+	<!--                          Build                              -->
+	<!-- =========================================================== -->
+	<target name="compile" description="This target compiles the project.">	
+		<javac srcdir="src" destdir="webapps/WEB-INF/classes" >					     
+		    <classpath refid="libs"/>
+		</javac>
+		
+		<copy todir="webapps/WEB-INF/classes/com/bke1/util">
+			<fileset dir="src/com/bke1/util"/>
+		</copy>
+		
+	</target>
+	
+	
+	
+	 <target name="build-webapp" depends="compile" description="This target builds Docorganiz application war file.">
+	 
+	 	<mkdir dir="output/temp" />
+		<copy todir="output/temp">
+			<fileset dir=".">
+				<exclude name="**/*.java" />
+				<exclude name="**/build.xml" />
+	 	    	</fileset>
+		</copy>
+		<!--
+	 	<jar destfile="output/bke1.war" >	 
+	 	    <fileset dir="output/temp/webapps" />  
+	 	</jar>
+	 	-->
+		<delete dir="output/temp"/>
+	</target>
+
+	<target name="testDataLookup" >
+		<java classname="com.bke1.util.DataLookup" fork="true" dir=".">
+			<classpath>
+				<pathelement location="webapps/WEB-INF/classes"/>				
+				<fileset dir="webapps/WEB-INF/lib">
+					<include name="**/*.jar"/>
+				</fileset>
+		
+			</classpath>
+		</java>
+	</target>
+	<target name="testAllVendor" >
+		<java classname="com.bke1.domain.AllVendor" fork="true" dir=".">
+			<classpath>
+				<pathelement location="webapps/WEB-INF/classes"/>				
+				<fileset dir="webapps/WEB-INF/lib">
+					<include name="**/*.jar"/>
+				</fileset>
+		
+			</classpath>
+		</java>
+	</target>
+	<target name="testLookup" >
+		<java classname="com.bke1.util.Lookup" fork="true" dir=".">
+			<classpath>
+				<pathelement location="webapps/WEB-INF/classes"/>				
+				<fileset dir="webapps/WEB-INF/lib">
+					<include name="**/*.*"/>
+				</fileset>
+		
+			</classpath>
+		</java>
+	</target>	
+
+</project>
