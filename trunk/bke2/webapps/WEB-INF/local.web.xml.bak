@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN"
+    "http://java.sun.com/j2ee/dtds/web-app_2_2.dtd">
+
+<web-app>
+  	  <!-- Begin: Host Type ID -->
+  	  <!-- Valid Host Types are: LOCAL, DEV, PROT, PROD  -->
+	 
+	 <context-param>
+		<param-name>quickbase_url</param-name>
+            	<param-value>https://docorganiz.quickbase.com/db/</param-value>
+          </context-param>
+          
+    <context-param>
+		<param-name>applicationName</param-name><!--
+    <param-value>bd77scjh5</param-value>-->
+    <param-value>bes8a4tgg</param-value>
+    </context-param>
+    
+    <context-param>
+    <param-name>invoiceTableId</param-name><!--
+    <param-value>bd77scjia</param-value>-->
+    <param-value>bes8a4tgq</param-value>
+    </context-param>
+    
+    <context-param>
+    <param-name>itemTableId</param-name><!--
+    <param-value>bd77scjib</param-value>-->
+    <param-value>bes8a4tgr</param-value>
+    </context-param>
+    
+    
+     <context-param>
+    <param-name>allocationTableId</param-name>
+    <param-value>bes8a4tgr</param-value>
+    </context-param>
+    
+  
+		  <context-param>
+    <param-name>vendorTableId</param-name>
+    <param-value>bes8a4tgu</param-value>
+    </context-param>
+    
+    <context-param>
+    <param-name>clientTableId</param-name>
+    <!--bd77scjh8-->
+    <param-value>bes8a4tgu</param-value>
+    </context-param>
+    
+    
+    <context-param>
+    <param-name>accountsTableId</param-name>
+    <!--bd77scjh8-->
+    <param-value>bes8a4tgv</param-value>
+    </context-param>
+    
+    
+		
+		<context-param>
+    <param-name>imageFileLocation</param-name>
+    <!--bd77scjh8-->
+    <param-value>C:\\Archana\\apache-tomcat-5.5.27\\webapps\\bke1\\</param-value>
+    </context-param>
+    
+    <context-param>
+    <param-name>serverURL</param-name>
+    <!--bd77scjh8-->
+    <param-value>http://localhost:8080/bke1</param-value>
+    </context-param>
+
+
+	<servlet>
+		<servlet-name>CacheVendorServlet</servlet-name>
+        	<servlet-class>com.bke1.servlet.CacheVendorServlet</servlet-class>
+	 	<load-on-startup>1</load-on-startup> 
+	</servlet>
+	
+   	<session-config>
+       		<session-timeout>60</session-timeout>
+   	</session-config>
+   	
+   	<welcome-file-list>
+	    	<welcome-file>via.jsp</welcome-file>
+  	</welcome-file-list>
+
+</web-app>
+

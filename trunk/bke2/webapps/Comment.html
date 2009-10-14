@@ -1,0 +1,212 @@
+<html>
+<head>
+	<link rel="stylesheet" href="css/demos.css" media="screen" type="text/css">
+	<script type="text/javascript">
+	</script>
+	<script type="text/javascript" src="js/editInfo.js"></script>
+	<style type="text/css">
+	body{
+		margin:0px;
+		font-size:0.8em;
+	}
+	#mainContainer{
+		width:840px;
+		margin:5px;
+	}
+	table,tr,td{
+		vertical-align:top;
+	}
+	.textInput{
+		width:300px;
+	}
+	html{
+		margin:0px;
+	}
+	.formButton{
+		width:75px;
+	}
+	textarea,input,select{
+		font-family:Trebuchet MS;
+	}
+	i{
+		font-size:0.9em;
+	}
+	</style>
+	<script type="text/javascript">
+
+
+	var aa1;
+	var formName;
+	var commentHiddenVar;
+	var commentHiddenVar1;
+	var aaa1="1";
+	var vCommCID=33;
+	var iCommCID=52;
+	var aCommCID=85;
+	var agentCommCID=49;
+	
+	
+	
+	var voucherTableId = "bdy8ms9iq";
+	var invoiceTableId = "bes8a4tgq";
+	var lineItemTableId = "bes8a4tgr";
+	
+	var allocationTableId = "bes8a4tgr";
+	var agentTableId = "bdyvk9utf";
+	var invoiceCommCID = "33";
+	var lineItemCommCID ="27";
+
+
+function getParam1( name )
+{
+  name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+  var regexS = "[\\?&]"+name+"=([^&#]*)";
+  var regex = new RegExp( regexS );
+  var results = regex.exec( window.location.href );
+  if( results == null )
+    return "";
+  else
+    return results[1];
+}
+
+	
+	function saveThis(){
+
+	//alert(aa1);
+	         commentHiddenVar.value=document.getElementById('comments').value;
+	//alert(commentHiddenVar.name+' >> '+commentHiddenVar.value);
+
+	
+	var commentButtonVar =  eval("self.opener.document."+formName+"."+aa1+"b");
+
+	//alert(commentButtonVar.name+' >> '+commentButtonVar.value);
+
+  var objValue = document.getElementById('comments').value;
+ // alert('objValue '+objValue);
+ 		if(objValue.length > 0){
+ 	//alert('3 ');
+ 	var currentlineItemCount=null;
+ 	
+ 			  		//alert('aa1 is >> '+aa1);
+ 		
+ 						if((aa1=="invoiceComm")){
+ 		
+ 								//alert("voucherComm");
+ 								var invoiceId = eval("self.opener.document."+formName+".invoiceId.value"); 
+        				//alert('voucher ID '+voucherId+' objvalue '+objValue);
+        				//editValue(objValue,vCommCID,voucherTableId,voucherId);
+        		   	editValue(objValue,invoiceCommCID,invoiceTableId,invoiceId);
+        	 }else if( (aa1.indexOf('lineItemComm',0)!=-1) ){
+ 								//alert("invoiceComm");
+ 								var currentlineItemCount = getParam1('lineCt');
+ 								
+ 								//alert("currentlineItemCount"+currentlineItemCount);
+ 								
+ 								
+
+ 								if(currentlineItemCount==null){ 
+ 										alert('Could not find current lineItem count');
+ 								}
+ 								
+ 								//alert("currentlineItemCount  "+currentlineItemCount+"formName  "+formName);
+ 								
+ 								
+ 								var lineItemIdVar = eval("self.opener.document."+formName+".lineItemId"+currentlineItemCount);
+ 								//alert(invoiceIdVar.name+invoiceIdVar.value)
+ 								var lineItemId = lineItemIdVar.value;
+ 								//eval("self.opener.document."+formName+".invoiceId"+currentInvoiceCount+".value");
+ 								 
+        				//alert('Ready to Edit lineItemId  '+lineItemId+' objvalue '+objValue);
+        				editValue(objValue,lineItemCommCID,lineItemTableId,lineItemId);
+        		  		
+        		   	//	editValue(objValue,iCommCID,invoiceTableId,invoiceId);
+        		   	        		  
+        		  
+        		   	
+        		   	//alert('After Editing Invoice');
+        		}
+ 	commentButtonVar.src='images/notes1.png';
+		}else {
+ 	commentButtonVar.src='images/notes.png';
+	  }
+	window.close();
+  }
+  
+  function closeThis(){
+  			if (window.focus) window.close();
+  	}
+  
+/*
+	function closeThis(){
+		if (window.focus) {comentwindow.focus()}
+	}
+*/	
+	function focus(){
+
+
+ 								
+ 								
+			 formName = self.opener.document.forms[0].name;
+			 
+			 //alert(formName)
+			 
+			 document.commentForm.comments.focus();
+			 aa1 = eval("self.opener.document."+formName+".comm.value");
+			 if(aa1.value==undefined){
+			 	aa1.value="";
+			 }	
+			 //aa1=self.opener.document.voucherInvoiceAllocation.comm.value;
+			 //alert(opener.name)
+			 commentHiddenVar =  eval("self.opener.document."+formName+"."+aa1);
+			 //alert(commentHiddenVar.name);
+			 commentHiddenVar1 =  eval("self.opener.document."+formName+"."+aa1+"h");
+			 //alert(commentHiddenVar1.name);
+     
+     
+     
+  	if(commentHiddenVar.value==null){
+			//alert("Inside If value  "+commentHiddenVar.value);
+  	 	commentHiddenVar.value="";
+  	}
+
+     document.getElementById('comments').value = commentHiddenVar.value;
+
+
+
+
+	//alert(commentHiddenVar1.value);
+	if((commentHiddenVar1!=null)&&(commentHiddenVar1.value.length > 0)){
+		//alert(commentHiddenVar1.value);
+		document.getElementById('com1').innerHTML=commentHiddenVar1.value;
+		document.getElementById('com').value=commentHiddenVar1.value;
+
+	}
+
+	}
+
+	</script>
+</head>
+<body onload="focus();">
+	<span id="errorMessage">
+<div id="mainContainer">
+	<fieldset>
+	<form method="post" name="commentForm">
+			 <table cellspacing="2" cellpadding="2" width="350" height="100%" bgcolor="#ffffff" >
+				<tr valign="top">
+					<td><span id="com1"><p wrap='true'></p></span><input type="hidden" id="com" name="com" ></td>
+				</tr>
+				<tr>
+					<td><textarea cols="60" rows="6"  name="comments" id="comments"></textarea></td>
+				</tr>
+				<tr>
+					<td>
+						<button  class="tbutton" name="saveComment" id="saveComment" onclick="saveThis();">Save & Done</button>
+						<button  class="tbutton" name="closeComment" id="closeComment" onclick="closeThis();">Return</button>
+					</td>
+				</tr>
+			 </table>
+	</form>
+</fieldset>
+</div>
+</body>
+</html>

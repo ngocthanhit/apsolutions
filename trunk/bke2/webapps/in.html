@@ -1,0 +1,3067 @@
+  <%
+
+   String ref = request.getParameter("ref");
+
+   //String u = request.getParameter("u");
+   
+   if(lookup!=null)
+   {
+   		System.out.println(" login "+login+" password "+password);
+			if(!lookup.isAuthenticated(login,password)){
+				System.out.println(" Auth failure ");
+				response.sendRedirect("/docorganiz5/login.jsp?ac="+ac+"&u="+u+"&vid="+vid+"&msg=Please logon with your credentials");
+ 				return;
+ 			}
+   }
+
+   if( (( ref != null)&&( ref.equals("ref")) ) )
+   {
+   	lookup.refresh();
+   }
+
+   String[] groupIdArray = null;
+   String groupId = null;
+   String groupIdPK =null;
+
+
+
+	if((request.getParameter("ac").equals("ad") ) )
+	{
+	   groupIdArray =	lookup.getBatchInfo(login, password).split(",");
+	   		for(int i = 0; i<groupIdArray.length; i++){
+	   			if(groupIdArray.length>=2)
+	   				groupId = groupIdArray[0]+groupIdArray[1];
+	   			if(groupIdArray.length>=3)
+	   				groupIdPK = groupIdArray[2];
+				//System.out.println("groupIdArray[] >> "+ gr.goupIdArray[i]);
+	   		}
+	}
+
+   String[] ven = lookup.vendorArray;
+   String[] pc = lookup.pc;
+   String[] nat = lookup.nat;
+   String[] processStatus = lookup.processStatus;
+	 String[] fromStatusArray = lookup.fromStatusArray;
+   String[] approverArray = lookup.approverArray;
+   String[] cd = lookup.cd;
+   String[] detailCode1 = lookup.detailCode1;
+   String[] detailCode2 = lookup.detailCode2;
+   
+   %>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-Control" content="no-cache">
+	<meta http-equiv="Content-Type" content="text/html">
+	<title>Vendor Panel</title>
+
+	<link rel="stylesheet" href="css/demos.css" media="screen" type="text/css">
+
+	<style type="text/css">
+	span.rqrd{ color:red; font-weight:bold; margin-right:5px}
+	</style>
+	<script type="text/javascript" src="js/addInfo.js"></script>
+	<script type="text/javascript" src="js/editInfo.js"></script>
+	<script type="text/javascript" src="js/validateTableComplete.js"></script>
+	<script type="text/javascript" src="js/checkVoucher.js"></script>
+	<script type="text/javascript" src="js/actb.js"></script>
+	<script type="text/javascript" src="js/common.js"></script>
+	<script type="text/javascript">
+
+<%=(String)ven[0]%>
+
+<%=(String)ven[1]%>
+
+<%=(String)ven[2]%>
+
+<%=(String)ven[3]%>
+
+<%=(String)pc[0]%>
+
+<%=(String)pc[1]%>
+
+<%=(String)nat[0]%>
+
+<%=(String)processStatus[0]%>
+
+<%=(String)fromStatusArray[0]%>
+
+<%=(String)fromStatusArray[1]%>
+
+<%=(String)fromStatusArray[2]%>
+
+<%=(String)approverArray[0]%>
+
+<%=(String)cd[0]%>
+
+<%=(String)cd[1]%>
+
+<%=(String)cd[2]%>
+
+
+
+	var imageWindow;
+	
+	function setPC(svr){
+	}
+	
+	function fillDiv(svn,aa,bb)
+	{
+	}
+	function setNaturalAccount(sv1){
+	     var oo11 = actb(sv1,naturalAccountArray);
+		 oo11.actb_lim = 5;
+		 oo11.actb_firstText = true;
+		 oo11.actb_mouse = true;
+
+	  }
+
+
+var approverTo1 = new Array(3);
+approverTo1[0] = "Hold";
+approverTo1[1] = "Ready";
+approverTo1[2] = "Rejected"; 
+
+		
+function setStatus(svr){
+	  //if(svr.name=='process_status'){
+	  
+	  //Condition to check Approver
+//alert('inside set status  1');
+//alert(svr.name+' approverTo1:  '+approverTo1.length);
+
+	   var obj33 = actb(svr,approverTo1);
+		 obj33.actb_lim = 5;
+		 obj33.actb_firstText = true;
+		 obj33.actb_startcheck = 1;
+		 obj33.actb_mouse = true;
+	  //}
+	  //statusLabelArray = approverFrom;
+	//  alert('inside set status  2');
+
+	}
+
+
+function setApprover(svr){
+	   var obj33 = actb(svr,approverArray);
+		 obj33.actb_lim = 5;
+		 obj33.actb_firstText = true;
+		 obj33.actb_startcheck = 1;
+		 obj33.actb_mouse = true;
+	}
+
+
+function setCd1(svr){
+		 svr.style.backgroundColor='SkyBlue';
+	   var obj33 = actb(svr,cd1);
+		 obj33.actb_lim = 5;
+		 obj33.actb_firstText = true;
+		 obj33.actb_startcheck = 1;
+		 obj33.actb_mouse = true;
+	}
+
+function setCd2(svr){
+		 svr.style.backgroundColor='SkyBlue';
+	   var obj33 = actb(svr,cd2);
+		 obj33.actb_lim = 5;
+		 obj33.actb_firstText = true;
+		 obj33.actb_startcheck = 1;
+		 obj33.actb_mouse = true;
+	}
+function setCd3(svr){
+		 svr.style.backgroundColor='SkyBlue';
+	   var obj33 = actb(svr,cd3);
+		 obj33.actb_lim = 5;
+		 obj33.actb_firstText = true;
+		 obj33.actb_startcheck = 1;
+		 obj33.actb_mouse = true;
+	}
+
+/*
+	function setTerms(svr){
+	//alert(svr.name+' termsArray:  '+vendorTermArray.length);
+	     var obj31 = actb(svr,vendorTermArray);
+		 obj31.actb_lim = 5;
+		 obj31.actb_firstText = true;
+		 obj31.actb_startcheck = 1;
+		 obj31.actb_mouse = true;
+
+	  }
+*/
+
+var fromStatusLabelIdArray = new Array(fromStatusArray,fromStatusIdArray);
+/*
+
+function fillFromStatus()
+	{
+	if(svn != null){
+	       for (i in fromStatusLabelIdArray) {
+		   		  for (j in fromStatusLabelIdArray[i]) {
+				  	  	 //alert('Found '+fromStatusLabelIdArray[0][j]);
+        			   	  if (fromStatusLabelIdArray[0][j] == svn.value){
+            		   	  	 //alert('Found '+svn.value+'found value of Div'+fromStatusLabelIdArray[1][j]);
+							 //aa.value=fromStatusLabelIdArray[1][j];
+							 aa.innerHTML=fromStatusLabelIdArray[1][j];
+							 bb.value=fromStatusLabelIdArray[1][j];
+							 }
+				 }
+			}
+	  	}
+	}
+
+	function setFromStatus(svr){
+	//alert(svr.name+' termsArray:  '+fromStatusArray.length);
+	     var obj32 = actb(svr,fromStatusArray);
+		 obj31.actb_lim = 5;
+		 obj31.actb_firstText = true;
+		 obj31.actb_startcheck = 1;
+		 obj31.actb_mouse = true;
+
+	  }
+
+*/
+
+
+
+function addAllocationOnBlur(currentInvCount){
+
+	var invCtrTemp = document.getElementById('invCtr').value
+
+	if (currentInvCount==invCtrTemp){
+ 		document.getElementById('addInvoice').focus();
+	}else{
+		invCtrTemp++;		
+		document.getElementById('invoice_no'+invCtrTemp).focus();
+	}
+}
+
+  function checkForZero(svr){
+  var svrValue = filterNum(svr.value);
+  svrValue = svrValue*1;
+
+  if (svrValue==0){
+  	//alert('Its zero');
+	svr.value="";
+  }else{
+  	//alert('Its got value ');
+  }
+
+
+  }
+
+function invoiceDateBlur1(obj22,a1){
+	obj22.style.backgroundColor='white';
+	//validate(obj22);
+	 var invoiceIdVal = document.getElementById('invoiceId'+a1).value;
+	//alert('obj22.value '+ obj22.value+' invoiceIdVal '+invoiceIdVal);
+        if( invoiceIdVal!='III' ){
+        	editValue(obj22.value,'<%=invoice_dateCID%>','<%=invoiceTableId%>',invoiceIdVal);
+        	//nextObj('purchase_amt'+a1+'l1');
+ 	}
+}
+
+
+var previousInvoiceNumber="";
+var previousInvoiceNumberFlag="0";
+
+function setPreviousInvoiceNumber(svr){
+	previousInvoiceNumber=svr;
+	previousInvoiceNumberFlag=document.getElementById('errorStatus').value;
+}
+
+function invoiceNumberFocus(obj){
+	
+	if(document.getElementById('errorMessageHidden').value.length<10){
+		obj.style.backgroundColor='SkyBlue';
+	}
+
+	inVoucherArea=false;
+	inInvoiceArea=true;
+	inAllocationArea=false;
+}
+
+
+function paFocus(sv2,currentAllocationCount){
+	inVoucherArea=false;
+	inInvoiceArea=false;
+	inAllocationArea=true;
+	currentAllocationCount=currentAllocationCount;
+	document.getElementById('currentAllocationCount').value=currentAllocationCount;
+	sv2.style.backgroundColor='SkyBlue';
+	checkForZero(sv2);
+}
+
+
+
+function invoiceDateBlur(obj22,a1){
+//alert('invoiceDateBlur 1');
+		onVoucherArea=false;
+		document.getElementById('currentInvoiceCount').value=a1;
+		obj22.style.backgroundColor='white';
+		validate(obj22);
+//alert('currentInvoiceCount'+document.getElementById('currentInvoiceCount').value);
+
+		var invoiceIdVal = document.getElementById('invoiceId'+a1).value;
+//alert(' voucherId >>>>>>>>'+document.getElementById('voucherId').value);
+
+//alert('isinvoice complete >>  '+ ' >>> '+isInvoiceComplete(1));
+		if( (invoiceIdVal=='III') && (isInvoiceComplete(a1) )  ){
+//alert(' voucherId '+document.getElementById('voucherId').value);
+			addValue('invoice',a1,0);
+//alert(' after addValue'); 			
+		}else if( (invoiceIdVal!='III')&&(isInvoiceComplete(a1))  ){
+			//alert('Editing stuff ');
+			editValue(obj22.value,'<%=invoice_dateCID%>','<%= invoiceTableId%>',invoiceIdVal);
+		}
+		nextObj('description'+a1+'l1');
+		inVoucherArea=false;
+		inInvoiceArea=false;
+}
+
+
+function groupIdOnBlur(obj33){
+		//alert('GROUPID ON BLUR');
+		obj33.style.backgroundColor='white';
+		validate(obj33);
+		//pausecomp(1000);
+		editUserInfo();
+		editValue(obj33.value,'<%=voucher_noCID%>','<%= voucherTableId%>',document.getElementById('voucherId').value);
+		nextObj('invoice_no1');
+
+}
+
+function insertAllocationTable(invInc){
+//alert('current insertAllocTable invInc  '+invInc);
+var inc = invInc*1+1;
+
+		var invRowCtr = document.getElementById('invRowCtr').value*1;
+		invRowCtr++;
+
+//alert('current insertAllocTable invRowCtr  '+invRowCtr);
+		
+		var x=document.getElementById('InvoiceTable').insertRow(invRowCtr);		
+		
+////		var x=document.getElementById('InvoiceTable').insertRow(inc);		
+	
+	
+		
+		//document.getElementById('invRowCtr').value = incRowCtr+1;
+		
+		x.vAlign="top";   		
+		var x0=x.insertCell(0);
+		x0.colSpan="5";
+		x0.width="100%";
+		x0.innerHTML="<table id=AllocationTable"+invInc+"  class='allo' cellpadding='2' border='1' width='100%'></table><tr><td align='left' colspan='8'><button name='addAllocation"+invInc+"' id='addAllocation"+invInc+"' class='tbutton'  onClick='insertAllocationRow("+invInc+");'>Line Item</button><button name='duplicate"+invInc+"' id='duplicate"+invInc+"' class='tbutton'  onClick='duplicate("+invInc+");'>Duplicate</button></td></tr><input type=hidden name=allocCtr"+invInc+" id=allocCtr"+invInc+" value=1></table>";
+	
+ 		
+    return true;
+    			
+}
+
+function insertAllocationHeader(inc){
+
+
+		var x=document.getElementById('AllocationTable'+inc).insertRow(0);
+    			
+		var x0=x.insertCell(0);
+		x0.vAlign="top";
+		x0.width="5%";
+		
+		x0.innerHTML="Ln #<label/>";
+		var x1=x.insertCell(1);
+		
+		//x1.vAlign="top";
+		x1.width="20%";
+		x1.innerHTML="Description<label/>";
+			
+		var x2=x.insertCell(2);
+		x2.width="15%";
+		x2.innerHTML="GL Acct<label/>";
+		
+		var x3=x.insertCell(3);
+		x3.width="8%";
+		x3.innerHTML="CCntr<label/>";
+		
+		var x4=x.insertCell(4);
+		x4.width="8%";
+		x4.innerHTML="LOC<label/>";
+		
+		var x5=x.insertCell(5);
+		x5.width="15%";
+		x5.innerHTML="Amount<label/>";
+		
+		var x6=x.insertCell(6);
+		x6.width="5%";
+		x6.innerHTML="Notes<label/>";
+		
+		var x7=x.insertCell(7);
+		x7.width="5%";
+		x7.innerHTML="Details<label/>";
+			
+    return true;     	
+	}
+
+
+  var aId=0;
+  
+  
+ function insertInvoiceRow()
+ { 	
+
+		var inc = document.getElementById('invCtr').value*1;
+
+		//alert('inc>>>>>>>>'+inc);
+		var incRowCtr = document.getElementById('invRowCtr').value*1;
+		var invRowCtr = document.getElementById('invRowCtr').value*1;
+		
+
+		inc++;
+
+		//alert('invRowCtr>>>>>>>>'+invRowCtr);
+		
+		//inc++;
+
+		//alert('Initial Invoice Row Insert '+incRowCtr);
+		//alert('x>>>>>>>>'+x);
+		//
+		//incRowCtr++;
+		var x=document.getElementById('InvoiceTable').insertRow(invRowCtr)
+		//var x=document.getElementById('InvoiceTable').insertRow(inc)
+		x.valign="top"
+
+
+		//document.getElementById('invRowCtr').value = incRowCtr;
+
+		var x0=x.insertCell(0);		
+
+		x0.width="29%";
+		x0.innerHTML="<input type='hidden' name=invoiceId"+inc+" id=invoiceId"+inc+" value='III'><span class=rqrd>*</span>Inv #: <input name=invoice_no"+inc+"  id=invoice_no"+inc+" onfocus=invoiceNumberFocus(this); onblur=invoiceNumberBlur(this,"+inc+");  class='inps' maxlength='27' size='27'>";
+
+ //  alert('Inv  2');
+		
+		var x1=x.insertCell(1);
+		x1.width="31%";
+		x1.innerHTML="<span class=rqrd>*</span>Inv Date: <input name=invoice_date"+inc+" id=invoice_date"+inc+" onfocus=this.style.backgroundColor='SkyBlue'; onBlur=invoiceDateBlur(this,"+inc+");  class='inps'  maxlength='10' size='10'>";
+
+	//     alert('Inv  3');
+	
+		var x2=x.insertCell(2);
+		x2.width="27%";
+		x2.innerHTML="<span class=rqrd>*</span>Inv Amt: <span id=paTotal"+inc+" style='align : right;'></span><span id=asTotal"+inc+"></span><input type=hidden name=paTot"+inc+" id=paTot"+inc+">";
+
+//     alert('Inv  4');
+
+		var x3=x.insertCell(3);
+    x3.width="8%";
+    
+    // alert('Inv  4.1');
+		
+		x3.vAlign="top";
+    // alert('Inv  4.2');
+		
+		x3.innerHTML="<IMG id='invoiceComm"+inc+"b' style='align: right;' height=24  alt=''  onclick=commentWindow('Comment.html','invoiceComm"+inc+"');  onselect='commentWindow('Comment.html','invoiceComm"+inc+"')' src='/docorganiz5/images/notes.png' width=20 border=1><input   type='hidden' name='invoiceComm"+inc+"h' id='invoiceComm"+inc+"h' ></input><input type='hidden' name='invoiceComm"+inc+"' id='invoiceComm"+inc+"' ></input>";
+		
+    //alert('14');
+    // alert('Inv  5');
+		
+		var x4=x.insertCell(4);
+    //alert('14 a');
+    x4.width="6%";
+		    //alert('14 b');
+		x4.vAlign="top";
+		    //alert('14 c');
+								  
+		x4.innerHTML="<IMG style=style='Z-INDEX: 100; align: right; POSITION: absolute' height=24 alt='' name='addImage"+inc+"'  id='addImage"+inc+"' onclick=popGetImage('"+inc+"');   src='/docorganiz5/images/image.png' width=20 border=1><input type=hidden name=asTot"+inc+" id=asTot"+inc+" value='0'>";
+							//alert('15');		
+		//alert('Inv  3');
+		var invoiceNumberObject =  document.getElementById('invoice_no'+inc);
+		invoiceNumberObject.focus();
+		//eval("document.voucherInvoiceAllocation.invoice_no"+inc).focus();
+		//alert('inv 4');
+		
+		imageSubmitCaller(inc-1);
+		
+		popImage(inc);
+		
+		//inc++;
+		//alert('Inv  1');
+		
+		insertAllocationTable(inc);
+		
+		//alert('Inv  2');
+		insertAllocationHeader(inc);
+		
+		//alert('Inv  3');
+		insertAllocationRow(inc);
+		
+		//alert('Inv  4');
+		setDefaultInvoiceDate(document.getElementById('invoice_date'+inc));
+		
+		eval("document.voucherInvoiceAllocation.invoice_no"+inc).focus();	
+		
+		//alert('Inv  5 invCtr is '+inc);
+		
+		document.getElementById('invCtr').value=inc;
+		
+		invRowCtr=invRowCtr+2;
+		
+		document.getElementById('invRowCtr').value=invRowCtr;
+		
+		
+		
+	//	alert('Current Invoice Row Insert '+document.getElementById('invCtr').value);
+			
+		//alert('Inv  12');	
+	
+	}
+	
+ 
+  function insertAllocationRow(aId)
+    {
+  //allocationId"+aId+"l"+toBinsertedAt purchase_amt sub_total natural_act div division pc
+	//alert('allocCtr'+aId);
+	//alert('invCtr'+invCtr);
+	
+	var toBinsertedAt= document.getElementById('allocCtr'+aId).value;
+	
+	//alert('toBinsertedAt'+toBinsertedAt);
+    var x=document.getElementById('AllocationTable'+aId).insertRow(toBinsertedAt);
+    
+ 	   		var x0=x.insertCell(0)
+				x0.width="5%";
+    		x0.align="middle";
+        x0.innerHTML="<input type='hidden' id='allocationId"+aId+"l"+toBinsertedAt+"'  name='allocationId"+aId+"l"+toBinsertedAt+"' value='III'><label>"+toBinsertedAt+"</label><input type='hidden' name='lineNumber"+aId+"l"+toBinsertedAt+"'  id='lineNumber"+aId+"l"+toBinsertedAt+"' value="+toBinsertedAt+">";
+
+        var x1=x.insertCell(1)
+    		x1.width="20%"; 
+        //changed col from 40 to 30 by ramya
+        x1.innerHTML="<textarea name='description"+aId+"l"+toBinsertedAt+"'  id='description"+aId+"l"+toBinsertedAt+"' rows='2' cols='30'  onfocus=descriptionFocus(this); onblur=descriptionBlur(this,'"+aId+"','"+toBinsertedAt+"');  value=''>  </textarea>";
+
+  			var x2=x.insertCell(2)
+    		x2.width="15%";
+        x2.innerHTML="<input name='cd1"+aId+"l"+toBinsertedAt+"'  id='cd1"+aId+"l"+toBinsertedAt+"' class='inps' onfocus=setCd1(this);  onblur=cd1Blur(this,'"+aId+"','"+toBinsertedAt+"');   maxlength='12' size='12'>";
+
+        var x3=x.insertCell(3)
+    		x3.width="5%";
+    		x3.innerHTML="<input name='cd2"+aId+"l"+toBinsertedAt+"'  id='cd2"+aId+"l"+toBinsertedAt+"' class='inps' onfocus=setCd2(this);  onblur=cd2Blur(this,'"+aId+"','"+toBinsertedAt+"');   maxlength='5' size='5'>";
+
+        var x3=x.insertCell(4)
+    		x3.width="5%";
+    		x3.innerHTML="<input name='cd3"+aId+"l"+toBinsertedAt+"'  id='cd3"+aId+"l"+toBinsertedAt+"' class='inps' onfocus=setCd3(this);  onblur=cd3Blur(this,'"+aId+"','"+toBinsertedAt+"');   maxlength='5' size='5'>";
+  		    			
+				var x4=x.insertCell(5)
+    		x4.width="15%";
+    		x4.innerHTML="<input name='purchase_amt"+aId+"l"+toBinsertedAt+"'  id='purchase_amt"+aId+"l"+toBinsertedAt+"' class='inps' onfocus=paFocus(this,"+toBinsertedAt+"); onBlur=paBlur(this,"+aId+","+toBinsertedAt+");  size='10'><input type=hidden name=sub_tot"+aId+"l"+toBinsertedAt+" id=sub_tot"+aId+"l"+toBinsertedAt+" ><input type=hidden name=sub_total"+aId+"l"+toBinsertedAt+" id=sub_total"+aId+"l"+toBinsertedAt+" >";
+
+				var x5=x.insertCell(6)
+    		x5.width="5%";																						
+     		x5.innerHTML="<IMG id='allocationComm"+aId+"l"+toBinsertedAt+"b' style='align: right; ' height=24 alt='' onclick=commentWindow('Comment.html','allocationComm"+aId+"l"+toBinsertedAt+"');  onselect='commentWindow('Comment.html','allocationComm"+aId+"l"+toBinsertedAt+"');' src='/docorganiz5/images/notes.png' width=20 border=1><input   type='hidden' name='allocationComm"+aId+"l"+toBinsertedAt+"h' id='allocationComm"+aId+"l"+toBinsertedAt+"h' ></input><input type='hidden' name='allocationComm"+aId+"l"+toBinsertedAt+"' id='allocationComm"+aId+"l"+toBinsertedAt+"' ></input>";
+
+
+
+				var x6=x.insertCell(7)
+    		x6.width="5%";																										
+    		
+ 				var hiddenX6Str="<IMG id='addAgent"+aId+"l"+toBinsertedAt+"'   name='addAgent'addAllocation"+aId+"l"+toBinsertedAt+"' style='align: right; ' height=24 alt='' onclick=getInternalAccount(document.getElementById('allocationId"+aId+"l"+toBinsertedAt+"').value);popAgent('dpaded.html','"+aId+"l"+toBinsertedAt+"','"+aId+"');  onselect=getInternalAccount(document.getElementById('allocationId"+aId+"l"+toBinsertedAt+"').value);popAgent('dpaded.html','"+aId+"l"+toBinsertedAt+"','"+aId+"'); src='/docorganiz5/images/popup.png' width=20 border=1>";
+ 				hiddenX6Str=hiddenX6Str+" <input   type=hidden name='allocationComm"+aId+"l"+toBinsertedAt+"' id='allocationComm"+aId+"l"+toBinsertedAt+"' ><input type=hidden name='allocationComm"+aId+"l"+toBinsertedAt+"' id='allocationComm"+aId+"l"+toBinsertedAt+"' > <input  type=hidden name='agentId"+aId+"l"+toBinsertedAt+"'  id='agentId"+aId+"l"+toBinsertedAt+"' > <input  type=hidden name='empId"+aId+"l"+toBinsertedAt+"'  id='empId"+aId+"l"+toBinsertedAt+"' > <input  type=hidden name='empName"+aId+"l"+toBinsertedAt+"'  id='empName"+aId+"l"+toBinsertedAt+"'>  <input  type=hidden name='labCat"+aId+"l"+toBinsertedAt+"'  id='labCat"+aId+"l"+toBinsertedAt+"'>  <input type=hidden name='labDesc"+aId+"l"+toBinsertedAt+"'  id='labDesc"+aId+"l"+toBinsertedAt+"'>  <input type=hidden name='hours"+aId+"l"+toBinsertedAt+"'  id='hours"+aId+"l"+toBinsertedAt+"'>	  <input  type=hidden name='agent_amount"+aId+"l"+toBinsertedAt+"'  id='agent_amount"+aId+"l"+toBinsertedAt+"'> <input  type=hidden name='agentComm"+aId+"l"+toBinsertedAt+"'  id='agentComm"+aId+"l"+toBinsertedAt+"'>";
+				
+				x6.innerHTML=hiddenX6Str;
+
+	   
+	 
+	if( (aId==1)&&(toBinsertedAt==1) ){
+	document.getElementById('vendorName').focus();
+	}else{
+	
+		document.getElementById('description'+aId+'l'+toBinsertedAt).focus();
+	}
+	
+//alert('alloc 3');
+
+	toBinsertedAt++;
+	document.getElementById('allocCtr'+aId).value=toBinsertedAt;
+  return true;
+//alert('End Alloc Insertion');
+ }
+
+
+
+	var nameIdArray = new Array(vendorIdArray,vendorNameArray);
+		//alert('ablove fill other of VIA vendorIdArray '+vendorIdArray);
+		//alert('ablove fill other of VIA vendorNameArray '+vendorNameArray);
+		//alert('ablove fill other of VIA nameIdArray '+nameIdArray);
+	function fillOther(svn)
+	{
+	var found='false'
+	//alert('fillOther'+svn.name);
+	 if(svn != null){
+	       for (i in nameIdArray) {
+	       				
+		   		  for (j in nameIdArray[i]) {
+		   		  	//alert('Associated Name '+nameIdArray[1][j]+' Associated UB for this vendor'+vendorUBArray[j])
+							 					
+		   		  	  	   	//alert('svn.name both '+svn.name);
+                	   	if (svn.name == 'vendor_id'){
+                	   	//alert('svn.name Id check '+svn.name);
+        			   	  if (nameIdArray[0][j] == svn.value){
+            		   	  	 document.getElementById('vendorName').value=nameIdArray[1][j];
+            		   	  	 document.getElementById('vendorUB').value=vendorUBArray[j];
+            		   	  	 document.getElementById('terms').innerHTML=vendorTermArray[j];
+            		   	  	 document.getElementById('termsh').value=vendorTermArray[j];
+            		   	  	 //alert(''+svn.value);
+            		   	  	 //alert('Associated Name '+nameIdArray[1][j]+' Associated UB for this vendor'+vendorUBArray[j])
+							 					 found='true'
+            		   	  	 svn.style.backgroundColor='white';}
+        		        }else if (svn.name == 'vendor_name'){
+                	   //alert('svn.name  name check '+svn.name);
+        			   	  if (nameIdArray[1][j] == svn.value){
+            		   	  	 document.getElementById('vendorId').value=nameIdArray[0][j];
+            		   	  	 document.getElementById('vendorUB').value=vendorUBArray[j];
+
+            		   	  	 document.getElementById('terms').innerHTML=vendorTermArray[j];
+            		   	  	 document.getElementById('termsh').value=vendorTermArray[j];
+
+            		   	  	 //alert('Associated Id '+nameIdArray[0][j]+' Associated UB for this vendor'+vendorUBArray[j])
+            		   	  	 //alert(''+svn.value);
+							 					 found='true'
+            		   	  	 svn.style.backgroundColor='white';}
+        		        }
+        		        
+				 }
+			}
+	  	}
+
+		if( (found=='false')&&(svn.name == 'vendor_id')){
+//A			document.getElementById('vendorName').value=''
+		}
+		if( (found=='false')&&(svn.name == 'vendor_name') ){
+//A			document.getElementById('vendorId').value=''
+		}
+	}
+
+
+
+	function setVar(svr){
+		 //alert('setVar '+svr.name)
+	  if(svr.name=='vendor_id'){
+	 // alert(vendorIdArray.size())
+	     var obj1 = actb(document.getElementById('vendorId'),vendorIdArray);
+		 obj1.actb_lim = 5;
+		 obj1.actb_firstText = true;
+		 obj1.actb_mouse = true;
+	  }
+	  else if(svr.name=='vendor_name'){
+	  	 var obj2 = actb(document.getElementById('vendorName'),vendorNameArray);
+		 obj2.actb_lim = 5;
+		 obj2.actb_firstText = false;
+		 obj2.actb_startcheck = 1;
+		 obj2.actb_mouse = true;
+	  }
+	  /*
+	  else if(svr.name=='terms'){
+	  	 var obj3 = actb(document.getElementById('terms'),vendorTermArray);
+		 obj3.actb_lim = 5;
+		 obj3.actb_firstText = false;
+		 obj3.actb_startcheck = 1;
+		 obj3.actb_mouse = true;
+	  }
+	 */ 
+	}
+	
+	function callTimer(){
+		return false
+	}
+
+	var agentWindow;
+	function popAgent(url,aa,bb)
+	{
+	//alert('inside pop agent');
+	//internalAccount //uncommented internal account by ramya
+		//document.getElementById('internalAccount').value = document.getElementById('internalAccount'+bb).value
+	  //document.getElementById('cd1').value = document.getElementById('cd1'+aa).value
+		document.getElementById('invoice_no').value = document.getElementById('invoice_no'+bb).value
+		document.getElementById('lineItemAmount').value = document.getElementById('purchase_amt'+aa).value
+		document.getElementById('aa1').value = aa
+		document.getElementById('bb1').value = bb
+		agentWindow=window.open(url,"Agent","menubar=no,addressbar=no,crollbars=auto,status=yes,height=1000,width=720,scrollbars=yes,resizable=yes");
+		//imageWindow.document.uploadForm.fromDir.click();
+		agentWindow.moveTo(0,0);
+		
+		if (window.focus) {
+			//alert('current window focus');
+			agentWindow.focus();
+		}
+		
+		//if (!agentWindow.closed && agentWindow.location) {
+                //        agentWindow.moveTo(0,0);
+                //}
+
+                //agentWindow.focus();
+
+		//agentWindow.document.AgentForm.agent_number1.focus();
+		//agentWindow.moveTo(0,0);
+		//return false;
+	}
+
+function focusAgentWindow(){
+	
+	if (!agentWindow.closed && agentWindow.location)
+	agentWindow.document.AgentForm.agent_number1.focus();
+}
+
+
+var invoiceVar;
+var imageH = '<%=imageH%>'*1 - '<%=imageH%>'*0.015;
+var imageV = '<%=imageV%>'*1 ;
+//- '<%=imageV%>'*0.59 ;
+var imagePosition = '<%=imagePosition%>';
+
+var voucherVar;
+
+
+	function popImage(invoiceCount)
+	{
+	//	alert('invoiceCount '+invoiceCount);
+
+		var url1 = '/docorganiz5/imageUpload.jsp?uac=<%=ac%>';
+
+
+
+		if(document.getElementById('invCtr').value==1){
+
+			imageWindow=window.open(url1,"Invoice","menubar=no,scrollbars=auto,status=yes,scrollbars=yes,resizable=yes,height="+imageV+",width="+imageH);
+
+		}else if(invoiceCount!=null){
+
+			document.getElementById('inim').value=invoiceCount;
+
+	//alert('invoice_no '+document.getElementById('invoice_no'+invoiceCount).value);
+if(document.getElementById('invoice_no'+invoiceCount)!=null){
+			invoiceVar = document.getElementById('invoice_no'+invoiceCount).value;
+}
+	//alert('invoiceVar '+invoiceVar);
+
+
+			setCookie("invoiceVar", invoiceVar, 30);
+
+			imageWindow=window.open(url1,"Invoice","menubar=no,scrollbars=auto,status=yes,scrollbars=yes,resizable=yes,height="+imageV+",width="+imageH);
+
+
+		}
+
+		if (!imageWindow.closed && imageWindow.location) {
+			imageWindow.moveTo(860,0);
+		}
+		//imageWindow.blur();
+		return true;
+	}
+
+
+    function popGetImage(invoiceCount){
+		//alert('invoiceCount  '+invoiceCount);
+		var vo1 = document.getElementById('voucher_no').value;
+		var ve1 = document.getElementById('vendorId').value;
+		var in1 = document.getElementById('invoice_no'+invoiceCount).value;
+		document.getElementById('inim').value=invoiceCount;
+
+		setCookie("invoiceVar", in1, 30);
+
+		/*** Checking previouse Image and submitting **/
+		//imageSubmitCaller(invoiceCount);
+
+		var url1 = '/docorganiz5/imageUpload.jsp?vo='+vo1+'&ve='+ve1+'&in='+in1+'&uac=<%=ac%>';
+		document.getElementById('previousinim').value=invoiceCount;
+
+		//alert('invoiceImageURL  '+document.getElementById('invoiceImageURL'+invoiceCount).value);
+
+		if (!imageWindow.closed && imageWindow.location) {
+
+			imageWindow.document.uploadForm.Object1.src=document.getElementById('invoiceImageURL'+invoiceCount).value;
+			//alert('1');
+			//There is something wrong with this code. We may not need until it becomes an UseCase
+			if( (document.getElementById('invoiceImageURL'+invoiceCount).value !=null)||(document.getElementById('invoiceImageURL'+invoiceCount).value > 1) )
+			{
+				//imageWindow.document.uploadForm.Object1.src=document.getElementById('invoiceImageURL'+invoiceCount).value;
+				//alert('2');			
+			}else{
+				//imageWindow.document.uploadForm.fromDir.click();
+				
+			}
+
+		}else{
+			//alert('4');
+			imageWindow=window.open(url1,"Invoice","menubar=no,scrollbars=auto,status=yes,height="+imageV+",width="+imageH+",scrollbars=yes,resizable=yes");
+			//imageWindow.document.uploadForm.fromDir.click();
+		}
+
+		//alert('invoiceCount is '+invoiceCount+'  >>>>>'+document.getElementById('invoice_no'+invoiceCount).value);
+		setInvoiceNumberVal(document.getElementById('invoice_no'+invoiceCount).value );
+
+		//document.getElementById('addImage'+invoiceCount).focus();
+
+    }
+    
+    
+
+	function setInvoiceNumberVal(invoiceNumberVal)
+	{
+	
+   		var invNoObject = imageWindow.document.getElementById('invoiceNumber');
+			//alert('invNoObject'+invNoObject.value);
+		if(invNoObject!=null){
+		//alert('1');
+		//imageWindow.document.uploadForm.invoiceNumber.innerHTML=invoiceNumberVal
+		invNoObject.innerHTML=invoiceNumberVal;
+		//alert('1'+invoiceNumberVal );
+		}
+		//imageWindow.document.uploadForm.invoiceNumber.innerHTML=invoiceNumberVal;
+	}
+
+
+	var comentwindow;
+		function commentWindow(url,imageName)
+		{
+			document.getElementById('comm').value = imageName
+			comentwindow=window.open(url,'Comment','scrollbars=yes,status=yes,height=300,width=450');
+			//comentwindow=window.open(url,'Comment','scrollbars=yes,status=no,height=300,width=450');
+			if (window.focus) {comentwindow.focus()}
+		}
+
+   	 var isTabPressed="false";
+	
+	document.onkeydown = function()
+	{
+
+        	var currentInvCount = document.getElementById('currentInvoiceCount').value;
+        	var currentAllocCount = document.getElementById('currentAllocationCount').value;
+
+	     //alert('window.event  '+window.event.keyCode);
+		   if(window.event && window.event.keyCode == 9){
+				isTabPressed = "true";
+			}
+ if( (window.event && window.event.keyCode==34)   && (imageWindow.document.uploadForm.Object1!=null) && (imageWindow.document.uploadForm.Object1.src!="") )
+ {
+            	imageWindow.document.uploadForm.Object1.gotoNextPage();
+ }
+if( (window.event && window.event.keyCode == 33) && (imageWindow.document.uploadForm.Object1!=null) && (imageWindow.document.uploadForm.Object1.src!="") )
+  {
+				imageWindow.document.uploadForm.Object1.gotoPreviousPage();
+  }
+		//F2
+      		if(window.event && window.event.keyCode == 113)
+      		{ // Capture and remap F2
+        		window.event.keyCode = 501;
+      		}
+        	if(window.event && window.event.keyCode == 501)
+          {
+        		
+        		return false;
+        	}
+		//F3 Key
+     if(window.event && window.event.keyCode == 114)
+     { // Capture and remap F3
+        			window.event.keyCode = 502;
+     }
+		if(window.event && window.event.keyCode == 502)
+		{
+			//alert('F3 key was pressed');
+		
+			if(inVoucherArea){
+				//alert('Voucher Comment ');
+				document.getElementById('voucherCommb').focus();			
+				voucherCommentWindow('Comment.html','voucherComm');
+				//break;
+			}else if(inInvoiceArea){
+				//alert('Invoice area Comment Current count '+currentInvCount);
+				document.getElementById('invoiceComm'+currentInvCount+'b').focus();
+				commentWindow('Comment.html','invoiceComm'+currentInvCount);
+				//break;
+			}else if(inAllocationArea){
+				//alert('Allocation of INV '+currentInvCount+' area Comment Current count '+currentAllocCount);
+				//document.getElementById('pc'+currentInvCount+'l'+currentAllocCount).blur();
+				document.getElementById('allocationComm'+currentInvCount+'l'+currentAllocCount+'b').focus();
+			        commentWindow('Comment.html','allocationComm'+currentInvCount+'l'+currentAllocCount);
+				//break;
+			}
+			
+				return false;
+ 			}
+
+		//F4
+		if(window.event && window.event.keyCode == 115)
+		{ // Capture and remap F4
+			window.event.keyCode = 503;
+		}
+		if(window.event && window.event.keyCode == 503)
+		{
+			//alert('F4 key was pressed');
+			//document.getElementById('addAgentChg').click();
+			//alert('currentInvCount'+currentInvCount+' currentAllocCount '+currentAllocCount);
+			document.getElementById('addAgentChg'+currentInvCount+'l'+currentAllocCount).focus();
+			//document.getElementById('pc'+currentInvCount+'l'+currentAllocCount).blur();
+			//document.getElementById('addAgentChg'+currentInvCount+'l'+currentAllocCount).click();
+			popAgent('dpaded.html', currentInvCount+'l'+currentAllocCount, currentInvCount);
+			return false;
+		}
+		//F5
+		if(window.event && window.event.keyCode == 116)
+		{ // Capture and remap F5
+			window.event.keyCode = 504;
+			//return false;
+		}
+		if(window.event && window.event.keyCode == 504)
+		{
+				//alert('F5 key was pressed');
+        //document.getElementById('addInvoice').click();
+		    insertInvoiceRow();	      			
+  			return false;
+		}
+		//F6
+		if(window.event && window.event.keyCode == 117)
+                { // Capture and remap F6
+                        window.event.keyCode = 506;
+                }
+        	if(window.event && window.event.keyCode == 506)
+                {
+        		//	alert('F6 key was pressed');
+			saveAndReturn('sr');
+        		return false;
+        	}
+
+		//F7
+		if(window.event && window.event.keyCode == 118)
+		{ // Capture and remap F7
+			window.event.keyCode = 507;
+		}
+
+		if(window.event && window.event.keyCode == 507)
+		{
+			//alert('F7 key was pressed');
+			saveAndNext();		
+			return false;
+		}
+		//F8
+		if(window.event && window.event.keyCode == 119)
+		{ // Capture and remap F8
+			window.event.keyCode = 508;
+		}
+		if(window.event && window.event.keyCode == 508)
+		{
+			//alert('F8 key was pressed');
+			skip1();
+			return false;
+		}
+
+		//F9
+  		if(window.event && window.event.keyCode == 120)
+      		{ // Capture and remap F9
+                	window.event.keyCode = 509;
+      		}
+        	if(window.event && window.event.keyCode == 509)
+                {
+                	//alert('F9 key was pressed');
+                	returnQ();
+			return false;
+                }
+
+	}
+
+	function buttonAlert(svr){
+		if(window.event && window.event.keyCode == 13)
+                {
+			//alert('Enter key was pressed');
+			svr.click();
+        		return false;
+        	}
+
+	}
+
+	function setInvoiceDate(svr){
+	//alert(svr.name+' invoiceDateArray:  '+invoiceDateArray.length);
+	     var obj3 = actb(svr,invoiceDateArray);
+		 obj3.actb_lim = 5;
+		 obj3.actb_firstText = true;
+		 obj3.actb_startcheck = 1;
+		 obj3.actb_mouse = true;
+	  }
+	function setVoucherDate(svr){
+	     var obj5 = actb(svr,voucherDateArray);
+		 obj5.actb_lim = 5;
+		 obj5.actb_firstText = true;
+		 obj5.actb_startcheck = 1;
+		 obj5.actb_mouse = true;
+
+	  }
+
+
+
+
+var currentDate;
+function setCurrentDate(){
+		var mydate=new Date()
+		var year=mydate.getYear()
+		if (year < 1000)
+		year+=1900
+		var day=mydate.getDay()
+		var month=mydate.getMonth()+1
+		if (month<10)
+		month="0"+month
+		var daym=mydate.getDate()
+		if (daym<10)
+		daym="0"+daym
+		currentDate=month+'/'+daym+'/'+year;
+		document.getElementById('voucher_date').value=month+'/'+daym+'/'+year;
+		document.getElementById('status_date').innerHtml=month+'/'+daym+'/'+year;
+		setVoucherDateArray(month+'/'+daym+'/'+year);
+		setInvoiceDateArray(month+'/'+daym+'/'+year);
+	}
+
+/****************************
+Voucher Day range
+****************************/
+var voucherDayLimit = 10;
+
+/****************************
+Dynamic Voucher Date Array
+****************************/
+
+var voucherDateArray = new Array(voucherDayLimit);
+
+
+
+function setVoucherDateArray(s){
+//alert(s);
+
+
+    var dtArray = s.split('/');
+
+	for(var k=0; k<=voucherDayLimit;k++){
+		sdate = new Date(dtArray[2],dtArray[0]-1,dtArray[1]-k);
+		var odate = new Date(sdate.getTime());
+		var m = odate.getMonth()+1;
+		if (m<10) m="0"+m;
+		var d = odate.getDate();
+		if (d<10) d="0"+d;
+		var y = odate.getYear();
+		var dateStr = m + '/' + d + '/' + y;
+		voucherDateArray[k] = dateStr;
+		//alert(dateStr)
+	}
+//alert(voucherDateArray)
+}
+
+
+/****************************
+Invoice Day range
+****************************/
+var invoiceDayLimit = 30;
+
+/****************************
+Dynamic Invoice Date Array
+****************************/
+
+var invoiceDateArray = new Array(invoiceDayLimit);
+
+
+function setInvoiceDateArray(s){
+//alert(s);
+
+
+    var dtArray = s.split('/');
+
+	for(var k=0; k<=invoiceDayLimit;k++){
+		sdate = new Date(dtArray[2],dtArray[0]-1,dtArray[1]-k);
+		var odate = new Date(sdate.getTime());
+		var m = odate.getMonth()+1;
+		if (m<10) m="0"+m;
+		var d = odate.getDate();
+		if (d<10) d="0"+d;
+		var y = odate.getYear();
+		var dateStr = m + '/' + d + '/' + y;
+		invoiceDateArray[k] = dateStr;
+		//alert(dateStr)
+	}
+//alert(invoiceDateArray)
+
+}
+
+
+function validate(svr){
+
+	  var ff='false';
+
+      if(svr.name=='vendor_id'){
+	  		if(svr.value=='')	ff='false';
+	  		for (i in vendorIdArray) {
+	  		  if (vendorIdArray[i] == svr.value) {
+	  		  	ff='true';
+	  		  	fillOther(svr);
+	  		  	document.getElementById('vendorName').style.backgroundColor='white';
+	  		  	break;
+	  		  	}
+	          }
+      }
+	else
+      if(svr.name=='vendor_name'){
+		if(svr.value=='')	ff='false';
+		for (i in vendorNameArray) {
+		  if (vendorNameArray[i] == svr.value) {
+		  	ff='true';
+		  	fillOther(svr);
+	  		document.getElementById('vendorId').style.backgroundColor='white';
+		  	break;
+		  }
+        }
+      }
+/*
+	else
+
+      if(svr.name=='terms'){
+		if(svr.value=='')	ff='false';
+		for (i in vendorTermArray) {
+		  if (vendorNameArray[i] == svr.value) {
+		  	ff='true';
+		  	fillOther(svr);
+	  		document.getElementById('terms').style.backgroundColor='white';
+		  	break;
+		  }
+        }
+      }
+ 
+	else
+	  if(svr.name=='voucher_no')	{
+		  if(svr.value=='')	{
+			ff='false';
+		  }
+		  if(svr.value.length<11)	{
+			ff='false';
+		  }
+		  else{
+			  ff='true';
+		  }
+
+	  }
+	*/     
+	else
+	  if(svr.name.indexOf('voucher_date',0)!=-1)	{
+	    if(svr.value=='')	ff='false';
+		for (i in voucherDateArray) {
+		  if (voucherDateArray[i] == svr.value) {
+      	  ff='true'; break; }
+        }
+	  }
+	else
+	  if(svr.name=='process_status'){
+	 	if(svr.value=='')	ff='false';
+		for (i in approverTo1) {
+		  if (approverTo1[i] == svr.value) {
+		  	  ff='true'; break; 
+		  }
+        }
+      }
+	else
+	  if(svr.name=='approver'){
+	 	if(svr.value=='')	ff='false';
+		for (i in approverArray) {
+		  if (approverArray[i] == svr.value) {
+		  	  ff='true'; break; }
+        }
+      }
+	else
+	  if(svr.name.indexOf('invoice_no',0)!=-1)	{
+	    if(svr.value=='')	{
+	    	ff='false';
+	    	//svr.focus();//
+	    } else{
+	    	ff='true';
+	    }
+	  }
+	else
+	  if(svr.name.indexOf('invoice_date',0)!=-1)	{
+	    if(svr.value=='')	ff='false';
+		for (i in invoiceDateArray) {
+		  if (invoiceDateArray[i] == svr.value) {
+      	  ff='true'; break; }
+        }
+	  }
+	else
+	  if(svr.name.indexOf('natural_act',0)!=-1)	{
+	    if(svr.value=='')	ff='false';
+		for (i in naturalAccountArray) {
+		  if (naturalAccountArray[i] == svr.value) {
+      	  ff='true'; break; }
+        }
+	  }
+	else
+	  if(svr.name.indexOf('pc',0)!=-1)	{
+
+	  	inVoucherArea=false;
+	  	inInvoiceArea=false;
+	  	inAllocationArea=false;
+
+	    if(svr.value=='')	ff='false';
+		for (i in pcArray) {
+		  if (pcArray[i] == svr.value) {
+      	  ff='true'; break; }
+        }
+	  }
+
+
+      if((ff=='false')){
+		 svr.style.backgroundColor='yellow';
+
+	  }else{
+	   svr.style.backgroundColor='white';
+	  }
+
+
+	  }
+
+
+
+function initialize(){
+  //alert('1');
+	setCurrentDate();
+
+	document.getElementById('voucher_no').value = getNextVoucherNumber('<%=groupId%>');
+	 	
+//	setCookie("acVar", '<%=ac%>', 30);
+  //window.focus();
+	//document.getElementById('groupId').innerHTML=document.getElementById('voucher_no').value;
+
+	document.getElementById('currentInvoiceCount').value=1;
+  
+   // setDefaultInvoiceDate(document.getElementById('invoice_date1'));
+  
+    
+	<%
+	if((request.getParameter("ac").equals("ad") ) )
+ 	{
+ 	%>
+ 	
+ 		  statusLabelArray = approverFrom;
+ 			document.getElementById('groupId').innerHTML=document.getElementById('voucher_no').value;
+			document.getElementById('groupDate').innerHTML=document.getElementById('voucher_date').value;	
+  			
+//		document.getElementById('process_status').value = statusLabelArray[0];
+			document.getElementById('process_status').value = approverTo1[0];
+			document.getElementById('approver').value = approverArray[0];
+			document.getElementById('groupIdPK').value = <%=groupIdPK%>;
+		
+			setDefaultInvoiceDate(document.getElementById('invoice_date1'));
+			
+/* AA			
+		insertAllocationTable(1);
+		insertAllocationHeader(1);	
+		insertAllocationRow(1);	
+AA */
+	
+   	<%}%>
+
+	//alert('voucher_no');	
+		popImage(1);
+	
+	
+	document.getElementById('vendorName').focus();
+}
+
+
+
+
+
+
+
+
+function getNextVoucherNumber(currentVoucherNumber){
+
+	//var currentVoucherNumber = getCookie("lastVoucherNumber");
+	//alert('currentVoucherNumber'+currentVoucherNumber);
+	var charPart="";
+
+	var alphaCount = 0;
+	 if(isNaN(currentVoucherNumber.charAt(0))){
+		alphaCount = 1;
+	 }
+	 if(isNaN(currentVoucherNumber.charAt(1))){
+		alphaCount = 2;
+	 }
+	 if(isNaN(currentVoucherNumber.charAt(2))){
+		alphaCount = 3;
+	 }
+
+	 charPart=currentVoucherNumber.substring(0,alphaCount)
+     //alert(' charPart   '+charPart);
+
+	 //alert(' SubString '+currentVoucherNumber.substring(alphaCount,11) );
+     var temp1 = currentVoucherNumber.substring(alphaCount,11);
+	 temp1 = temp1*1+1;
+	 //alert('temp1'+temp1);
+	 var temp2=""+temp1;
+
+	 var intLength = temp2.length;
+     var remainingLength = 11 - alphaCount - intLength;
+
+	 var zeros = "";
+     if (remainingLength>0){
+		for(var i=1; i<=remainingLength;i++)
+			zeros =zeros+"0";
+		temp2=zeros+temp2;
+     }else{
+
+     }
+	//alert('final get next voucher number    '+ charPart+temp2);
+	return charPart+temp2;
+}
+
+
+
+function edLoad(){
+
+	validate(document.getElementById('vendorId'));
+
+	document.getElementById('currentInvoiceCount').value=1;
+	var invoiceCtr = document.getElementById('invCtr').value;
+	//alert('in edLoad'+invoiceCtr);
+    for(var i=1; i<=invoiceCtr;i++){
+    	tallyPA(i);
+    	//tallyAS(i);
+
+    }
+//alert('in load 1');
+
+
+	initialize();
+
+}
+
+function setInvoiceImage(svrr){
+
+//alert('in edLoad')
+}
+
+	function toCash(p, c, t, d) {
+
+		var s = (0 > p) ? "-" : ""
+		var m = String(Math.round(Math.abs(p*100)))
+
+		var j, k = "", f
+		c = c || "" ; t = t || "" ; d = d || "."
+		c="$"
+		t=','
+		while (m.length < 3) m = "0" + m
+
+		f = m.substring((j = m.length - 2))
+		while (j > 3) { k = t + m.substring(j - 3, j) + k ; j -= 3 }
+		k = m.substring(0, j) + k
+		return s + c + k + d + f
+	}
+
+	function TryCash(S) {
+		S = filterNum(S)
+		var T = S.split(/\s+/)
+		return toCash(+T[0], T[1], T[2], T[3])
+
+	}
+
+	function tocash(X) { return toCash(X*100) }
+
+	function filterNum(str) {
+		re = /^\$|,/g;
+		var temp = str.replace(re, "");
+		temp = temp.replace("$", "");
+		temp = temp.replace(",", "");
+		return temp
+	}
+
+function tallyPA(aId)
+		{
+
+		var a=0;
+		//alert('PA aId : '+aId)
+		var ctr =document.getElementById('allocCtr'+aId).value
+		ctr = ctr-1
+		//alert('PA ctr'+ctr)
+		var temp;
+		for(var i=1; i<=ctr;i++){
+			//alert(i);
+			if(i==1) {
+				a =0;
+			}
+		  //alert(document.getElementById('purchase_amt'+aId+'l'+i).name);
+			temp = eval("document.getElementById('purchase_amt"+aId+"l"+i+"').value").toString()
+			temp = filterNum(temp)
+			a=filterNum(temp+'')*1+a;
+		}
+		var ub = document.getElementById('vendorUB').value
+		ub = ub*1
+		//alert('TOTAL PA '+a+' ub '+ub)
+		//Make PA Total Yellow
+        if( (a<=0)||( a > ub ) ){
+		  document.getElementById('paTotal'+aId).style.backgroundColor='yellow';
+		}else{
+		
+		  document.getElementById('paTotal'+aId).style.backgroundColor='white';
+		}
+
+		a=TryCash(a+'');
+		document.getElementById('paTot'+aId).value=a;
+		document.getElementById('paTotal'+aId).innerHTML=a;
+		//alert('B4 VT Tally inside tallyPA '+a);
+		tallyVT();
+
+	}
+
+	function tallyAS(aId)
+		{
+		var a=0;
+       	// alert('AS aId '+aId)
+		var ctr =document.getElementById('allocCtr'+aId).value;
+		ctr = ctr-1
+		//	alert('AS ctr'+ctr)
+
+		var temp;
+		for(var i=1; i<=ctr;i++){
+
+			if(i==1) {
+				a =0;
+			}
+			temp = eval("document.getElementById('sub_tot"+aId+"l"+i+"').value").toString();
+			temp = filterNum(temp);
+			a=filterNum(temp+'')*1+a;
+		}
+
+
+
+		a=TryCash(a+'');
+		//document.getElementById('asTot'+aId).value=a;
+		//document.getElementById('asTotal'+aId).innerHTML=a;
+
+	}
+
+function tallyVT()
+		{
+		//alert('inside tallyVT fn');
+		var a=0;
+		var b=0;
+		var aId = document.getElementById('invCtr').value
+		//alert('inside tallyVT fn >>>>> aId'+ aId);
+		for(var i=1; i<=aId;i++){
+			if(i==1) {
+				a =0;
+				b =0;
+			}
+			//alert('inside tallyVT fn>>> i'+ i+'a>>>>'+a+'b>>>'+b);
+			//alert('TallVT '+i+ ' and the Value is '+document.getElementById('asTot'+i).value);
+			//temp = eval("document.getElementById('asTot"+i+"').value").toString();
+			
+			temp = eval("document.getElementById('asTot"+i+"')");
+			//alert('TallVT '+temp.value);
+			temp = temp.value;
+			
+			//alert('tallyVt 2');
+			temp = filterNum(temp)
+			a=filterNum(temp+'')*1+a;
+
+			temp1 = eval("document.getElementById('paTot"+i+"').value").toString();
+			temp1 = filterNum(temp1);
+			b=filterNum(temp1+'')*1+b;
+
+		}
+		document.getElementById('vocherTot').value=a;
+		a=TryCash(b+'');
+		document.getElementById('voucherTotal').innerHTML=a;
+
+	}
+
+window.onfocus=function()
+{
+
+var fromAwindowFocus = document.getElementById('fromAwindowFocus').value;
+var fromAwindo = document.getElementById('fromAwindo').value;
+
+if((fromAwindowFocus=="1")&&(fromAwindo=='false')){
+	//alert('fromAwindowFocus is true'+document.getElementById('fromAwindowFocus').value);
+	//alert('fromAwindo'+document.getElementById('fromAwindo').value);
+	document.getElementById('fromAwindowFocus').value='2';
+	agentWindow.document.AgentForm.agent_number1.focus();	
+	//document.getElementById('fromAwindowFocus').value='2';
+	//return;
+}
+//alert("fromAWindo"+document.getElementById('fromAwindo').value)
+	if(document.getElementById('fromAwindo').value=='true'){
+		//alert('From Agent Window ');
+	<%if(ac.equals("ad")){%>	
+		 if(currentInvoiceCount==1 ){
+                        //alert('currentInvoice'+ self.opener.document.voucherInvoiceAllocation.currentInvoiceCount.value);
+                        document.voucherInvoiceAllocation.vendor_name.focus();
+                }
+	<%}%>
+		bb1 = document.getElementById('bb1').value
+		aa1= document.getElementById('aa1').value
+		//document.getElementById('sub_total'+aa1).innerHTML =document.getElementById('sub_tot'+aa1).value
+		tallyAS(''+bb1)
+		tallyVT()
+
+//	alert('Agent ID Length '+ document.getElementById('agentId'+aa1).value)
+
+
+//	alert(' Agent Number Length '+ document.getElementById('agent_number'+aa1).value)
+
+//	alert(' Length '+ document.getElementById('agent_number'+aa1).value.split('|').length)
+/*
+alert(' agent_number '+ document.getElementById('agent_number'+aa1).value)
+
+alert(' agent_amount '+ document.getElementById('agent_amount'+aa1).value)
+alert(' account '+ document.getElementById('account'+aa1).value)
+alert(' charge_code '+ document.getElementById('charge_code'+aa1).value)
+alert(' dep_code '+ document.getElementById('dep_code'+aa1).value)
+*/
+
+/*alert('B4 empId ');
+
+		if(document.getElementById('empId'+aa1).value.split('&').length>1){
+			//document.getElementById('addAgentChg'+aa1).style.backgroundColor='green'
+			alert('Has Details Info ');
+		}
+*/		
+/*		else{
+			document.getElementById('addAgentChg'+aa1).style.backgroundColor='white'
+		}
+*/
+		//alert("agentNumber length "+document.getElementById('agent_number'+aa1).value.split('|').length);
+		//alert("agentAmount "+document.getElementById('agent_amount'+aa1).value);
+
+
+		svr1 = eval("document.getElementById('sub_total'+aa1)")
+		svr2 = eval("document.getElementById('purchase_amt'+aa1)")
+
+		if( (eval("filterNum(document.getElementById('sub_tot'+aa1).value)")*1)>(eval("filterNum(document.getElementById('purchase_amt'+aa1).value)")*1) ){
+		  svr1.style.backgroundColor='yellow';
+		  svr2.style.backgroundColor='yellow';
+		}else{
+		  svr1.style.backgroundColor='white';
+		  svr2.style.backgroundColor='white';
+		}
+	document.getElementById('fromAwindo').value='false'
+	}
+	/*
+	if(document.getElementById('fromComwindo').value=='true'){
+	alert('');
+	if(document.getElementById('voucherComment').value.length>2) alert('back from comment '+document.getElementById('voucherCom').value.length);
+	document.getElementById('voucherComment').style.backgroundColor='green';
+	document.getElementById('fromComwindo').value='false'
+	}
+	*/
+
+}
+
+function validatePA(svr1,svr2,svr3){
+alert(svr1.name)
+alert(svr2.name)
+alert(svr3.name)
+var stat1='true';
+var stat2='true';
+var stat3='true';
+		if(isNaN(filterNum(svr2.value))){
+			 stat2='false';
+		}
+		if( ((svr1.value)>filterNum(svr2.value))||(filterNum(svr2.value)*1<=0) ){
+		  //svr3.style.backgroundColor='yellow';
+		  //svr2.style.backgroundColor='yellow';
+		  stat2='false'
+		  stat3='false'
+		}else{
+		  //svr3.style.backgroundColor='white';
+		  //svr2.style.backgroundColor='white';
+		}
+
+		if(filterNum(svr2.value)*1>document.getElementById('vendorUB').value){
+		  stat2='false'
+		}
+
+		if(stat2=='true'){svr2.style.backgroundColor='white';}
+		else {svr2.style.backgroundColor='yellow';}
+
+
+}
+
+function nextObj(objName){
+
+	//alert('objName '+objName);
+	
+	var nextObject = eval("document.getElementById('"+objName+"')");
+	
+	if(nextObject!=null){
+		//alert('next Object == null');
+		//alert('Is tab pressed  '+isTabPressed);
+		if(isTabPressed=="true"){
+			//alert('Tabbed '+nextObject);
+			//pausecomp(200);
+			nextObject.focus();
+			isTabPressed="false";
+		}
+	
+	}
+	
+}
+
+
+function currentObj(svr){
+	//alert(svr.name)
+	svr.style.backgroundColor='SkyBlue';
+	//}
+}
+function currentObj2(svr){
+	//alert(svr.name)
+	svr.style.backgroundColor='white';
+	//}
+}
+
+function pausecomp(millis)
+{
+	var date = new Date();
+	var curDate = null;
+
+	do { curDate = new Date(); }
+	while(curDate-date < millis);
+}
+
+function saveAndReturn(ss11){
+
+		document.getElementById('mv').value=ss11;
+
+		//imageWindow.document.uploadForm.mv.value='clear';
+
+		//imageWindow.document.uploadForm.Object1.src='';
+
+		if(imageWindow.document.uploadForm.Object1.src!=null){
+			/*** Checking previouse Image and submitting **/
+			//alert('inside save and return 5')
+			imageSubmitCaller(document.getElementById('inim').value);
+		//alert('inside save and return 6')
+		}else{
+
+			//		alert('there is no image')
+		}
+
+	//	imageWindow.document.uploadForm.reset();
+	//	imageWindow.document.uploadForm.Object1.src="";
+		//alert('Image window '+imageWindow.document.uploadForm.vo.value);
+
+	document.voucherInvoiceAllocation.submit();
+
+	//pausecomp(300);
+	//agentWindow.close();
+	//alert('3');
+	imageWindow.close();
+	//alert('4');
+	//return false;
+
+}
+
+function saveAndNext2(){
+
+	//imageWindow.document.uploadForm.fakeButton.click();
+	imageWindow.submitImage();
+	pausecomp(2000);
+	document.voucherInvoiceAllocation.submit();
+	return true;
+}
+
+function saveAndNext1(){
+
+
+	document.getElementById('mv').value='sn';
+
+	//imageWindow.document.uploadForm.submitButton.click();
+	/*** Checking previouse Image and submitting **/
+	//alert('SAVE AND NEXT INIM '+document.getElementById('inim').value);
+
+	if(imageWindow.document.uploadForm.Object1.src!=null){
+		/*** Checking previouse Image and submitting **/
+		imageSubmitCaller(document.getElementById('inim').value);
+	}else{
+		//alert('NO IMAGE');
+	}
+
+	document.voucherInvoiceAllocation.submit();
+	return true;
+}
+
+function saveAndNext(){
+//alert(' Inv Ctr '+document.getElementById('invCtr').value);
+	//document.getElementById('mv').value='sn';
+//alert(' In SAVE AND Next '+document.getElementById('u').value);
+	document.getElementById('u').value
+//alert(' In SAVE AND RETURN U var val'+<%=u%>);
+	//imageWindow.document.uploadForm.submitButton.click();
+	/*** Checking previouse Image and submitting **/
+	//alert('SAVE AND NEXT INIM '+document.getElementById('inim').value);
+var invctr1 = document.getElementById('invCtr').value;
+var currentInvId = document.getElementById('invoiceId'+invctr1).value;
+	if(imageWindow.document.uploadForm.Object1.src!=null){
+		/*** Checking previouse Image and submitting **/
+		//alert('Invoice Id '+currentInvId);
+		if(currentInvId!='III'){
+			imageSubmitCaller(invctr1);			
+			}
+			
+	}else{
+		//alert('NO IMAGE');
+	}
+	document.voucherInvoiceAllocation.submit();
+	return true;
+}
+
+
+ function fixPath( s )
+ {
+	 return s.replace(/\\/g, "\\\\");
+ }
+
+ function convertPath(svr){
+
+  var fName = svr;
+  fName = fixPath(fName);
+  //alert('fName '+fName)
+  //svr.value = fName;
+  return fName;
+ }
+
+
+
+/*
+function submitImageWindow(){
+
+	alert('fromDir1.value '+imageWindow.document.uploadForm.fromDir1.value);
+	if((imageWindow.document.uploadForm.fromDir1.value==null)||(imageWindow.document.uploadForm.fromDir1.value=="")) {
+		//alert('SRC   '+imageWindow.document.Object1.src)
+		imageWindow.document.uploadForm.fromDir1.value=imageWindow.document.uploadForm.Object1.src;
+	}
+
+	if(imageWindow.document.uploadForm.fromDir1.value.length>1){
+		//alert('Has New Local image attached NEED TO SUBMIT')
+		//imageWindow.document.uploadForm.submit();
+		imageWindow.document.uploadForm.submitButton.click();
+
+	}else{
+		alert('Has No image');
+	}
+}
+*/
+
+function imageSubmitCaller(invoiceCount){
+
+var currentInvoiceCount = document.getElementById('currentInvoiceCount').value;
+	//alert('Image to be submitted '+invoiceCount);
+/*
+	//alert('imageWindow.document.uploadForm.fromDir1.value    '+imageWindow.document.uploadForm.fromDir1.value);
+	if((imageWindow.document.uploadForm.fromDir1.value==null)||(imageWindow.document.uploadForm.fromDir1.value=="")) {
+		//alert('SRC   '+imageWindow.document.Object1.src)
+		//imageWindow.document.uploadForm.fromDir1.value=convertPath(imageWindow.document.uploadForm.Object1.src);
+	}
+
+
+*/
+
+		document.getElementById('inim').value=invoiceCount;
+
+		var previousinim = document.getElementById('previousinim').value;
+		//if(previousinim!=null)
+		if(previousinim.length>0){
+		
+
+			if (previousinim!=invoiceCount){
+		
+
+				//var imageVar=imageWindow.document.uploadForm.Object1.src;
+				//alert('From Dir1 '+imageWindow.document.uploadForm.fromDir1.value.length)
+				if(imageWindow.document.uploadForm.fromDir1.value.length>1){
+					//alert('Has New Local image attached NEED TO SUBMIT')
+					 //alert('previousinim!=invoiceCount');
+						if(isInvoiceComplete(currentInvoiceCount))
+						imageWindow.document.uploadForm.submitButton.click();
+
+				}else{
+					//alert('Does NOT Have New Local image attached NEED NOT SUBMIT')
+				}
+
+
+			}else{
+				//alert('Clicking on same Invoice '+invoiceCount);
+				if(imageWindow.document.uploadForm.fromDir1.value.length>1){
+				//alert('Has New Local image attached NEED TO SUBMIT');
+					//alert('NOT OF previousinim!=invoiceCount');
+
+						if(isInvoiceComplete(currentInvoiceCount))
+						imageWindow.document.uploadForm.submitButton.click();
+
+				}else{
+					//alert('Does NOT Have New Local image attached NEED NOT SUBMIT')
+				}
+			}
+
+		}else{
+
+				if(imageWindow.document.uploadForm.fromDir1.value.length>1){
+						//alert('Has New Local image attached so Iam submitting');
+						//alert('currentInvoiceCount'+document.getElementById('currentInvoiceCount').value);
+
+
+						if(isInvoiceComplete(currentInvoiceCount)){
+						//alert('isInvoiceComplete');
+						imageWindow.document.uploadForm.submitButton.click();
+						}
+				}
+
+		}
+
+	}
+	
+function imageSubmitCaller343(invoiceCount){
+
+//	alert('Image tobe submitted '+invoiceCount);
+
+/*
+	//alert('imageWindow.document.uploadForm.fromDir1.value    '+imageWindow.document.uploadForm.fromDir1.value);
+	if((imageWindow.document.uploadForm.fromDir1.value==null)||(imageWindow.document.uploadForm.fromDir1.value=="")) {
+		//alert('SRC   '+imageWindow.document.Object1.src)
+		//imageWindow.document.uploadForm.fromDir1.value=convertPath(imageWindow.document.uploadForm.Object1.src);
+	}
+*/
+
+		document.getElementById('inim').value=invoiceCount;
+
+		var previousinim = document.getElementById('previousinim').value;
+		if( (previousinim!=null) &&(previousinim.length>0) ){
+			//alert('previously Clicked on Invoice count  '+previousinim);
+
+			if (previousinim!=invoiceCount){
+			 //alert('First Click');
+
+				//var imageVar=imageWindow.document.uploadForm.Object1.src;
+				//alert('From Dir1 '+imageWindow.document.uploadForm.fromDir1.value.length)
+				if(imageWindow.document.uploadForm.fromDir1.value.length>1){
+					//alert('Has New Local image attached NEED TO SUBMIT')
+					imageWindow.document.uploadForm.submitButton.click();
+
+				}else{
+//					alert('Does NOT Have New Local image attached NEED NOT SUBMIT')
+				}
+
+
+			}else{
+//				//alert('Clicking on same Invoice '+invoiceCount);
+				if(imageWindow.document.uploadForm.fromDir1.value.length>1){
+//					alert('Has New Local image attached NEED TO SUBMIT')
+					imageWindow.document.uploadForm.submitButton.click();
+				}else{
+//					alert('Does NOT Have New Local image attached NEED NOT SUBMIT')
+				}
+			}
+
+		}else{
+
+				if(imageWindow.document.uploadForm.fromDir1.value.length>1){
+				//				alert('Has New Local image attached so Iam submitting')
+								imageWindow.document.uploadForm.submitButton.click();
+				}
+
+		}
+
+	}
+
+
+var currentInvoiceCount;
+
+var currentAllocationCount;
+
+function clearLastInvoice(){
+
+	//Clear Current Invoice
+
+	currentInvoiceCount =document.getElementById('currentInvoiceCount').value;
+
+	//document.getElementById('purchase_amt'+currentInvoiceCount+"l1").focus();
+
+	document.getElementById('errorMessage').innerHTML='';
+	document.getElementById('invoice_no'+currentInvoiceCount).value='';
+
+	document.getElementById('invoice_no'+currentInvoiceCount).focus();
+
+	document.getElementById('invoice_no'+currentInvoiceCount).style.backgroundColor='white';
+	document.getElementById('errorMessage').innerHTML='';
+
+
+	//Clear first Allocation
+/*
+	if(document.getElementById('purchase_amt'+currentInvoiceCount+"l1")!=null){
+	//paTot1 asTot1 invoiceComm1h1
+			document.getElementById('paTotal'+currentInvoiceCount).innerHTML='';
+			document.getElementById('paTot'+currentInvoiceCount).value="";
+			document.getElementById('asTotal'+currentInvoiceCount).innerHTML='';
+
+			document.getElementById('asTot'+currentInvoiceCount).value="";
+
+			if(document.getElementById('invoiceComm1h'+currentInvoiceCount)!=null)
+				document.getElementById('invoiceComm1h'+currentInvoiceCount).value="";
+
+
+//		alert('0');
+				document.getElementById('purchase_amt'+currentInvoiceCount+"l1").value="";
+				 document.getElementById('purchase_amt'+currentInvoiceCount+"l1").style.backgroundColor='white';
+//		alert('1');
+				document.getElementById('allocationId'+currentInvoiceCount+"l1").value="III";
+//		alert('2');
+//				document.getElementById('ast_tot'+currentInvoiceCount+"l1").value="";
+//		alert('3');
+//				document.getElementById('sub_total'+currentInvoiceCount+"l1").innerHTML='';
+//		alert('4');
+				document.getElementById('cd1'+currentInvoiceCount+"l1").value='';
+//		alert('5');
+				document.getElementById('cd2'+currentInvoiceCount+"l1").innerHTML='';
+				document.getElementById('cd3'+currentInvoiceCount+"l1").innerHTML='';
+//		alert('6');
+				document.getElementById('description'+currentInvoiceCount+"l1").value='';
+//		alert('7');
+//				document.getElementById('pc'+currentInvoiceCount+"l1").value='';
+//		alert('8');
+
+	}
+
+*/
+	//return false;
+			
+
+}
+
+var duplicateInvoiceObject;
+var skp=1;
+function skip1(){
+
+//alert('sk');
+	clearLastInvoice();
+
+	if(window.focus()) window.blur();
+
+	imageWindow.skipPressed();
+
+//	if(window.focus()) window.blur();
+	document.getElementById('errorMessage').innerHTML='';
+	var invCtr = document.getElementById('invCtr').value;
+	
+	var invoiceNumberObj = document.getElementById('invoice_no'+currentInvoiceCount);
+	invoiceNumberObj.style.backgroundColor='white';
+
+	
+//alert('hello1 '+invoiceNumberObj.value)
+	if(document.getElementById('invoiceId1').value=="III"){
+		document.getElementById('vendorName').focus();
+	}else{
+	 //if( document.getElementById('invoiceId'+currentInvoiceCount).value!="III") {
+	 //if( currentInvoiceCount > 1 )
+		//alert('focus on invoice numbr');
+ 		//clearLastInvoice();
+ 		//alert('currentInvoiceCount that is skipped '+currentInvoiceCount)
+		document.getElementById('purchase_amt'+currentInvoiceCount+"l1").style.backgroundColor='white';
+		document.getElementById('sub_total'+currentInvoiceCount).style.backgroundColor='white';
+		invoiceNumberObj.focus();
+	}
+}
+
+
+
+function returnQ(){
+	window.location = "https://docorganiz.quickbase.com/db/bdyvk9utb";
+	imageWindow.close();
+
+}
+
+function logout(sv1, sv2){
+	window.location = "/docorganiz5/login.jsp?ac="+sv1+"&u="+document.getElementById('u').value+"&vid="+sv2;
+	 imageWindow.close();
+	agentWindow.close();
+}
+
+function setDefaultInvoiceDate(invoiceDateObj){
+//alert('invoiceDateObj '+invoiceDateObj);
+//alert('invoiceDateObj Name '+invoiceDateObj.name);
+
+	if(invoiceDateObj!=null){
+		//alert('invoiceDateObj.value '+invoiceDateObj.value);
+		invoiceDateObj.value=currentDate;
+	}
+
+}
+
+function getCookie(Name){ //get cookie value
+	var re=new RegExp(Name+"=[^;]+", "i"); //construct RE to search for target name/value pair
+	if (document.cookie.match(re)) //if cookie found
+	return document.cookie.match(re)[0].split("=")[1] //return its value
+	return ""
+}
+
+function setCookie(name, value, days){ //set cookie value
+	var expireDate = new Date()
+	//set "expstring" to either future or past date, to set or delete cookie, respectively
+	var expstring=expireDate.setDate(expireDate.getDate()+parseInt(days))
+	document.cookie = name+"="+value+"; expires="+expireDate.toGMTString()+"; path=/";
+}
+
+
+
+
+function trapCtrlKeyCombination(e)
+{
+    var forbiddenKeys = new Array('1', '2', '0', '4', '5', '6', '7', '8');
+	var invCtrl = document.getElementById('currentInvoiceCount').value;
+	var currentAllocationCount = document.getElementById('currentAllocationCount').value;
+
+//alert('Ctrl pressed'+e.ctrlKey);
+
+
+        //list all CTRL + key combinations you want to disable
+        var key;
+        var isCtrl;
+
+        if(window.event)
+        {
+                key = window.event.keyCode;     //IE
+                if(window.event.ctrlKey)
+                        isCtrl = true;
+                else
+                        isCtrl = false;
+        }
+        else
+        {
+                key = e.which;     //firefox
+                if(e.ctrlKey)
+                        isCtrl = true;
+                else
+                        isCtrl = false;
+        }
+
+        //if ctrl is pressed check if other key is in forbidenKeys array
+        if(isCtrl)
+        {
+                for(i=0; i<forbiddenKeys.length; i++)
+                {
+
+
+				          //alert('Key combination CTRL '+String.fromCharCode(key)+' has been pressed');
+				          //alert('Key combination CTRL '+key+' has been pressed');
+                          //return false;
+
+					//alert('	inVoucherArea >>'+inVoucherArea+' inInvoiceArea '+inInvoiceArea+' inAllocationArea '+inAllocationArea);
+
+                        //case-insensitive comparation
+                        if(forbiddenKeys[i] == String.fromCharCode(key))
+                        {
+				          	//alert('Key combination CTRL '+String.fromCharCode(key)+' has been pressed');
+							if(String.fromCharCode(key)=="1")
+							{
+								//alert('Current position is '+invCtrl);
+								//alert('Key combination CTRL '+String.fromCharCode(key)+' has been pressed');
+								//imageWindow.focus();
+								//imageWindow.invCtrl
+							//	imageWindow.document.uploadForm.fromDir.click();
+								break;
+							}else if(String.fromCharCode(key)=="2")
+							{
+								//alert('Key combination CTRL '+String.fromCharCode(key)+' has been pressed');
+
+								//alert('inVoucherArea'+inVoucherArea+'  invCtrl '+invCtrl);
+								/*
+								if(inVoucherArea){
+									//alert('Voucher Comment ');
+									voucherCommentWindow('Comment.html','voucherComm');
+									break;
+								}else if(inInvoiceArea){
+									//alert('Invoice area Comment Current count '+currentInvoiceCount);
+									commentWindow('Comment.html','invoiceComm'+invCtrl);
+									break;
+								}else if(inAllocationArea){
+									//alert('Invoice area Comment Current count '+currentAllocationCount);
+									commentWindow('Comment.html','allocationComm'+invCtrl+'l'+currentAllocationCount);
+									break;
+								}
+								*/
+							}
+							else if(String.fromCharCode(key)=="0")
+							{
+								//alert('Key combination CTRL '+String.fromCharCode(key)+' has been pressed');
+								if((inInvoiceArea)||(inAllocationArea)){
+									//alert('Invoice area Comment Current count '+currentInvoiceCount);
+									//popAgent('Comment.html','1l1','1');
+								//	popAgent('dpaded.html',invCtrl+'l'+currentAllocationCount,invCtrl);
+									break;
+								}
+
+															}
+							else if(String.fromCharCode(key)=="4")
+							{
+								//alert('Key combination CTRL '+String.fromCharCode(key)+' has been pressed');
+								document.getElementById('addInvoice').click();
+								break;
+							}
+							else if(String.fromCharCode(key)=="5")
+							{
+								//alert('Key combination CTRL '+String.fromCharCode(key)+' has been pressed');
+								//document.getElementById('addInvoice').click();
+								saveAndReturn('sr');
+								break;
+							}
+							else if(String.fromCharCode(key)=="6")
+							{
+								//alert('Key combination CTRL '+String.fromCharCode(key)+' has been pressed');
+								//document.getElementById('addInvoice').click();
+								saveAndNext();
+								break;
+							}
+							else if(String.fromCharCode(key)=="7")
+							{
+								document.getElementById('reset').click();
+								break;
+
+							}
+							else if(String.fromCharCode(key)=="8")
+							{
+								//alert('Key combination CTRL '+String.fromCharCode(key)+' has been pressed');
+								returnQ();
+								break;
+							}
+
+
+
+
+                             return false;
+                        }
+
+
+                }
+        }
+
+        return true;
+
+}
+
+function refreshInfo(){
+	//alert('1');
+	//refreshInfo();
+	document.getElementById('mv').value='sn';
+	document.getElementById('ref').value="ref";
+	document.voucherInvoiceAllocation.submit();
+	return true;
+
+}
+
+function editUserInfo(){
+
+			//alert('groupIdPK'+document.getElementById('groupIdPK').value)
+	var groupIdPK = document.getElementById('groupIdPK').value;
+	var voucherNumber = document.getElementById('voucher_no').value;
+	if((voucherNumber.length>0)&&(groupIdPK.length>0)){
+	//alert('inside if statement');
+			editValue(voucherNumber,'13','<%=userInfoTableId%>',groupIdPK);
+	}
+}
+
+var inVoucherArea=true;
+var inInvoiceArea=false;
+var inAllocationArea=false;
+
+var voucherAdded=false;
+
+function vendorFocus(sv1){
+	sv1.style.backgroundColor='SkyBlue';
+	inVoucherArea=true;
+	inInvoiceArea=false;
+	inAllocationArea=false;
+	setVar(sv1);
+
+}
+
+function voucherNameOnBlur(svr11){
+	svr11.style.backgroundColor='white';
+	validate(svr11);
+
+	inVoucherArea=false;
+
+	var voucherId = document.getElementById('voucherId').value;
+
+	var vendorId = document.getElementById('vendorId').value;
+
+	//alert('add voucher function voucherId length = '+voucherId.length+'  voucherId>>> '+voucherId);
+
+	if(voucherId.length==0){
+			if(isVoucherComplete()&&(!voucherAdded)){
+
+//A				editUserInfo();
+//A				addValue('voucher',0,0);
+				//pausecomp(1000);
+				//voucherAdded=true;
+				nextObj('process_status');
+			}
+	}else {
+
+	//if( voucherId.length>0){
+		if(isVoucherComplete()){
+			//alert('In Edit voucher');
+			editValue(vendorId,'<%=vendor_idCID%>','<%= voucherTableId%>',voucherId);
+			nextObj('invoiceNumber1');
+			//break;
+			//alert('Done Edit voucher');
+		}
+	}
+
+}
+
+
+
+
+function groupDateBlur(obj){
+alert('inside groupdate on blur');
+        obj.style.backgroundColor='white';
+alert('inside groupdate on blur>>>>>1');
+        validate(obj);
+alert('inside groupdate on blur');       
+        var voucherId = document.getElementById('voucherId').value;
+alert('inside groupdate on blur>>>>>2');        
+        //alert('voucher ID '+voucherId+' objvalue '+obj.value);
+        if(voucherId.length>0){
+alert('inside groupdate on blur>>>>3');        
+							alert('has voucherID>>>>4');
+                        editValue(obj.value,'<%=voucher_dateCID%>','<%= voucherTableId%>',voucherId);
+        }
+}
+
+
+function approverOnBlur(svr11){
+//alert('inside approveronblur');
+	svr11.style.backgroundColor='white';
+	validate(svr11);
+
+	inVoucherArea=true;
+
+	var voucherId = document.getElementById('voucherId').value;
+
+	var vendorId = document.getElementById('vendorId').value;
+
+//alert('add voucher function voucherId length = '+voucherId.length+'  voucherId>>> '+voucherId);
+
+	if(voucherId.length==0){
+	
+	//		alert("inside if statement "+ isVoucherComplete()+"   voucherAdded " + voucherAdded )
+			if(isVoucherComplete()&&(!voucherAdded)){
+				
+		//		alert('before added value for voucher');
+
+				editUserInfo();
+				addValue('voucher',0,0);
+			//	alert('added value for voucher');
+				//pausecomp(1000);
+				voucherAdded=true;
+				nextObj('invoice_no1');
+			}
+	}else {
+
+	//if( voucherId.length>0){
+		if(isVoucherComplete()){
+			//alert('In Edit voucher');
+			editValue(svr11.value,'<%=approverCID%>','<%= voucherTableId%>',voucherId);
+			nextObj('invoice_no1');
+			//break;
+			//alert('Done Edit voucher');
+		}
+	}
+
+}
+
+
+
+
+function statusBlur(obj){ 
+
+	obj.style.backgroundColor='white';
+	validate(obj);
+//alert('currentDate >>> '+currentDate);
+	var voucherId = document.getElementById('voucherId').value;
+	//alert('voucher ID '+voucherId+' objvalue '+obj.value);
+	
+	if( (voucherId.length>0)&& (obj.value!="<%=voucher.getProcessingStatus()%>") ){
+	//alert('inside status blur 1');
+			editValue(obj.value,'<%= process_statusCID%>','<%= voucherTableId%>',voucherId);
+			editValue(currentDate,'<%= status_dateCID%>','<%= voucherTableId%>',voucherId);
+	//alert('inside status blur 2');
+	}
+	
+}
+
+
+function statusBlurOnEdit(obj){ 
+	//alert('inside on blur on edit');
+	setStatus(obj);
+	//alert('inside on blur on edit 1')
+	obj.style.backgroundColor='white';
+	validate(obj);
+
+	var voucherId = document.getElementById('voucherId').value;
+	//alert('voucher ID '+voucherId+' objvalue '+obj.value);
+	if(voucherId.length>0){
+	//alert('inside status blur 1');
+			editValue(obj.value,'<%= process_statusCID%>','<%= voucherTableId%>',voucherId); 
+	//alert('inside status blur 2');
+	}
+}
+
+
+function invoiceNumberBlur(obj33, invCtr){
+		obj33.style.backgroundColor='white';
+		setInvoiceNumberVal(obj33.value);
+		var invoiceNumberVal = document.getElementById('invoiceId'+invCtr).value;
+        if( invoiceNumberVal!='III' ){
+                editValue(obj33.value,'<%=invoice_noCID%>','<%=invoiceTableId%>',invoiceNumberVal);
+        }
+}
+
+function cd1OnBlur(obj1212,a1,b1){
+
+//alert('1  a1 '+a1+' b1 '+b1);        
+        obj1212.style.backgroundColor='white';
+//alert('2');
+        validate(obj1212);
+	var allocationIdVal = document.getElementById('allocationId'+a1+'l'+b1).value;
+        //alert('obj1212.value '+ obj22.value+' invoiceIdVal '+invoiceIdVal);
+        if( allocationIdVal!='III' ){
+                editValue(obj1212.value,'<%=naturalActCID%>','<%=allocationTableId%>',allocationIdVal);
+        }
+//alert('3');
+}
+
+function cd2OnBlur(obj1212,a1,b1){
+
+//alert('1  a1 '+a1+' b1 '+b1);        
+        obj1212.style.backgroundColor='white';
+//alert('2');
+        validate(obj1212);
+	var allocationIdVal = document.getElementById('allocationId'+a1+'l'+b1).value;
+        //alert('obj1212.value '+ obj22.value+' invoiceIdVal '+invoiceIdVal);
+        if( allocationIdVal!='III' ){
+                editValue(obj1212.value,'<%=pcCID%>','<%=allocationTableId%>',allocationIdVal);
+        }
+//alert('3');
+}
+
+function cd3OnBlur(obj1212,a1,b1){
+
+//alert('1  a1 '+a1+' b1 '+b1);        
+        obj1212.style.backgroundColor='white';
+//alert('2');
+        validate(obj1212);
+	var allocationIdVal = document.getElementById('allocationId'+a1+'l'+b1).value;
+        //alert('obj1212.value '+ obj22.value+' invoiceIdVal '+invoiceIdVal);
+        if( allocationIdVal!='III' ){
+                editValue(obj1212.value,'<%=cd3CID%>','<%=allocationTableId%>',allocationIdVal);
+        }
+//alert('3');
+
+
+}
+
+function purchaseAmountBlur(paObj,a1,b1){
+ 
+//alert('1  a1 '+a1+' b1 '+b1);
+        paObj.style.backgroundColor='white';
+//alert('paObj'+paObj.value);
+       // validate(paObj);
+        var allocationIdVal = document.getElementById('allocationId'+a1+'l'+b1).value;
+        //alert('obj1212.value '+ obj22.value+' invoiceIdVal '+invoiceIdVal);
+        if( allocationIdVal!='III' ){
+                editValue(paObj.value,'<%=purchaseAmountCID%>','<%=allocationTableId%>',allocationIdVal);
+        }
+//alert('3');
+}
+
+
+
+/*******************************/
+/****** 	FOCUS AREA        *****/
+/*******************************/
+//Voucher Area
+
+//Invoice Area
+
+
+//Allocation 
+
+function descriptionFocus(sv1){
+	sv1.style.backgroundColor='SkyBlue';
+	inVoucherArea=false;
+	inInvoiceArea=false;
+	inAllocationArea=true;
+	if(sv1.value.length==0){
+		sv1.value='';
+	}
+	
+	return true;
+}
+
+
+
+
+/*******************************/
+/****** 			 EDIT AREA	 *****/
+/*******************************/
+//Voucher Area
+
+//Invoice Area
+function invoiceNumberBlurasdfaf(obj22,a1){
+		inVoucherArea=false;
+		document.getElementById('currentInvoiceCount').value=a1;
+		obj22.style.backgroundColor='white';
+		validate(obj22);
+
+		var invoiceIdVal = document.getElementById('invoiceId'+a1).value;
+//alert(' voucherId '+document.getElementById('voucherId').value);
+		//alert('Invoice Id >>  '+a1+' >>> '+invoiceIdVal);
+		if( (invoiceIdVal=='III') &&(isInvoiceComplete(a1))  ){
+			//alert(' voucherId '+document.getElementById('voucherId').value);
+			addValue('invoice',a1,0);
+		}else if( (invoiceIdVal!='III')&&(isInvoiceComplete(a1))  ){
+			//alert('Editing stuff ');
+			editValue(obj22.value,'<%=invoice_noCID%>','<%= invoiceTableId%>',invoiceIdVal);
+		}
+
+		setInvoiceNumberVal(obj22.value);
+		inInvoiceArea=true;
+}
+
+
+//Allocation Area
+
+function descriptionBlur(descObj,a1,b1){
+ 
+//alert('descObj  a1 '+a1+' b1 '+b1);
+        descObj.style.backgroundColor='white';
+//alert('descObj'+descObj.value);
+       // validate(descObj);
+var allocationIdVal = document.getElementById('allocationId'+a1+'l'+b1).value;
+//alert('descObj.value '+ descObj.value+' invoiceIdVal '+invoiceIdVal);
+
+        if(( allocationIdVal!='III' )){
+                //alert('descObj.value '+ descObj.value+' allocationIdVal '+allocationIdVal);
+                editValue(descObj.value,'<%=descriptionCID%>','<%=allocationTableId%>',allocationIdVal);
+        }
+
+//alert('3');
+}
+
+
+function cd1Blur(cd1Obj,a1,b1){
+ 
+//alert('cd1Obj  a1 '+a1+' b1 '+b1);
+        cd1Obj.style.backgroundColor='white';
+//alert('cd1Obj'+cd1Obj.value);
+       // validate(cd1Obj);
+var allocationIdVal = document.getElementById('allocationId'+a1+'l'+b1).value;
+//alert('cd1Obj.value '+ cd1Obj.value+' invoiceIdVal '+invoiceIdVal);
+
+        if(( allocationIdVal!='III' )){
+                editValue(cd1Obj.value,'<%=cd1CID%>','<%=allocationTableId%>',allocationIdVal);
+        }
+
+//alert('3');
+}
+
+
+function cd2Blur(cd2Obj,a1,b1){
+ 
+//alert('cd2Obj  a1 '+a1+' b1 '+b1);
+        cd2Obj.style.backgroundColor='white';
+//alert('cd2Obj'+cd2Obj.value);
+       // validate(cd2Obj);
+var allocationIdVal = document.getElementById('allocationId'+a1+'l'+b1).value;
+//alert('cd2Obj.value '+ cd2Obj.value+' invoiceIdVal '+invoiceIdVal);
+
+        if(( allocationIdVal!='III' )){
+                editValue(cd2Obj.value,'<%=cd2CID%>','<%=allocationTableId%>',allocationIdVal);
+        }
+
+//alert('3');
+}
+
+function cd3Blur(cd3Obj,a1,b1){
+ 
+//alert('cd3Obj  a1 '+a1+' b1 '+b1);
+        cd3Obj.style.backgroundColor='white';
+//alert('cd3Obj'+cd3Obj.value);
+       // validate(cd3Obj);
+var allocationIdVal = document.getElementById('allocationId'+a1+'l'+b1).value;
+//alert('cd3Obj.value '+ cd3Obj.value+' invoiceIdVal '+invoiceIdVal);
+
+        if(( allocationIdVal!='III' )){
+                editValue(cd3Obj.value,'<%=cd3CID%>','<%=allocationTableId%>',allocationIdVal);
+        }
+
+//alert('3');
+}
+
+
+function paBlur(obj11,a1,b1){
+//	alert('inside pa blur');
+
+document.getElementById('currentAllocationCount').value=b1;
+	
+	
+	obj11.style.backgroundColor='white';	
+	inVoucherArea=false;
+	inInvoiceArea=false;
+	inAllocationArea=true;
+	obj11.style.backgroundColor='White';
+//	alert('inside pa blur>>>>> 1');
+	checkForZero(obj11);
+//alert('inside pa blur>>>>> 2');
+	tallyPA(a1);	
+//	alert('inside pa blur>>>>> 3');
+	obj11.value=TryCash(obj11.value);
+//	alert('inside pa blur>>>>> 4');
+	
+	//	fillDiv(obj11,document.getElementById('div'+a1+'l'+b1),document.getElementById('division'+a1+'l'+b1));
+	//alert('1' + 'a1>>>>>' + a1 + 'b1...... ' + b1);
+	var allocationId = document.getElementById('allocationId'+a1+'l'+b1).value;
+//	alert('inside pa blur>>>>> 5');
+	if( (allocationId=='III') &&(isAllocationComplete(a1,b1))  ){
+     //alert(' voucherId '+document.getElementById('voucherId').value);
+      //alert('inside pa blur>>>>> 6');
+      addValue('allocation',a1,b1);
+      //alert('inside pa blur>>>>> 7');
+  }else {
+  	 //alert('inside pa blur Allocation Edit ');
+      editValue(obj11.value,'<%=purchaseAmountCID%>','<%=allocationTableId%>',allocationId);
+  }
+
+//document.getElementById('description'+a1+'l'+b1).focus();
+ 	//document.getElementById('addAllocation'+a1).focus();
+	return true;
+}
+
+function duplicate (svr1){
+	//alert('current Invoice Count is  '+svr1);
+
+	var currentAllocCtr =  document.getElementById('allocCtr'+svr1).value; 
+
+	
+	 var previousAllocCtr = currentAllocCtr*1 -1;
+	
+	insertAllocationRow(svr1);
+
+ 
+
+	
+//	 alert('currentAllocCtr is '+currentAllocCtr+'previousAllocCtr is '+previousAllocCtr);
+		
+//		alert('cd1'+svr1+'l'+currentAllocCtr+' is '+document.getElementById('cd1'+svr1+'l'+currentAllocCtr).value);
+		
+//		alert('cd1'+svr1+'l'+previousAllocCtr+' is '+document.getElementById('cd1'+svr1+'l'+previousAllocCtr).value);
+		
+		document.getElementById('cd1'+svr1+'l'+currentAllocCtr).value=document.getElementById('cd1'+svr1+'l'+previousAllocCtr).value
+		document.getElementById('cd2'+svr1+'l'+currentAllocCtr).value=document.getElementById('cd2'+svr1+'l'+previousAllocCtr).value
+		document.getElementById('cd3'+svr1+'l'+currentAllocCtr).value=document.getElementById('cd3'+svr1+'l'+previousAllocCtr).value
+		
+	
+}
+
+</script>
+
+</head>
+<body onload="javascript:<%if(ac.equals("ad")){%>initialize();<%}else{%> edLoad(); <%}%>">
+<form method="POST" action="" name="voucherInvoiceAllocation">
+<input type=hidden name=ac id=ac value=<%=ac%>>
+<input type=hidden name=login id=ac value=<%=login%>>
+<input type=hidden name=password id=ac value=<%=password%>>
+
+<!--- Begining of Pre Voucher Buttons --->
+<table class="vouch" width="100%" bgcolor="#ffffff" border="0">
+
+  <tr valign="top">
+ 		<td height="60" align="center">
+ 				<a href="#"><img src="https://docorganiz.quickbase.com/up/bcscwdzuq/g/re/eh/va/DO-AP%20QB%203-2%20Logo%2011-16-2008.jpg" alt="DocOrganiz.com" hspace="10" border="0"></a>
+ 		</td>
+ 		<!--
+		
+ 	  <td width="10%" align="right">
+ 			<button  class="tbutton" name="refreshBtn" id="refreshBtn" ONCLICK="refreshInfo();">Refresh</button>
+ 		</td>
+-->
+
+ 	<input type="hidden" id="errorMessageHidden" name="errorMessageHidden"></input> 
+
+ 	<td width="80%" align="center" style="color:red" ><span id="errorMessage"></span></td> 	
+
+ 	<td width="10%" align="right">
+ 		<button  class="tbutton" name="refreshBtn" id="refreshBtn" ONCLICK="refreshInfo();">Refresh</button>
+ 		<button name='return' id='return' class='tbutton'  onKeyDown=buttonAlert(this)  onClick=logout('<%=ac%>','<%=vid%>') >Logout</button>
+ 	</td>
+
+ 	</tr>
+</table>
+<!--- End of Pre Voucher Buttons --->
+
+<!--- Begining of Voucher Info --->
+<table class="vouch" cellpadding="2" width="100%" bgcolor="#ffffff" border="1">
+<!--
+<table class="vendor" cellpadding="2" width="100%" bgcolor="#ffffff" border="0">
+-->
+  <tr >
+    <td width="10%" nowrap><span class=rqrd>*</span>Vendor ID:</td>
+    <td width="8%"><input type=hidden  <%if(ac.equals("vu")){%> value='<%=voucher.getVendorId()%>'  <%}%> name="vendor_id" id="vendorId">
+    	
+    	<!-- size="12" class="inps" maxlength="12" onfocus="vendorFocus(this);" onblur="this.style.backgroundColor='white';voucherNameOnBlur(this);">
+    	-->
+	</td> <input type=hidden name="voucherId" id="voucherId" <%if(ac.equals("vu")){%> value='<%=voucher.getVoucherId()%>' <%}%>>
+    
+    <td width="9%" nowrap><span class=rqrd>*</span>Vendor:</td>
+    <td width="10%">
+    	
+    	<input type=hidden rows="2" cols="20" value='<%=voucher.getVendorName()%>' name="vendor_name" id="vendorName" >
+    	
+    	<!--
+    	class="inps" onfocus="vendorFocus(this);" onblur="this.style.backgroundColor='white';voucherNameOnBlur(this);" ></textArea>
+    	-->
+   <!-- 	
+    	<input type="text" value='<%=voucher.getVendorName()%>' maxlength="50" size="20" name="vendor_name" id="vendorName" class="inps" onfocus="vendorFocus(this);" onblur="this.style.backgroundColor='white';voucherNameOnBlur(this);" >
+   --> 	
+
+	</td>
+	<td width="10%" align="left" nowrap><span class=rqrd>*</span>Terms:</td>
+		<td width="15%" align="left" nowrap>
+			<span id=terms> <%if(ac.equals("vu")){%> <%=voucher.getTerms()%> <%}%></span>	
+			<!--			
+	  	<input name="terms" value='<%=voucher.getTerms()%>' id="terms" onfocus="vendorFocus(this);" onblur="this.style.backgroundColor='white';voucherNameOnBlur(this);"  class="inps" maxlength="16" size="16">  	
+			-->
+			<input type="hidden" name="termsh" <%if(ac.equals("vu")){%> value='<%=voucher.getTerms()%>' <%}%> id="termsh">
+			
+    </td>
+ </tr>
+<!--
+</table>
+-->
+
+ <tr >
+ 			<td width="10%" nowrap><span class=rqrd>*</span>Group ID:</td>
+    	<%
+			if(ac.equals("vu") )
+	 		{
+				groupId = voucher.getGroupId();
+				
+	 		}
+    	%>
+    	<td width="8%" >
+    		<input type=hidden   name="voucher_no1" id="voucher_no1" value=<%=(String)groupId%> > 
+ 				<input type=hidden  name="voucher_no" id="voucher_no" value=<%=(String)groupId%> > 
+ 				<span id=groupId> <%=groupId%> </span>
+			</td>
+    	<input type='hidden' value='<%=groupIdPK%>'  name='groupIdPK' id='groupIdPK'>
+ 			<td width="9%" nowrap><span class=rqrd>*</span>Group Date:</td>
+ 			<td width="10%" nowrap><input name="voucher_date"  value='<%=voucher.getVoucherDate()%>'  id="voucher_date" type="hidden">
+ 				<span id=groupDate><%if(ac.equals("vu") ){%><%= voucher.getVoucherDate()%> <%}%></span>
+ 			</td>
+ 			<td width="10%" nowrap>Group Amt:</td><input   value='<%=voucher.getVoucherTotal()%>' type=hidden name=vocherTot id=vocherTot>
+ 			<td width="15%" align="left"><span id=voucherTotal><%=voucher.getVoucherTotal()%></span></td>
+  </tr>
+ 
+  <tr >
+    <td width="10%" ><span class=rqrd>*</span>Status:</td>
+    <td width="8%"><input name="process_status" value='<%=voucher.getProcessingStatus()%>' id="process_status" onfocus="this.style.backgroundColor='SkyBlue';setStatus(this);" onblur="statusBlur(this);"  class="inps" maxlength="16" size="16"></td>
+    <td width="8%" nowrap>Status Date:</td>
+    <td width="10%">
+				<span id="status_date"><%=voucher.getStatusDate()%></span>
+				<input type=hidden  value='<%=voucher.getStatusDate()%>' id=status_dat name=status_dat>
+		</td>
+		<td width="10%" nowrap>Approver:</td>
+    <td width="15%" align="left">
+    	<table>
+    		<tr>
+    			  <td>
+    	 				<input name="approver" value='<%=voucher.getApprover()%>' id="approver" onfocus="this.style.backgroundColor='SkyBlue';setApprover(this);" onblur="approverOnBlur(this);"  class="inps" maxlength="15" size="15">
+    	 			</td>
+    	 			<td>	
+    					<IMG id="voucherCommb" style="align: right;" height=24 alt="" onclick="commentWindow('Comment.html','voucherComm');"  onselect="commentWindow('Comment.html','voucherComm');"  <%if ( voucher.getAPNotes().length() >0 ){%>  src="/docorganiz5/images/notes1.png"  <%}else{%> src="/docorganiz5/images/notes.png" <%}%> width=20 border=1>
+    				</td>	
+          	<input value='<%=voucher.getAPNotes()%>'  type="hidden" name="voucherCommh" id="voucherCommh" ></input>    	
+    				<input type="hidden" name="voucherComm" id="voucherComm" ></input>
+    	  </tr>
+    </table>    	
+    </td>
+	</tr>
+</table>
+<!--- End of Voucher Info --->
+
+
+<!--- Begining of Invoice Info --->
+
+<table  id="InvoiceTable"  cellpadding="2" width="100%" class="vouch"  bgcolor="#ffffff" border="1">
+	<!-- invtbl -->
+
+<%
+
+int allocationCtr = 0;
+int	invoiceCtr = 1;
+int invRowCtr=2;
+ if(ac.equals("ed") )
+ {
+ 
+	System.out.println(" VOUCHER ID @@@ >>>>"+voucher.getVoucherId()+"<<<<");
+  invRowCtr=0;
+	invoiceCtr = 1;
+	
+	/*	
+	HashSet invoiceCollection = voucher.getInvoiceCollection();
+	//SortedSet invoiceCollection = voucher.getInvoiceCollection();
+	  	
+			Iterator  it = invoiceCollection.iterator();
+			Invoice invoice = new Invoice();
+		
+			//Invoice loop		
+			while (it.hasNext()){
+				invoice = (Invoice)it.next();
+			      System.out.println(" INVOICE ID FROM JSP @@@ : "+invoice.getInvoiceId());
+		*/
+			int invoiceLength =0;
+			Object invoiceCollection[] = voucher.getInvoiceCollection();
+			
+			if(invoiceCollection!=null)
+			invoiceLength = invoiceCollection.length;
+			
+			System.out.println(" invoiceLength @@@ >>>>"+invoiceLength);
+			Invoice invoice = null;
+			invoiceLength=invoiceLength-1;
+			//Invoice loop		
+			for(int i = 0; i <=invoiceLength; i++){
+				invoice = (Invoice)invoiceCollection[i];
+			  System.out.println(" INVOICE ID FROM JSP @@@ : "+invoice.getInvoiceId());
+		
+		
+%>
+	<!-- invtbl -->
+  <tr valign="top"> 
+ 
+ 	
+		<input type=hidden  name="invoiceId<%=invoiceCtr%>" id="invoiceId<%=invoiceCtr%>" value='<%=invoice.getInvoiceId()%>'>
+    <td width="35%"  nowrap><span class=rqrd>*</span>Inv #: <input type=hidden name="invoice_no<%=invoiceCtr%>"  value="<%=invoice.getInvoiceNumber()%>" id="invoice_no<%=invoiceCtr%>" >
+    <span><%=invoice.getInvoiceNumber()%></span>
+    	<!--
+    	 onfocus=invoiceNumberFocus(this); onblur="invoiceNumberBlur(this,<%=invoiceCtr%>);"  class="inps" maxlength="27" size="27"> 
+    	 -->
+    	 
+    	 </td>
+    	 
+    <td width="31%"  nowrap><span class=rqrd>*</span>Inv Date: <input  type=hidden name="invoice_date<%=invoiceCtr%>" value='<%=invoice.getInvoiceDate()%>' id="invoice_date<%=invoiceCtr%>">
+    <span><%=invoice.getInvoiceDate()%></span>
+    
+    	<!-- onfocus="this.style.backgroundColor='SkyBlue';" onblur="invoiceDateBlur(this,<%=invoiceCtr%>);"  class="inps" maxlength="10" size="10">
+    	-->
+    	</td>
+    <td width="27%" align="left"  nowrap><span class=rqrd>*</span>Inv Amt: <span id='paTotal<%=invoiceCtr%>' style='align : right;'<%=invoice.getPurchaseAmount()%>></span><span id=asTotal<%=invoiceCtr%>></span><input type=hidden name=paTot<%=invoiceCtr%> id=paTot<%=invoiceCtr%> value=<%=invoice.getPurchaseAmount()%>> </td>
+	  
+	  
+	  <td width="8%"  nowrap>
+								<IMG id="invoiceComm<%=invoiceCtr%>b" style="align: right;" height=24 alt="" onclick="commentWindow('Comment.html','invoiceComm<%=invoiceCtr%>');"  onselect="commentWindow('Comment.html','invoiceComm<%=invoiceCtr%>');" <%if ( invoice.getInvoiceComments().length() >0 ){%>  src="/docorganiz5/images/notes1.png"  <%}else{%> src="/docorganiz5/images/notes.png" <%}%> width=20 border=1>
+	    
+	  </td>  
+	  <td width="6%"  nowrap><input type=hidden name='invoiceImageURL<%=invoiceCtr%>' id='invoiceImageURL<%=invoiceCtr%>' value='<%=invoice.getInvoiceImageURL()%>'>
+	  	<IMG style="Z-INDEX: 100; align: right; POSITION: absolute" height=24 alt="" name="addImage<%=invoiceCtr%>" id="addImage<%=invoiceCtr%>" onClick="popGetImage('<%=invoiceCtr%>');"  onBlur=nextObj('vendorId');   <%if ( invoice.getInvoiceImageURL().length() >5 ){%> src="/docorganiz5/images/image1.png"  <%}else{%> src="/docorganiz5/images/image.png" <%}%>  width=20 border=1>
+	  </td>
+		<input type=hidden name=asTot<%=invoiceCtr%> id=asTot<%=invoiceCtr%> value="0">
+  		<input value='<%=invoice.getInvoiceComments()%>'  type="hidden" name="invoiceComm<%=invoiceCtr%>h" id="invoiceComm<%=invoiceCtr%>h" ></input>    	
+    		<input type="hidden" name="invoiceComm<%=invoiceCtr%>" id="invoiceComm<%=invoiceCtr%>" ></input> 
+ 		
+  </tr>
+  
+<!-- endof invtbl -->
+
+<tr valign="top" >
+	
+  	<td colspan=5 width="100%"  nowrap>
+  		     <table id=AllocationTable<%=invoiceCtr%>  class="allo" cellpadding='2' border='1' width="100%">
+	 
+		<!--  begining of aloctbl header-->
+
+  		    	<tr>
+  		    		<td  align="middle" width="5%"  nowrap>Ln #<label/></td>
+  		    		<td width="30%"  nowrap>Description<label/></td>	
+  		    		<!--
+  		    		<td width="8%">Acct-Sub-Sfx<label/></td>
+  		    		-->
+  		    		
+  		    		<td width="15%">GL Acct<label/></td>
+  		    		<td width="8%">CCntr<label/></td>
+  		    		<td width="8%">LOC<label/></td>
+  		    		  		    				
+  		    		<td width="20%">Amount<label/></td> 	
+	 						<td width="8%">Notes<label/></td> 
+	 						<td width="8%">Details<label/></td> 
+          	</tr>
+	 <!--endof aloctbl header -->  
+  <%
+
+/*
+	  			HashSet allocationCollection = invoice.getAllocationCollection();
+	  			Iterator  it1 = allocationCollection.iterator();
+	  			Allocation allocation = null;
+	  			allocationCtr = 1;
+	  			//Allocation Loop		
+	  			while (it1.hasNext()){
+	  				allocation = (Allocation)it1.next();
+							      System.out.println(" ALLOCATION ID for allocationCtr >>>"+allocationCtr+" IS @@@ : "+allocation.getId());
+								System.out.println(" ALLOCATION OBJECT IS "+allocation);
+*/
+			allocationCtr = 1;
+			Object allocationCollection[] = invoice.getAllocationCollection();
+			int allocationLength = allocationCollection.length;
+			System.out.println(" allocationLength @@@ >>>>"+allocationLength);
+			Allocation allocation = null;
+			allocationLength=allocationLength-1;
+			//Allocation loop		
+			for(int j = 0; j <=allocationLength; j++){
+				allocation = (Allocation)allocationCollection[j];
+			  System.out.println(" Line Item # FROM JSP @@@ : "+allocation.getLineNumber());
+		
+										
+								
+	  %>
+   
+ <!--  begining of aloctbl info-->
+  	         	
+  		    	<tr>
+  		    		<input type="hidden" name="allocationId<%=invoiceCtr%>l<%=allocationCtr%>"  id="allocationId<%=invoiceCtr%>l<%=allocationCtr%>" value='<%=allocation.getId()%>'> 
+  		    		<td  width="6%" align="middle"><%=allocation.getLineNumber()%><label/><input type="hidden" name="lineNumber<%=invoiceCtr%>l<%=allocationCtr%>"  id="lineNumber<%=invoiceCtr%>l<%=allocationCtr%>" value="<%=allocation.getLineNumber()%>"></td>
+  		    		<td width="20%">	
+  		    			<span><%=allocation.getDescription()%></span>
+  		    			<input type="hidden"  name="description<%=invoiceCtr%>l<%=allocationCtr%>"  id="description<%=invoiceCtr%>l<%=allocationCtr%>"  value=<%=allocation.getDescription()%> >
+  		    			
+  		    		</td>	
+  		    		<td width="5%">	
+  		    			<span><%=allocation.getCd1()%></span>
+  		    			<input type=hidden name="cd1<%=invoiceCtr%>l<%=allocationCtr%>" value='<%=allocation.getCd1()%>' id="cd1<%=invoiceCtr%>l<%=allocationCtr%>" >
+  		    			<!--
+  		    			class="inps" onfocus="this.style.backgroundColor='SkyBlue';setCd1(this);"  onblur=cd1Blur(this,<%=invoiceCtr%>,<%=allocationCtr%>);  maxlength="12" size="12">
+  		    			-->
+  		    		</td>	
+  		    		<td width="5%">
+  		    			<span><%=allocation.getCd2()%></span>	
+  		    			
+  		    			<input  type=hidden  name="cd2<%=invoiceCtr%>l<%=allocationCtr%>" value='<%=allocation.getCd2()%>' id="cd2<%=invoiceCtr%>l<%=allocationCtr%>">
+  		    			<!--
+  		    			 class="inps" onfocus="this.style.backgroundColor='SkyBlue';setCd2(this);"  onblur=cd2Blur(this,<%=invoiceCtr%>,<%=allocationCtr%>);   maxlength="5" size="5">
+  		    			 -->
+  		    		</td>	
+  		    		<td width="5%">	
+  		    			
+  		    			<span><%=allocation.getCd3()%></span>
+  		    			<input  type=hidden  name="cd3<%=invoiceCtr%>l<%=allocationCtr%>" value='<%=allocation.getCd3()%>' id="cd3<%=invoiceCtr%>l<%=allocationCtr%>" >
+  		    			<!--
+  		    			class="inps" onfocus="this.style.backgroundColor='SkyBlue';setCd3(this);"  onblur=cd3Blur(this,<%=invoiceCtr%>,<%=allocationCtr%>);    maxlength="5" size="5">
+  		    			-->
+  		    		</td>
+					<td width="15%">
+
+  		    			<span><%=allocation.getAmount()%></span>							
+			<input type=hidden name="purchase_amt<%=invoiceCtr%>l<%=allocationCtr%>" value='<%=allocation.getAmount()%>' id="purchase_amt<%=invoiceCtr%>l<%=allocationCtr%>">
+			<!--  class="inps"
+          onfocus="paFocus(this,<%=allocationCtr%>);"  onBlur="paBlur(this,<%=invoiceCtr%>,<%=allocationCtr%>);" 
+          size='10'>
+      -->    
+          </td>
+
+	 						<td width="5%">
+									<IMG id="allocationComm<%=invoiceCtr%>l<%=allocationCtr%>b" style="align: right;" height=24 alt="" onclick="document.getElementById('currentAllocationCount').value=<%=allocationCtr%>;commentWindow('Comment.html','allocationComm<%=invoiceCtr%>l<%=allocationCtr%>');"  onselect="document.getElementById('currentAllocationCount').value=<%=allocationCtr%>;commentWindow('Comment.html','allocationCommb<%=invoiceCtr%>l<%=allocationCtr%>');"  <%if ( allocation.getNotes().length() >0 ){%>  src="/docorganiz5/images/notes1.png"  <%}else{%> src="/docorganiz5/images/notes.png" <%}%>  width=20 border=1>
+									
+	 						</td>	
+	 						
+	 	
+    <!--endof aloctbl info -->
+
+
+   <!-- Dynamic Agent information -->
+		<%
+			  
+			    boolean hasAgentInfo = false;
+					int agentLength =0;
+			    Object agentCollection[] = allocation.getAgentCollection();
+		
+		
+					if(agentCollection!=null)
+						agentLength = agentCollection.length;		
+		
+					System.out.println(" agentLength @@@ >>>>"+agentLength);
+					Agent agent = null;
+		%>
+		
+							<td width="5%">
+								<IMG   id="addAgent<%=invoiceCtr%>l<%=allocationCtr%>"   name="addAgent<%=invoiceCtr%>l<%=allocationCtr%>"  <%if ( agentLength > 0 ){%> src="/docorganiz5/images/popup1.png"  <%}else{%> src="/docorganiz5/images/popup.png" <%}%>   style="align: right;" height=24 alt="" onclick=getInternalAccount(document.getElementById('allocationId<%=invoiceCtr%>l<%=allocationCtr%>').value);popAgent('dpaded.html','<%=invoiceCtr%>l<%=allocationCtr%>','<%=invoiceCtr%>');  onselect=getInternalAccount(document.getElementById('allocationId<%=invoiceCtr%>l<%=allocationCtr%>').value);popAgent('dpaded.html','<%=invoiceCtr%>l<%=allocationCtr%>','<%=invoiceCtr%>');   width=20 border=1>
+	 						</td>
+									<input value='<%=allocation.getNotes()%>'  type="hidden" name="allocationComm<%=invoiceCtr%>l<%=allocationCtr%>h" id="allocationComm<%=invoiceCtr%>l<%=allocationCtr%>h" ></input>    	
+    							<input type="hidden" name="allocationComm<%=invoiceCtr%>l<%=allocationCtr%>" id="allocationComm<%=invoiceCtr%>l<%=allocationCtr%>" ></input> 
+ 		
+		
+		<%
+		
+						String agIdStr=""; 
+						String empIdStr="";
+						String empNameStr="";
+						String labCatStr="";
+						String labDescStr="";
+						String hoursStr="";
+						String agent_amountStr=""; 
+						String agentCommStr=""; 
+										
+						//agentCtr = 1;
+						
+					agentLength=agentLength-1;
+						//Invoice loop		
+					for(int k = 0; k <=agentLength; k++){
+					
+							agent = (Agent)agentCollection[k];
+							hasAgentInfo = true;
+							agIdStr=agIdStr+"&"+agent.getId();
+							empIdStr=empIdStr+"&"+agent.getEmpId();
+							empNameStr=empNameStr+"&"+agent.getEmpName();
+							labCatStr=labCatStr+"&"+agent.getLabCat();
+							labDescStr=labDescStr+"&"+agent.getLabDesc();
+							hoursStr=hoursStr+"&"+agent.getHours();
+							agent_amountStr=agent_amountStr+"&"+agent.getAmount();
+							agentCommStr=agentCommStr+"&"+agent.getComments();
+				
+				System.out.println(" AGENT ID JSP @@@ : "+agent.getId());
+
+			} //End of Agent Loop
+				
+				System.out.println(" AGENT ID @@@ : "+agIdStr);
+
+		  %>
+      <input value='<%=agIdStr%>' type=hidden name='agentId<%=invoiceCtr%>l<%=allocationCtr%>'  id='agentId<%=invoiceCtr%>l<%=allocationCtr%>' >
+		  <input value='<%=empIdStr%>' type=hidden name='empId<%=invoiceCtr%>l<%=allocationCtr%>'  id='empId<%=invoiceCtr%>l<%=allocationCtr%>' >
+		  <input value='<%=empNameStr%>' type=hidden name='empName<%=invoiceCtr%>l<%=allocationCtr%>'  id='empName<%=invoiceCtr%>l<%=allocationCtr%>'>
+		  <input value='<%=labCatStr%>' type=hidden name='labCat<%=invoiceCtr%>l<%=allocationCtr%>'  id='labCat<%=invoiceCtr%>l<%=allocationCtr%>'>
+
+		  <input value='<%=labDescStr%>' type=hidden name='labDesc<%=invoiceCtr%>l<%=allocationCtr%>'  id='labDesc<%=invoiceCtr%>l<%=allocationCtr%>'>
+		  <input value='<%=hoursStr%>' type=hidden name='hours<%=invoiceCtr%>l<%=allocationCtr%>'  id='hours<%=invoiceCtr%>l<%=allocationCtr%>'>
+		  <input value='<%=agent_amountStr%>' type=hidden name='agent_amount<%=invoiceCtr%>l<%=allocationCtr%>'  id='agent_amount<%=invoiceCtr%>l<%=allocationCtr%>'>
+		  <input value='<%=agentCommStr%>' type=hidden name='agentComm<%=invoiceCtr%>l<%=allocationCtr%>'  id='agentComm<%=invoiceCtr%>l<%=allocationCtr%>'>
+
+		 
+    </tr>
+  
+<%
+	  allocationCtr++;
+
+	} //End of Allocation while
+%>
+  
+      	<!--Begining of Allocation Button Row -->
+
+          	<tr>
+  		   			<td align="left" colspan="8">  		   				
+  							<input type=hidden name=allocCtr<%=invoiceCtr%> id=allocCtr<%=invoiceCtr%> value=<%=allocationCtr%>>
+ 								<button name='addAllocation<%=invoiceCtr%>' id='addAllocation<%=invoiceCtr%>' class='tbutton'  onClick='insertAllocationRow(<%=invoiceCtr%>);'>Line Item</button>
+ 								<button name='duplicate<%=invoiceCtr%>' id='duplicate<%=invoiceCtr%>' class='tbutton'  onClick='duplicate(<%=invoiceCtr%>);'>Duplicate</button>
+ 					  
+ 					  	</td> 	
+ 						</tr>
+ 						<!--Endof Allocation Button Row -->
+
+  		    </table> <!--Endof Allocation Table -->
+  		    
+  	</td>
+  	
+  </tr>  
+
+ 			    
+			<%
+
+System.out.println("invCtr "+invoiceCtr);	
+
+System.out.println("invRowCtr "+invRowCtr);	
+
+
+  				invoiceCtr++;
+
+					invRowCtr=invRowCtr+2;	
+	
+	} //End of Invoice Loop
+			
+				} //End of If ac=ad or ed
+			%>
+
+  <!--Begining of Invoice Button Row -->
+
+  <tr>
+    <td align="middle" colspan="1">
+    								
+ 			<button name='addInvoice' id='addInvoice' class='tbutton'  onKeyDown=buttonAlert(this) onClick=insertInvoiceRow() >Invoice</button>
+ 		</td>
+		<td align="middle" style="color:red" colspan="3"><b>*</b> required fields
+
+		<button name='return' id='return' class='tbutton'  onKeyDown=buttonAlert(this)  onClick=saveAndReturn('sr') >Save & Return</button>
+
+		<input type="hidden" name="mv" id="mv" value="">
+
+			<%if(ac.equals("ad")){%>
+				<button name='return' class='tbutton' onKeyDown=buttonAlert(this)  onClick=saveAndNext()>Save & Next</button>
+
+				<button name='skip' class='tbutton' onKeyDown=buttonAlert(this)  onClick=skip1()>Skip Invoice</button>
+			<%}%>
+			<button name='return' class='tbutton'  onKeyDown=buttonAlert(this) onClick=returnQ()>Return</button>
+	    </td>
+   </tr>   
+ 	<input type=hidden name=invCtr id=invCtr <%if(ac.equals("ad")){%>value=1<%}else{%>value=<%=(invoiceCtr-1)%> <%}%> >
+ 	<input type=hidden name=invRowCtr id=invRowCtr  <%if(ac.equals("ad")){%>value=2<%}else{%>value=<%=invRowCtr%> <%}%> >
+ 	
+
+  <!--End of Invoice Button Row -->
+ 			
+</table>
+
+  <!--End of Invoice Table -->
+
+						 <input type=hidden name=fromAwindowFocus id=fromAwindowFocus value='0'>
+ 						<input type=hidden name=fromAwindo id=fromAwindo value='false'>
+ 						<input type=hidden name=fromComwindo id=fromComwindo value='false'>
+ 						
+						<input type=hidden name=invoice_no id=invoice_no   value=''>
+			 			<input type=hidden name=internalAccount id=internalAccount value=''>
+			 			<input type=hidden name=cd1 id=cd1 value=''>
+						<input type=hidden name=lineItemAmount id=lineItemAmount   value=''>
+			 			<input type=hidden name=comm id=comm value=''>
+			 			<input type=hidden name=vendorUB id=vendorUB >
+			 			<input type=hidden name=aa1 id=aa1 value=''>
+ 						<input type=hidden name=bb1 id=bb1 value=''>
+ 						<input type=hidden name=inim id=inim value=1>
+ 						<input type=hidden name=errorStatus id=errorStatus >
+ 						<input type=hidden name=previousinim id=previousinim >
+ 						<input type=hidden name="ref" id="ref" >
+ 						<input type=hidden name=skipArrayCounter id=skipArrayCounter value=0>
+ 						<input type=hidden name=skipArray id=skipArray value='<%=lookup.getSkipArray()%>'>
+ 						<input type=hidden name=currentInvoiceCount id=currentInvoiceCount >
+ 						<input type=hidden name=currentAllocationCount id=currentAllocationCount >
+ 						<input type=hidden name=empId id=empId value='<%=(String)detailCode1[0]%>' >
+ 						<input type=hidden name=empName id=empName value='<%=(String)detailCode1[1]%>' >
+ 						<input type=hidden name=labCat id=labCat value='<%=(String)detailCode2[1]%>' >
+ 						<input type=hidden name=labDesc id=labDesc value='<%=(String)detailCode2[0]%>' >
+</form>
+			<table width="100%" border="0" cellspacing="0" cellpadding="0" >
+        <tr>
+          <td valign="top">
+            <div align="center">
+            	<a>Copyright 2008 by DocOrganiz Corporation. All Rights Reserved.</a>            
+            </div>
+          </td>
+        </tr>
+      </table>
+      <input type=hidden name=u id=u value='<%=(String)u%>' >
+</body>
+</html>
