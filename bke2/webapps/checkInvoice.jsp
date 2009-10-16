@@ -1,4 +1,4 @@
-  <%@ page language="java" import="com.intuit.quickbase.util.*,com.bke1.util.Lookup" %> 
+  <%@ page language="java" import="com.intuit.quickbase.util.*,com.bke2.util.Lookup" %> 
    <%@ page import="java.util.HashMap"%>
  
   <%@ page buffer="128kb"%>  
