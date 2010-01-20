@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file was auto-generated from WSDL -->
+<!-- by the Apache Axis2 version: 1.5.1  Built on : Oct 19, 2009 (10:59:00 EDT) -->
+<serviceGroup>
+    <service name="QBWebConnectorQuerySvc">
+        <messageReceivers>
+            <messageReceiver mep="http://www.w3.org/ns/wsdl/in-out" class="com.intuit.developer.QBWebConnectorQuerySvcMessageReceiverInOut"/>
+        </messageReceivers>
+        <parameter name="ServiceClass">com.intuit.developer.QBWebConnectorQuerySvcSkeleton</parameter>
+        <parameter name="useOriginalwsdl">true</parameter>
+        <parameter name="modifyUserWSDLPortAddress">true</parameter>
+        <operation name="sendRequestXML" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://developer.intuit.com/">
+            <actionMapping>http://developer.intuit.com/sendRequestXML</actionMapping>
+            <outputActionMapping>http://developer.intuit.com/QBWebConnectorQuerySvcSoap/sendRequestXMLResponse</outputActionMapping>
+        </operation>
+        <operation name="connectionError" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://developer.intuit.com/">
+            <actionMapping>http://developer.intuit.com/connectionError</actionMapping>
+            <outputActionMapping>http://developer.intuit.com/QBWebConnectorQuerySvcSoap/connectionErrorResponse</outputActionMapping>
+        </operation>
+        <operation name="closeConnection" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://developer.intuit.com/">
+            <actionMapping>http://developer.intuit.com/closeConnection</actionMapping>
+            <outputActionMapping>http://developer.intuit.com/QBWebConnectorQuerySvcSoap/closeConnectionResponse</outputActionMapping>
+        </operation>
+        <operation name="getLastError" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://developer.intuit.com/">
+            <actionMapping>http://developer.intuit.com/getLastError</actionMapping>
+            <outputActionMapping>http://developer.intuit.com/QBWebConnectorQuerySvcSoap/getLastErrorResponse</outputActionMapping>
+        </operation>
+        <operation name="authenticate" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://developer.intuit.com/">
+            <actionMapping>http://developer.intuit.com/authenticate</actionMapping>
+            <outputActionMapping>http://developer.intuit.com/QBWebConnectorQuerySvcSoap/authenticateResponse</outputActionMapping>
+        </operation>
+        <operation name="receiveResponseXML" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://developer.intuit.com/">
+            <actionMapping>http://developer.intuit.com/receiveResponseXML</actionMapping>
+            <outputActionMapping>http://developer.intuit.com/QBWebConnectorQuerySvcSoap/receiveResponseXMLResponse</outputActionMapping>
+        </operation>
+    </service>
+</serviceGroup>
