@@ -1,9 +1,11 @@
 package com.bke2.util;
 
+import java.util.Date;
+
 public class AccountRet {
 	private String listId = null;
 	private String timeCreated = null;
-	private String timeModified = null;
+	private Date timeModified = null;
 	private String editSequence = null;
 	private String name = null;
 	private String isInActive = null;
@@ -39,12 +41,6 @@ public class AccountRet {
 	}
 	public void setTimeCreated(String timeCreated) {
 		this.timeCreated = timeCreated;
-	}
-	public String getTimeModified() {
-		return timeModified;
-	}
-	public void setTimeModified(String timeModified) {
-		this.timeModified = timeModified;
 	}
 	public String getEditSequence() {
 		return editSequence;
@@ -120,5 +116,11 @@ public class AccountRet {
 		aa=aa+"AaccountNumber:"+accountNumber+"\n";
 		aa=aa+"QuickBasePrimaryKey:"+quickBasePrimaryKey+"\n\n\n";
 		return aa;
+	}
+	public void setTimeModified(Date timeModified) {
+		this.timeModified = timeModified;
+	}
+	public Date getTimeModified() {
+		return timeModified;
 	}
 }
