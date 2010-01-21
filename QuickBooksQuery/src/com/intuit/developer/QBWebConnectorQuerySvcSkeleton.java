@@ -251,7 +251,7 @@ import com.intuit.quickbase.util.QuickBaseException;
             		try { 
             			System.out.println("Received response  ....");
             			String response1 = receiveResponseXML.getResponse();
-            			System.out.println(response1);
+            			//System.out.println(response1);
             			org.jdom.Document document = null;
             			SAXBuilder builder1 = new SAXBuilder();
              		
@@ -389,7 +389,7 @@ import com.intuit.quickbase.util.QuickBaseException;
    		for (int k = 0; k <= tempQuickBaseAccount.size()-1; k++) {
    			infoHash4=new HashMap();
    			AccountRet deleteQuickBaseAccount = ((AccountRet)tempQuickBaseAccount.get(k));
-   			System.out.println("Value of IsInActive: "+ deleteQuickBaseAccount.getIsInActive());
+   			//System.out.println("Value of IsInActive: "+ deleteQuickBaseAccount.getIsInActive());
    			if(deleteQuickBaseAccount.getIsInActive().equals("0")){
    				 
 			       infoHash4.put("24", "1");
@@ -516,7 +516,7 @@ import com.intuit.quickbase.util.QuickBaseException;
 				
 				//account.setName(accountRet1.getChildText("Name"));
 				//account.setTotalBalance(accountRet1.getChildText("TotalBalance"));
-				System.out.println("Account: " + account.toString());
+				//System.out.println("Account: " + account.toString());
 				quickBooksAccounts.add(account);
 			}
 		}catch(Exception e){
@@ -553,7 +553,7 @@ import com.intuit.quickbase.util.QuickBaseException;
 	           			account.setAccountNumber(((String)iterator.next()).trim());
 	           			quickBooksDateModifiedInQuickBase = (String)iterator.next();
 	           			
-	           			System.out.println(" quickBooksDateModifiedInQuickBase "+quickBooksDateModifiedInQuickBase);
+	           			//System.out.println(" quickBooksDateModifiedInQuickBase "+quickBooksDateModifiedInQuickBase);
 	           			if((quickBooksDateModifiedInQuickBase!=null) && (!quickBooksDateModifiedInQuickBase.equals(""))){
 	           				account.setTimeModified(new Date(Long.parseLong(quickBooksDateModifiedInQuickBase)));
 	           			}else if(quickBooksDateModifiedInQuickBase==null){
