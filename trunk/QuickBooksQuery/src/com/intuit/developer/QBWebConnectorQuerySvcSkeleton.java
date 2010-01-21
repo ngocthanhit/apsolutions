@@ -45,7 +45,7 @@ import com.intuit.quickbase.util.QuickBaseException;
          String loginID = null;
          String passWord = null;
  		 DateFormat quickBaseInputDateFormatter = new SimpleDateFormat("EEE MMM dd hh:mm:ss z yyyy");
- 		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+ 		 DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
  		 
  		 
   		 String clientId = "7";
@@ -367,10 +367,11 @@ import com.intuit.quickbase.util.QuickBaseException;
    						   
    					   if(!infoHash3.isEmpty()){
    					   		try{
-   					   			//primaryKey1 = qdb15.editRecord(accountsTableId, infoHash3, baseAccount.getQuickBasePrimaryKey() );
-   					   			//System.out.println("Successfully UPDATEd a Base Record Primary key we are using: "+ baseAccount.getQuickBasePrimaryKey());
-   					   			System.out.println("Base ACCT: "+ baseAccount);
-   					   			System.out.println("Book ACCT: "+ booksAccount);
+   					   			primaryKey1 = qdb15.editRecord(accountsTableId, infoHash3, baseAccount.getQuickBasePrimaryKey() );
+   					   			System.out.println("Updating primary key"+ baseAccount.getQuickBasePrimaryKey());
+   					   			System.out.println("Successfully UPDATEd a Base Record Primary key we are using: "+ infoHash3);
+   					   			//System.out.println("Base ACCT: "+ baseAccount);
+   					   			//System.out.println("Book ACCT: "+ booksAccount);
  					   
    				   			}catch(Exception e2){
    				   				System.out.println("Problem while editing "+ infoHash3 + "\nwith PK "+baseAccount.getQuickBasePrimaryKey());
@@ -388,10 +389,11 @@ import com.intuit.quickbase.util.QuickBaseException;
    		for (int k = 0; k <= tempQuickBaseAccount.size()-1; k++) {
    			infoHash4=new HashMap();
    			AccountRet deleteQuickBaseAccount = ((AccountRet)tempQuickBaseAccount.get(k));
-   			
+   			System.out.println("Value of IsInActive: "+ deleteQuickBaseAccount.getIsInActive());
    			if(deleteQuickBaseAccount.getIsInActive().equals("0")){
+   				 
 			       infoHash4.put("24", "1");
-			       //primaryKey1 = qdb15.editRecord(accountsTableId, infoHash4,deleteQuickBaseAccount.getQuickBasePrimaryKey() );               				   
+			       primaryKey1 = qdb15.editRecord(accountsTableId, infoHash4,deleteQuickBaseAccount.getQuickBasePrimaryKey() );               				   
 			       System.out.println("SUCCESSFULLY DELETED a Base Record with Primary key: "+deleteQuickBaseAccount.getQuickBasePrimaryKey());
    			}
    		}
@@ -410,7 +412,7 @@ import com.intuit.quickbase.util.QuickBaseException;
 			   	  	infoHash2.put("20", addBooksAccount.getDesc());
 			   	  	infoHash2.put("24", addBooksAccount.getIsInActive()); // the account is inActive = 0 (active)
 			   	  	infoHash2.put("28", addBooksAccount.getListId());
-        	    //primaryKey1 = qdb15.addRecord(accountsTableId, infoHash2);
+        	    primaryKey1 = qdb15.addRecord(accountsTableId, infoHash2);
         	    System.out.println ("Insert response"+primaryKey1+"\n infoHash2 "+infoHash2);
    		   }
  		   
@@ -552,8 +554,8 @@ import com.intuit.quickbase.util.QuickBaseException;
 	           			quickBooksDateModifiedInQuickBase = (String)iterator.next();
 	           			
 	           			System.out.println(" quickBooksDateModifiedInQuickBase "+quickBooksDateModifiedInQuickBase);
-	           			if(quickBooksDateModifiedInQuickBase!=null){
-	           				account.setTimeModified((Date)formatter.parse(quickBooksDateModifiedInQuickBase));
+	           			if((quickBooksDateModifiedInQuickBase!=null) && (!quickBooksDateModifiedInQuickBase.equals(""))){
+	           				account.setTimeModified(new Date(Long.parseLong(quickBooksDateModifiedInQuickBase)));
 	           			}else if(quickBooksDateModifiedInQuickBase==null){
 	           				account.setTimeModified(null);	           				
 	           			}
