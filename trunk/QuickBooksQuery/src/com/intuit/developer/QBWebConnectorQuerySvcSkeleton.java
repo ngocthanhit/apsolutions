@@ -206,15 +206,18 @@ import com.intuit.quickbase.util.QuickBaseException;
               	    String password;
 
               		try{
+              			System.out.println("Debug #1\n");
               			String[] asRtn = new String[2];
-              			asRtn[0] = "{F5FCCBC3-AA13-4d28-9DBF-3E571823F2BB}"; //myGUID.toString();
+              			asRtn[0] = "{F5FCCBC3-AA13-4e28-9DBE-3E571823F2BB}"; //myGUID.toString();
               			
               			loginID= authenticate.getStrUserName();
               			passWord= authenticate.getStrPassword();
               		    System.out.println("UserName: " + authenticate.getStrUserName());
               			System.out.println("Password: " + authenticate.getStrPassword());
               			boolean isAuthenticated;
+              			System.out.println("Debug #1a\n");
               		    isAuthenticated = lookup.isAuthenticated(loginID,passWord);
+              		    System.out.println("Debug #1b\n");
               			System.out.println("Is Authenticated: "+ isAuthenticated);
               			//Checks for authentication and sends a result back to QBWC
               			if(isAuthenticated) {

@@ -38,19 +38,13 @@ public class Lookup
     private int clientSize=0;
     private int clientSequenceId = 0;
     private String vendorName="";
-
     private QuickBaseClient qdbLookup=null;
     private String bkeToken="eb8ujnbu7wy92bpafjvhc6zx2tp";
-
-
     //public String login;
     //public  String password;
-
     //private boolean loginFailure;
     //private boolean isLoggedIn;
     //private QuickBaseClient qdb;
-
-    
 
     public Lookup()
     {
