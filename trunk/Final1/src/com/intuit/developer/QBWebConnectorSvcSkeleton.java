@@ -84,28 +84,28 @@ import javax.xml.xpath.*;
             		"</BillAdd>" +
     			"</BillAddRq>" +
     		"</QBXMLMsgsRq></QBXML>";
-    */
+    
     		
     		inXML ="<?xml version=\"1.0\" ?>" +
     		"<!DOCTYPE QBXML PUBLIC '-//INTUIT//DTD QBXML QBD 1.0//EN' >" +
     		"<QBXML>" +
     		"<QBXMLMsgsRq onError = \"continueOnError\">" +
-    	//	"<VendorQueryRq requestID = \"1\">" +
-    	//	"</VendorQueryRq>" +
+    		"<VendorQueryRq requestID = \"1\">" +
+    		"</VendorQueryRq>" +
     		"<AccountQueryRq requestID = \"1\">" +
     		"</AccountQueryRq>" +
-    	//	"<BillQueryRq requestID = \"1\">" +
-    	//	"</BillQueryRq>" +
+    		"<BillQueryRq requestID = \"1\">" +
+    		"</BillQueryRq>" +
     		"</QBXMLMsgsRq></QBXML>";
     
-    		/*
+    		*/
     		inXML ="<?xml version=\"1.0\"?>"+ 
     		"<?qbxml version=\"3.0\"?>"+
     		    "<QBXML>"+
     		        "<QBXMLMsgsRq onError=\"stopOnError\" >"+ lookup.exportBills()+   
     		        "</QBXMLMsgsRq>"+
     		    "</QBXML>";
-    		 */
+    		 
     		System.out.println("Final XML STRING: "+ inXML);
     		response.setSendRequestXMLResult(inXML);
     		return response;
