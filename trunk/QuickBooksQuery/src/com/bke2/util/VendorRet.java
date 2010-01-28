@@ -5,7 +5,7 @@ import java.util.Date;
 public class VendorRet {
 	private String listID;
 	private String timeCreated;
-	private Date timeModified;
+	private String timeModified;
 	private String termsRef="";
 	private String name="";
 	private String isInActive;
@@ -27,10 +27,10 @@ public class VendorRet {
 	public void setTimeCreated(String timeCreated) {
 		this.timeCreated = timeCreated;
 	}
-	public Date getTimeModified() {
+	public String getTimeModified() {
 		return timeModified;
 	}
-	public void setTimeModified(Date timeModified) {
+	public void setTimeModified(String timeModified) {
 		this.timeModified = timeModified;
 	}
 	public String getTermsRef() {
