@@ -1,4 +1,4 @@
-
+ 
 /**
  * QBWebConnectorQuerySvcSkeleton.java
  *
@@ -49,6 +49,8 @@ import com.intuit.quickbase.util.QuickBaseException;
 		 String s4 = "sortorder-AD";
 		 String accountsTableId = "bes8a4tgv";
 		 String vendorTableId ="bes8a4tgu";
+		 //QuickBaseClient qdb13 = new;
+		 //QuickBaseClient qdb15 = null;
 		 QuickBaseClient qdb13 = new QuickBaseClient("mgconno@yahoo.com" ,"Bubbaa17", strURL);		
 		 QuickBaseClient qdb15 = new QuickBaseClient("sashiatwork@gmail.com" ,"SRquic12", strURL);
 		
@@ -72,7 +74,6 @@ import com.intuit.quickbase.util.QuickBaseException;
     		"<AccountQueryRq requestID = \"1\">" +
     		"</AccountQueryRq>" +
     		"</QBXMLMsgsRq></QBXML>";
-    
     		System.out.println("Final XML STRING: "+ inXML);
     		response.setSendRequestXMLResult(inXML);
     		return response;
@@ -84,7 +85,6 @@ import com.intuit.quickbase.util.QuickBaseException;
          * 
          * @param connectionError
          */
-        
                  public com.intuit.developer.ConnectionErrorResponse connectionError(com.intuit.developer.ConnectionError connectionError)
                  {
                 	 ConnectionErrorResponse response = new ConnectionErrorResponse();
@@ -98,7 +98,6 @@ import com.intuit.quickbase.util.QuickBaseException;
                 	 return response;
                  }
      
-         
         /**
          * Auto generated method signature
          * 
@@ -144,8 +143,10 @@ import com.intuit.quickbase.util.QuickBaseException;
               			String[] asRtn = new String[2];
               			asRtn[0] = "{F5FCCBC3-AA13-4e28-9DBE-3E571823F2BB}"; //myGUID.toString();
               			
-              			loginID= authenticate.getStrUserName();
-              			passWord= authenticate.getStrPassword();
+              			loginID = authenticate.getStrUserName();
+              			passWord = authenticate.getStrPassword();
+              			qdb15 = new QuickBaseClient(loginID ,passWord, strURL);
+
               		    //System.out.println("UserName: " + authenticate.getStrUserName());
               			//System.out.println("Password: " + authenticate.getStrPassword());
               			boolean isAuthenticated;           			
@@ -182,8 +183,6 @@ import com.intuit.quickbase.util.QuickBaseException;
              		
             		Element accountQueryRs = null;
             		Element vendorQueryRs = null;
-            		String requestID =null;
-            		String requestID1 = null;
             		
             		try { 
             			System.out.println("Received response  ....");
@@ -197,44 +196,29 @@ import com.intuit.quickbase.util.QuickBaseException;
             			Element qbxmlrs = (Element)qbxml.getChild("QBXMLMsgsRs");
             			accountQueryRs = (Element)qbxmlrs.getChild("AccountQueryRs");
             			vendorQueryRs = (Element)qbxmlrs.getChild("VendorQueryRs");
-            			//requestID = accountQueryRs.getAttributeValue("requestID");
-            			//requestID1 = vendorQueryRs.getAttributeValue("requestID");
-            			//System.out.println("RequestID: "+ requestID);
-            			//System.out.println("RequestID1: "+ requestID1);
+           
 					}catch(Exception e1){
 						System.out.println("Exception at receiveResponseXML with DOM parsing "+e1.getMessage());
 					}
 					
-					
-
                		/*	*********************************************/
                		/* 				Get QuickBooks Data             */
                		/************************************************/			
                		
-					
-					
 					Vector quickBooksAccounts=null;
 					Vector quickBooksVendors=null;
-					
-					//if(requestID.equals("1")){
-						quickBooksAccounts = getQuickBooksAccounts(accountQueryRs);
-					//}else if(requestID1.equals("2")){
-						quickBooksVendors = getQuickBooksVendors(vendorQueryRs);
-					//}
-               		
-               		/*	*********************************************/
-               		/* 				Get QuickBase Data              */
-               		/************************************************/			
+					quickBooksAccounts = getQuickBooksAccounts(accountQueryRs);
+					quickBooksVendors = getQuickBooksVendors(vendorQueryRs);
                		
                		// First check if there are any records at all 
              		Vector quickBaseAccounts = getQuickBaseAccounts();
              		Vector quickBaseVendors = getQuickBaseVendors();
              		
-             		//System.out.println("zzzTotal quickBase Account size>>>>> : " + quickBaseAccounts.size() );
-             		//System.out.println("Total quickBooksAccount size>>: " + quickBooksAccounts.size() );
+             		System.out.println("Total Number of quickBase Accounts>>>>>: " + quickBaseAccounts.size() );
+             		System.out.println("Total Number of quickBooks Accounts>>>>: " + quickBooksAccounts.size() );
              		
-             		System.out.println("zzzTotal quickBase Vector size>>>>> : " + quickBaseVendors.size() );
-             		System.out.println("Total quickBooksVector size>>: " + quickBooksVendors.size() );
+             		System.out.println("Total Number of QuickBase Vendors>>>>>: " + quickBaseVendors.size() );
+             		System.out.println("Total Number of QuickBooks Vendors>>>>: " + quickBooksVendors.size() );
              		
              		syncAccountsInQuickBase(quickBooksAccounts,quickBaseAccounts);
              		syncVendorsInQuickBase(quickBooksVendors,quickBaseVendors);
@@ -248,13 +232,13 @@ import com.intuit.quickbase.util.QuickBaseException;
 	@SuppressWarnings("unchecked")
 	public void syncAccountsInQuickBase(Vector quickBooksAccounts, Vector quickBaseAccounts){
 
-		HashMap infoHash2 =null;// new  HashMap();
-		HashMap infoHash3 =null;// new  HashMap();
-		HashMap infoHash4 =null;// new  HashMap();
+		HashMap infoHash2 =null;
+		HashMap infoHash3 =null;
+		HashMap infoHash4 =null;
 
 		String primaryKey1 ="";
 		
-   		/*	*********************************************/
+   		/************************************************/
    		/* 				Get QuickBase Data              */
    		/************************************************/		
 
@@ -266,16 +250,14 @@ import com.intuit.quickbase.util.QuickBaseException;
 		for (int i = 0; i <= quickBaseAccounts.size()-1; i++) {
 				 baseAccount = (AccountRet)quickBaseAccounts.get(i);
    			for (int j = 0;  j<= quickBooksAccounts.size()-1; j++) {
-   				   //Updating quickbase records
    				    booksAccount = (AccountRet)quickBooksAccounts.get(j);
-   				   //if ( ((AccountRet)quickBaseAccounts.get(i)).getFullName().equals(((AccountRet)quickBooksAccounts.get(j)).getFullName())) {
-   				   if( (baseAccount.getFullName().equals(booksAccount.getFullName()))||(baseAccount.getListId().equals(booksAccount.getListId())) ) {
-   					//System.out.println("Base is >>>"+baseAccount);
-   					//System.out.println("Book is >>>"+booksAccount);
+   				    //if (((AccountRet)quickBaseAccounts.get(i)).getFullName().equals(((AccountRet)quickBooksAccounts.get(j)).getFullName())) {
+   				    if((baseAccount.getFullName().equals(booksAccount.getFullName()))||(baseAccount.getListId().equals(booksAccount.getListId())) ) {
+   					//System.out.println("QuickBase Account is: >>>"+baseAccount);
+   					//System.out.println("QuickBooks Account is: >>>"+booksAccount);
   					 
    					   tempQuickBooksAccount.remove(j);
 					   tempQuickBaseAccount.remove(i);
-					   //quickBooksAccounts.remove(j);
    					   infoHash3=new HashMap();
    					   
    					   if(!baseAccount.getFullName().equals(booksAccount.getFullName())) 
@@ -304,14 +286,14 @@ import com.intuit.quickbase.util.QuickBaseException;
    					   if(!infoHash3.isEmpty()){
    					   		try{
    					   			primaryKey1 = qdb15.editRecord(accountsTableId, infoHash3, baseAccount.getQuickBasePrimaryKey() );
-   					   			System.out.println("Updating primary key"+ baseAccount.getQuickBasePrimaryKey());
-   					   			System.out.println("Successfully UPDATEd a Base Account Record Primary key we are using: "+ infoHash3);
+   					   			System.out.println("Updating Primary key"+ baseAccount.getQuickBasePrimaryKey());
+   					   			System.out.println("Successfully updated a QuickBase Account Record: "+ infoHash3);
    					   			//System.out.println("Base ACCT: "+ baseAccount);
    					   			//System.out.println("Book ACCT: "+ booksAccount);
  					   
    				   			}catch(Exception e2){
    				   				System.out.println("Problem while editing "+ infoHash3 + "\nwith PK "+baseAccount.getQuickBasePrimaryKey());
-   				   				System.out.println("Exception at Edit Record Accounts "+e2.getMessage());
+   				   				System.out.println("Exception while editing an Account record in Quickbase: "+e2.getMessage());
    				   			}
    					   }
 					   infoHash3=null;
@@ -321,20 +303,20 @@ import com.intuit.quickbase.util.QuickBaseException;
    		   } //end base for
    		   // For add records
    		
-   		   System.out.println("DELETE VECTOR SIZE"+tempQuickBaseAccount.size());
-   		for (int k = 0; k <= tempQuickBaseAccount.size()-1; k++) {
-   			infoHash4=new HashMap();
-   			AccountRet deleteQuickBaseAccount = ((AccountRet)tempQuickBaseAccount.get(k));
-   			//System.out.println("Value of IsInActive: "+ deleteQuickBaseAccount.getIsInActive());
-   			if(deleteQuickBaseAccount.getIsInActive().equals("0")){
-   				 
+   		   System.out.println("DELETE ACCOUNT VECTOR SIZE"+tempQuickBaseAccount.size());
+   		   
+   		   for (int k = 0; k <= tempQuickBaseAccount.size()-1; k++) {
+   			   infoHash4=new HashMap();
+   			   AccountRet deleteQuickBaseAccount = ((AccountRet)tempQuickBaseAccount.get(k));
+   			   //System.out.println("Value of IsInActive: "+ deleteQuickBaseAccount.getIsInActive());
+   			   if(deleteQuickBaseAccount.getIsInActive().equals("0")){
 			       infoHash4.put("24", "1");
-			       primaryKey1 = qdb15.editRecord(accountsTableId, infoHash4,deleteQuickBaseAccount.getQuickBasePrimaryKey() );               				   
+			       primaryKey1 = qdb15.editRecord(accountsTableId, infoHash4, deleteQuickBaseAccount.getQuickBasePrimaryKey() );               				   
 			       System.out.println("SUCCESSFULLY DELETED a Base Record with Primary key: "+deleteQuickBaseAccount.getQuickBasePrimaryKey());
    			}
    		}
    		   
-   		   System.out.println("INSERT VECTOR SIZE >>: " + tempQuickBooksAccount.size());
+   		   System.out.println("INSERT ACCOUNT VECTOR SIZE >>: " + tempQuickBooksAccount.size());
 
    		   for (int l = 0; l <= tempQuickBooksAccount.size()-1; l++) {
    			   AccountRet addBooksAccount = (AccountRet)tempQuickBooksAccount.get(l);
@@ -360,19 +342,16 @@ import com.intuit.quickbase.util.QuickBaseException;
 
     /*
      * 
-     * 
-     * 
      * syncVendorsInQuickBase
-     * 
-     * 
+     *
      * */
 	
 	@SuppressWarnings("unchecked")
 	public void syncVendorsInQuickBase(Vector quickBooksVendors, Vector quickBaseVendors){
 
-		HashMap infoHash2 =null;// new  HashMap();
-		HashMap infoHash3 =null;// new  HashMap();
-		HashMap infoHash4 =null;// new  HashMap();
+		HashMap infoHash2 =null;
+		HashMap infoHash3 =null;
+		HashMap infoHash4 =null;
 
 		String primaryKey1 ="";
 		
@@ -389,7 +368,6 @@ import com.intuit.quickbase.util.QuickBaseException;
 		for (int i = 0; i <= quickBaseVendors.size()-1; i++) {
 			baseVendor = (VendorRet)quickBaseVendors.get(i);
    			for (int j = 0;  j<= quickBooksVendors.size()-1; j++) {
-   				   //Updating quickbase records
    				booksVendor = (VendorRet)quickBooksVendors.get(j);
    				//if( (baseVendor.getName().equals(booksVendor.getName()))||(baseVendor.getListID().equals(booksVendor.getListID())) ) {
    				if(baseVendor.getName().equals(booksVendor.getName())) {
@@ -403,49 +381,47 @@ import com.intuit.quickbase.util.QuickBaseException;
    					infoHash3=new HashMap();
    					   
    				
-   					   if(!baseVendor.getCompanyName().equals(booksVendor.getCompanyName())) 
+   					if(!baseVendor.getCompanyName().equals(booksVendor.getCompanyName())) {
    					   infoHash3.put("11",  booksVendor.getCompanyName());
+   					}
 
-   					   if(!baseVendor.getCreditLimit().equals(booksVendor.getCreditLimit())){
-   	   					   infoHash3.put("25",  booksVendor.getCreditLimit());
-   					   }else{
+   					if(!baseVendor.getCreditLimit().equals(booksVendor.getCreditLimit())){
+   	   				    infoHash3.put("25",  booksVendor.getCreditLimit());
+   					}else{
    						System.out.println("baseVendor.getCreditLimit() >>>"+baseVendor.getCreditLimit()+"baseVendor.getCreditLimit() >>>"+baseVendor.getCreditLimit());
-   					   }
-   					   if(!baseVendor.getName().equals(booksVendor.getName())) 
+   					}
+   					if(!baseVendor.getName().equals(booksVendor.getName())) {
     				   infoHash3.put("7",  booksVendor.getName());
-   					   
-   					   if(!baseVendor.getType().equals(booksVendor.getType())) 
+   					}
+   					if(!baseVendor.getType().equals(booksVendor.getType())) {
     				   infoHash3.put("21",  booksVendor.getType());
-   					   
-   					   if(!baseVendor.getTermsRef().equals(booksVendor.getTermsRef())) 
+   					}
+   					if(!baseVendor.getTermsRef().equals(booksVendor.getTermsRef())) {
    					   infoHash3.put("8", booksVendor.getTermsRef());
-
-   					   if(!baseVendor.getAccountNumber().equals(booksVendor.getAccountNumber())) 
+   					}
+   					if(!baseVendor.getAccountNumber().equals(booksVendor.getAccountNumber())) {
    					   infoHash3.put("14", booksVendor.getAccountNumber());
-   					   
-   					   if(!baseVendor.getListID().equals(booksVendor.getListID())) 
+   					} 
+   					if(!baseVendor.getListID().equals(booksVendor.getListID())) {
     				   infoHash3.put("38", booksVendor.getListID());
-   					   
-   					   if(!baseVendor.getIsInActive().equals(booksVendor.getIsInActive())) 
+   					}
+   					if(!baseVendor.getIsInActive().equals(booksVendor.getIsInActive())) {
    					   infoHash3.put("26", booksVendor.getIsInActive()); // the vendor is inActive = 0 (active)
-   					   
-   					   if( (booksVendor.getTimeModified()!=null)&&(baseVendor.getTimeModified()!=null)){
-   						   if( (baseVendor.getTimeModified().before(booksVendor.getTimeModified())) ){
-   							   infoHash3.put("36", booksVendor.getTimeModified().toString());
-   							   System.out.println("Debug, Both Not Null, quick base is older");
-   						   }
-   					   }else if( (booksVendor.getTimeModified()!=null)&&(baseVendor.getTimeModified()==null)){
-   						   infoHash3.put("36", booksVendor.getTimeModified().toString());
-   						       System.out.println("Debug, base is null, setting to books modified date");
-   					   }
-   						   
-   					   if(!infoHash3.isEmpty()){
-   					   		try{
-   					   			primaryKey1 = qdb15.editRecord(vendorTableId, infoHash3, baseVendor.getQuickBasePrimaryKey() );
-   					   			System.out.println("Updating primary key"+ baseVendor.getQuickBasePrimaryKey());
-   					   			System.out.println("Successfully UPDATEd a Base Record Primary key we are using: "+ infoHash3);
-   					   			//System.out.println("Base Vendor: "+ baseVendor);
-   					   			//System.out.println("Book Vendor: "+ booksVendor);
+   					}
+   					if( (booksVendor.getTimeModified()!=null)&&(baseVendor.getTimeModified()!=null)){
+   						if(! (baseVendor.getTimeModified().equals(booksVendor.getTimeModified())) ){
+   							   infoHash3.put("36", booksVendor.getTimeModified());
+   						}
+   					}else if( (booksVendor.getTimeModified()!=null)&&(baseVendor.getTimeModified()==null)){
+   						   infoHash3.put("36", booksVendor.getTimeModified());
+   					}
+   					if(!infoHash3.isEmpty()){
+   					   	try{
+   					   		primaryKey1 = qdb15.editRecord(vendorTableId, infoHash3, baseVendor.getQuickBasePrimaryKey() );
+   					   		System.out.println("Updating primary key"+ baseVendor.getQuickBasePrimaryKey());
+   					   		System.out.println("Successfully UPDATEd a Base Record Primary key we are using: "+ infoHash3);
+   					   		//System.out.println("Base Vendor: "+ baseVendor);
+   					   		//System.out.println("Book Vendor: "+ booksVendor);
  					   
    				   			}catch(Exception e2){
    				   				System.out.println("Problem while editing "+ infoHash3 + "\nwith PK "+baseVendor.getQuickBasePrimaryKey());
@@ -493,7 +469,7 @@ import com.intuit.quickbase.util.QuickBaseException;
 				    VendorRet addBooksVendor = (VendorRet)tempQuickBooksVendor.get(l);
    			   		infoHash2=new HashMap();
    			   			infoHash2.put("12", clientId); //Hard Code ClinetID just for Add
-   			   			infoHash2.put("36", addBooksVendor.getTimeModified().toString());			   	  	
+   			   			infoHash2.put("36", addBooksVendor.getTimeModified());			   	  	
    			   			infoHash2.put("7",  addBooksVendor.getName());
    			   			infoHash2.put("11",  addBooksVendor.getCompanyName());
    			   			infoHash2.put("25", addBooksVendor.getCreditLimit());
@@ -567,7 +543,9 @@ import com.intuit.quickbase.util.QuickBaseException;
 				String datetime = accountRet1.getChildText("TimeModified").substring(0,19);				
 				quickBooksDate = (Date)formatter.parse(datetime);
 				account.setTimeModified(quickBooksDate);
-					
+				//account.setTimeModified(datetime);
+				
+	
 				fullName = accountRet1.getChildText("FullName");
 				if(fullName!=null) account.setFullName(fullName);
 				else  account.setFullName("");	
@@ -631,9 +609,12 @@ import com.intuit.quickbase.util.QuickBaseException;
 				VendorRet vendor = new VendorRet();
 				
 				//System.out.println("Debug 12");
-				String datetime = vendorRet1.getChildText("TimeModified").substring(0,19);				
-				quickBooksDate = (Date)formatter.parse(datetime);
-				vendor.setTimeModified(quickBooksDate);
+				String datetime = vendorRet1.getChildText("TimeModified").substring(0,19);	
+				System.out.println("ZZZZZZZZZZZZZZZZZZZZZZZZZZZ  Date from quickbooks: "+ datetime);
+				//quickBooksDate = (Date)formatter.parse(datetime);
+				
+				//System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX   quickBooksDate:" + quickBooksDate);
+				vendor.setTimeModified(datetime);
 				
 				//System.out.println("Debug 13");
 				accountNumber = vendorRet1.getChildText("AccountNumber");
@@ -742,7 +723,7 @@ import com.intuit.quickbase.util.QuickBaseException;
     	String quickBooksDateModifiedInQuickBase ="";
     	try {
 
-    		
+    		QuickBaseClient qdb13 = new QuickBaseClient(loginID ,passWord, strURL);
 			quickBaseAccounts = qdb13.doQuery(accountsTableId, "{8.EX.'"+clientId+"'}", "3.7.10.20.24.6.26.28", "3", s4);
 			
 			for(int j = 0; j <= quickBaseAccounts.size() - 1; j++)
@@ -792,7 +773,7 @@ import com.intuit.quickbase.util.QuickBaseException;
 	    	String quickBooksDateModifiedInQuickBase ="";
 	    	try {
 
-	    		
+	    		QuickBaseClient qdb13 = new QuickBaseClient(loginID ,passWord, strURL);	
 	    		quickBaseVendors = qdb13.doQuery(vendorTableId, "{12.EX.'"+clientId+"'}", "7.11.14.21.26.3.8.25.36.38", "7", s4);
 				// 7 is vendorname
 	    		// 11 is company name
@@ -837,9 +818,10 @@ import com.intuit.quickbase.util.QuickBaseException;
 		           			
 		           			
 		           			
-		           			//System.out.println(" quickBooksDateModifiedInQuickBase "+quickBooksDateModifiedInQuickBase);
+		           			System.out.println("################################# quickBooksDateModifiedInQuickBase "+quickBooksDateModifiedInQuickBase);
 		           			if((quickBooksDateModifiedInQuickBase!=null) && (!quickBooksDateModifiedInQuickBase.equals(""))){
-		           				vendor.setTimeModified(new Date(Long.parseLong(quickBooksDateModifiedInQuickBase)));
+		           				vendor.setTimeModified(quickBooksDateModifiedInQuickBase);
+		           				System.out.println("$$$$$$$$$$$$QuickBaseDate after date conversion: "+ vendor.getTimeModified());
 		           			}else if(quickBooksDateModifiedInQuickBase==null){
 		           				vendor.setTimeModified(null);	           				
 		           			}
