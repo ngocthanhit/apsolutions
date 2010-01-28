@@ -1,21 +1,25 @@
 package com.bke2.util;
 
+import java.util.Date;
+
 public class VendorRet {
-	private String ListID;
+	private String listID;
 	private String timeCreated;
-	private String timeModified;
-	private String editSequence;
-	private String name;
-	private String isActive;
+	private Date timeModified;
+	private String termsRef="";
+	private String name="";
+	private String isInActive;
+	private String accountNumber;
 	private String companyName;
-	private String nameOnCheck;
-	private String isVendorElifgibleFor1099;
-	private String balance;
+	private String type="";
+	private String creditLimit="";
+	private String quickBasePrimaryKey="";
+	
 	public String getListID() {
-		return ListID;
+		return listID;
 	}
 	public void setListID(String listID) {
-		ListID = listID;
+		this.listID = listID;
 	}
 	public String getTimeCreated() {
 		return timeCreated;
@@ -23,17 +27,17 @@ public class VendorRet {
 	public void setTimeCreated(String timeCreated) {
 		this.timeCreated = timeCreated;
 	}
-	public String getTimeModified() {
+	public Date getTimeModified() {
 		return timeModified;
 	}
-	public void setTimeModified(String timeModified) {
+	public void setTimeModified(Date timeModified) {
 		this.timeModified = timeModified;
 	}
-	public String getEditSequence() {
-		return editSequence;
+	public String getTermsRef() {
+		return termsRef;
 	}
-	public void setEditSequence(String editSequence) {
-		this.editSequence = editSequence;
+	public void setTermsRef(String termsRef) {
+		this.termsRef = termsRef;
 	}
 	public String getName() {
 		return name;
@@ -41,11 +45,50 @@ public class VendorRet {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getIsActive() {
-		return isActive;
+	public String getIsInActive() {
+		return isInActive;
 	}
-	public void setIsActive(String isActive) {
-		this.isActive = isActive;
+	public void setIsInActive(String isActive) {
+		this.isInActive = isActive;
+	}
+	public String getAccountNumber(){
+		return accountNumber;
+	}
+	public void setAccountNumber(String accountNumber) {
+		this.accountNumber = accountNumber;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	public String getCreditLimit() {
+		return creditLimit;
+	}
+	public void setCreditLimit(String creditLimit) {
+		this.creditLimit = creditLimit;
+	}
+    public String toString() {
+		
+		String aa="";
+		aa=" ListId:"+listID+"\n";
+		aa=aa+"TimeModified:"+timeModified+"\n";
+		aa=aa+"TermsRef:"+termsRef+"\n";
+		aa=aa+"Type:"+type+"\n";
+		aa=aa+"IsInActive:"+isInActive+"\n";
+		aa=aa+"CreditLimit:"+creditLimit+"\n";
+		aa=aa+"Name:"+name+"\n";
+		aa=aa+"CompanyName:"+companyName+"\n";
+		aa=aa+"Account:"+accountNumber+"\n";
+		aa=aa+"QuickBasePrimaryKey:"+quickBasePrimaryKey+"\n";
+		return aa;
+	}
+	public String getQuickBasePrimaryKey() {
+		return quickBasePrimaryKey;
+	}
+	public void setQuickBasePrimaryKey(String quickBasePrimaryKey) {
+		this.quickBasePrimaryKey = quickBasePrimaryKey;
 	}
 	public String getCompanyName() {
 		return companyName;
@@ -53,25 +96,6 @@ public class VendorRet {
 	public void setCompanyName(String companyName) {
 		this.companyName = companyName;
 	}
-	public String getNameOnCheck() {
-		return nameOnCheck;
-	}
-	public void setNameOnCheck(String nameOnCheck) {
-		this.nameOnCheck = nameOnCheck;
-	}
-	public String getIsVendorElifgibleFor1099() {
-		return isVendorElifgibleFor1099;
-	}
-	public void setIsVendorElifgibleFor1099(String isVendorElifgibleFor1099) {
-		this.isVendorElifgibleFor1099 = isVendorElifgibleFor1099;
-	}
-	public String getBalance() {
-		return balance;
-	}
-	public void setBalance(String balance) {
-		this.balance = balance;
-	}
-	
 	
 }
 
