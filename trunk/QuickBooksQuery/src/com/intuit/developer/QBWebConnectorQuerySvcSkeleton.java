@@ -7,8 +7,15 @@
  */
 package com.intuit.developer;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.Writer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -44,37 +51,44 @@ import com.intuit.quickbase.util.QuickBaseException;
  		 DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
  		 
  		 
-  		 String clientId = "7";
+  		 //String clientId = "7";
  		 String strURL = "https://docorganiz.quickbase.com/db/";
 		 String s4 = "sortorder-AD";
 		 String accountsTableId = "bes8a4tgv";
 		 String vendorTableId ="bes8a4tgu";
-		 //QuickBaseClient qdb13 = new;
-		 //QuickBaseClient qdb15 = null;
-		 QuickBaseClient qdb13 = new QuickBaseClient("mgconno@yahoo.com" ,"Bubbaa17", strURL);		
-		 QuickBaseClient qdb15 = new QuickBaseClient("sashiatwork@gmail.com" ,"SRquic12", strURL);
 		
+		 QuickBaseClient qdb13 = null;	
+		 Lookup lookup = new Lookup();
+		 //ServletContext context
+ 		// lookup = (Lookup)getServletContext().getAttribute("lookup");
+ 		 //Context initial = new InitialContext();
+ 		 //Context environment =
+ 		//(Context)initial.lookup("java:comp/env");
+
         /**
          * Auto generated method signature
          * 
-                                     * @param sendRequestXML
+         * @param sendRequestXML
          */
         
     	public com.intuit.developer.SendRequestXMLResponse sendRequestXML(com.intuit.developer.SendRequestXML sendRequestXML)
     	{
     		SendRequestXMLResponse response = new SendRequestXMLResponse();
+    	   
     		String inXML;
     		
     		inXML ="<?xml version=\"1.0\" ?>" +
     		"<!DOCTYPE QBXML PUBLIC '-//INTUIT//DTD QBXML QBD 1.0//EN' >" +
     		"<QBXML>" +
     		"<QBXMLMsgsRq onError = \"continueOnError\">" +
+    		"<CompanyQueryRq requestID = \"2\">" +
+    		"</CompanyQueryRq>" +
     		"<VendorQueryRq requestID = \"2\">" +
     		"</VendorQueryRq>" +
     		"<AccountQueryRq requestID = \"1\">" +
     		"</AccountQueryRq>" +
     		"</QBXMLMsgsRq></QBXML>";
-    		System.out.println("Final XML STRING: "+ inXML);
+    		//System.out.println("Final XML STRING: "+ inXML);
     		response.setSendRequestXMLResult(inXML);
     		return response;
     	}
@@ -107,6 +121,7 @@ import com.intuit.quickbase.util.QuickBaseException;
                  public com.intuit.developer.CloseConnectionResponse closeConnection(com.intuit.developer.CloseConnection closeConnection)
                  {
               		CloseConnectionResponse connection = new CloseConnectionResponse();
+              		
               		try {
               			connection.setCloseConnectionResult("Closing  the connection");
               		}catch (Exception ex){
@@ -136,31 +151,58 @@ import com.intuit.quickbase.util.QuickBaseException;
          */
                  public com.intuit.developer.AuthenticateResponse authenticate(com.intuit.developer.Authenticate authenticate)
               	 {
-              		AuthenticateResponse response = new AuthenticateResponse();
-              	    Lookup lookup = new Lookup();
+                 
+                	 AuthenticateResponse response = new AuthenticateResponse();
+              	     Lookup lookup = new Lookup();
 
               		try{
               			String[] asRtn = new String[2];
-              			asRtn[0] = "{F5FCCBC3-AA13-4e28-9DBE-3E571823F2BB}"; //myGUID.toString();
+              		//asRtn[0] = "{F5FCCBC3-AA13-4e28-9DBE-3E571823F2BB}"; //myGUID.toString();
+                       
+                        String token = String.valueOf(System.currentTimeMillis());
+
+                        String fileName = String.valueOf("QUERY"+token+".txt");
+              			
+                        asRtn[0] = token; //myGUID.toString();
+                        
+                       
+                  
               			
               			loginID = authenticate.getStrUserName();
               			passWord = authenticate.getStrPassword();
-              			qdb15 = new QuickBaseClient(loginID ,passWord, strURL);
+              			
+              			
+              			
+              			
 
-              		    //System.out.println("UserName: " + authenticate.getStrUserName());
-              			//System.out.println("Password: " + authenticate.getStrPassword());
+              		    System.out.println("UserName: " + authenticate.getStrUserName());
+              			System.out.println("Password: " + authenticate.getStrPassword());
               			boolean isAuthenticated;           			
               		    isAuthenticated = lookup.isAuthenticated(loginID,passWord);
               			System.out.println("Is Authenticated: "+ isAuthenticated);
               			//Checks for authentication and sends a result back to QBWC
               			if(isAuthenticated) {
-              				{asRtn[1] = "";} 
+              				{asRtn[1] = "";}
+              				init(loginID,passWord);
               			} 
               			else {
               				{asRtn[1] = "NVU";}
               			}
               			ArrayOfString asRtn2 = new ArrayOfString();
               			asRtn2.setString(asRtn);
+              			String finalFileName = new File(".").getCanonicalPath()+"\\"+ fileName;
+              			//System.out.println("FILENAME WE ARE USING IN AUTHENTICATE: "+ finalFileName);
+                        File fileWithTokenName = new File(finalFileName);
+                        boolean isFileCreated = fileWithTokenName.createNewFile();
+
+                        if (isFileCreated) {
+                        	System.out.println("File Created ");
+                        }
+                        else {
+                        	System.out.println("Could not create file ");
+                        }
+                        System.out.println("Writting contents: ");      
+              			setContents(fileWithTokenName, "u="+loginID+"p="+passWord);
               			response.setAuthenticateResult(asRtn2);
               			
               		}catch (Exception ex){
@@ -181,8 +223,28 @@ import com.intuit.quickbase.util.QuickBaseException;
              	{
              		ReceiveResponseXMLResponse response = new ReceiveResponseXMLResponse();
              		
+             		String token = receiveResponseXML.getTicket();
+             		
+                    String fileName = String.valueOf("QUERY"+token+".txt");
+                    try{
+                    	String finalFileName = new File(".").getCanonicalPath()+"\\"+fileName;             	
+                    	File fileWithTokenName = new File(finalFileName);
+                    	String userNamePassword = getContents(fileWithTokenName);
+                    	int endOfLoginID = userNamePassword.indexOf("p=");         	
+                    	this.loginID = userNamePassword.substring(2, endOfLoginID);                  	
+                    	this.passWord = userNamePassword.substring(endOfLoginID+2);
+                    	init(loginID, passWord);
+             		
+                    } catch (Exception ex){
+                    	System.out.println("Error creating username/password file: "+ ex.getMessage());
+                    }
+             		
             		Element accountQueryRs = null;
             		Element vendorQueryRs = null;
+            		Element companyQueryRs = null;
+            		String clientId = null;
+            		
+            		String localTicket = receiveResponseXML.getTicket();
             		
             		try { 
             			System.out.println("Received response  ....");
@@ -196,6 +258,7 @@ import com.intuit.quickbase.util.QuickBaseException;
             			Element qbxmlrs = (Element)qbxml.getChild("QBXMLMsgsRs");
             			accountQueryRs = (Element)qbxmlrs.getChild("AccountQueryRs");
             			vendorQueryRs = (Element)qbxmlrs.getChild("VendorQueryRs");
+            			companyQueryRs = (Element)qbxmlrs.getChild("CompanyQueryRs");
            
 					}catch(Exception e1){
 						System.out.println("Exception at receiveResponseXML with DOM parsing "+e1.getMessage());
@@ -209,10 +272,12 @@ import com.intuit.quickbase.util.QuickBaseException;
 					Vector quickBooksVendors=null;
 					quickBooksAccounts = getQuickBooksAccounts(accountQueryRs);
 					quickBooksVendors = getQuickBooksVendors(vendorQueryRs);
+					clientId = getCompanyName(companyQueryRs);
+					System.out.println("ClientId: "+ clientId);
                		
                		// First check if there are any records at all 
-             		Vector quickBaseAccounts = getQuickBaseAccounts();
-             		Vector quickBaseVendors = getQuickBaseVendors();
+             		Vector quickBaseAccounts = getQuickBaseAccounts(clientId);
+             		Vector quickBaseVendors = getQuickBaseVendors(clientId);
              		
              		System.out.println("Total Number of quickBase Accounts>>>>>: " + quickBaseAccounts.size() );
              		System.out.println("Total Number of quickBooks Accounts>>>>: " + quickBooksAccounts.size() );
@@ -220,8 +285,8 @@ import com.intuit.quickbase.util.QuickBaseException;
              		System.out.println("Total Number of QuickBase Vendors>>>>>: " + quickBaseVendors.size() );
              		System.out.println("Total Number of QuickBooks Vendors>>>>: " + quickBooksVendors.size() );
              		
-             		syncAccountsInQuickBase(quickBooksAccounts,quickBaseAccounts);
-             		syncVendorsInQuickBase(quickBooksVendors,quickBaseVendors);
+             		syncAccountsInQuickBase(quickBooksAccounts,quickBaseAccounts,clientId);
+             		syncVendorsInQuickBase(quickBooksVendors,quickBaseVendors, clientId);
 
           		    System.out.println("DONE PROCESSING RECORDS XXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
           		   
@@ -230,8 +295,9 @@ import com.intuit.quickbase.util.QuickBaseException;
              	}
 
 	@SuppressWarnings("unchecked")
-	public void syncAccountsInQuickBase(Vector quickBooksAccounts, Vector quickBaseAccounts){
-
+	public void syncAccountsInQuickBase(Vector quickBooksAccounts, Vector quickBaseAccounts, String clientId){
+		System.out.println("VALUE OF LOGINID: "+ this.loginID);
+ 		System.out.println("VALUE OF PASSWORD: "+ this.passWord);
 		HashMap infoHash2 =null;
 		HashMap infoHash3 =null;
 		HashMap infoHash4 =null;
@@ -285,7 +351,8 @@ import com.intuit.quickbase.util.QuickBaseException;
    						   
    					   if(!infoHash3.isEmpty()){
    					   		try{
-   					   			primaryKey1 = qdb15.editRecord(accountsTableId, infoHash3, baseAccount.getQuickBasePrimaryKey() );
+   					   		    this.qdb13 = new QuickBaseClient(loginID.trim() ,passWord.trim(), strURL);
+   					   			primaryKey1 = qdb13.editRecord(accountsTableId, infoHash3, baseAccount.getQuickBasePrimaryKey() );
    					   			System.out.println("Updating Primary key"+ baseAccount.getQuickBasePrimaryKey());
    					   			System.out.println("Successfully updated a QuickBase Account Record: "+ infoHash3);
    					   			//System.out.println("Base ACCT: "+ baseAccount);
@@ -311,7 +378,11 @@ import com.intuit.quickbase.util.QuickBaseException;
    			   //System.out.println("Value of IsInActive: "+ deleteQuickBaseAccount.getIsInActive());
    			   if(deleteQuickBaseAccount.getIsInActive().equals("0")){
 			       infoHash4.put("24", "1");
-			       primaryKey1 = qdb15.editRecord(accountsTableId, infoHash4, deleteQuickBaseAccount.getQuickBasePrimaryKey() );               				   
+			       if (qdb13 == null){
+			    	   System.out.println("QB Client is null");
+			       }
+			       this.qdb13 = new QuickBaseClient(loginID.trim() ,passWord.trim(), strURL);
+			       primaryKey1 = qdb13.editRecord(accountsTableId, infoHash4, deleteQuickBaseAccount.getQuickBasePrimaryKey() );               				   
 			       System.out.println("SUCCESSFULLY DELETED a Base Record with Primary key: "+deleteQuickBaseAccount.getQuickBasePrimaryKey());
    			}
    		}
@@ -329,7 +400,8 @@ import com.intuit.quickbase.util.QuickBaseException;
 			   infoHash2.put("20", addBooksAccount.getDesc());
 			   infoHash2.put("24", addBooksAccount.getIsInActive()); // the account is inActive = 0 (active)
 			   infoHash2.put("28", addBooksAccount.getListId());
-        	   primaryKey1 = qdb15.addRecord(accountsTableId, infoHash2);
+			   this.qdb13 = new QuickBaseClient(loginID.trim() ,passWord.trim(), strURL);
+        	   primaryKey1 = this.qdb13.addRecord(accountsTableId, infoHash2);
         	   System.out.println ("Insert response"+primaryKey1+"\n infoHash2 "+infoHash2);
    		   }
  		   System.out.println("DONE SYNCing RECORDS XXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
@@ -347,8 +419,8 @@ import com.intuit.quickbase.util.QuickBaseException;
      * */
 	
 	@SuppressWarnings("unchecked")
-	public void syncVendorsInQuickBase(Vector quickBooksVendors, Vector quickBaseVendors){
-
+	public void syncVendorsInQuickBase(Vector quickBooksVendors, Vector quickBaseVendors, String clientId){
+		
 		HashMap infoHash2 =null;
 		HashMap infoHash3 =null;
 		HashMap infoHash4 =null;
@@ -417,7 +489,8 @@ import com.intuit.quickbase.util.QuickBaseException;
    					}
    					if(!infoHash3.isEmpty()){
    					   	try{
-   					   		primaryKey1 = qdb15.editRecord(vendorTableId, infoHash3, baseVendor.getQuickBasePrimaryKey() );
+   					   	    this.qdb13 = new QuickBaseClient(loginID.trim() ,passWord.trim(), strURL);
+   					   		primaryKey1 = qdb13.editRecord(vendorTableId, infoHash3, baseVendor.getQuickBasePrimaryKey() );
    					   		System.out.println("Updating primary key"+ baseVendor.getQuickBasePrimaryKey());
    					   		System.out.println("Successfully UPDATEd a Base Record Primary key we are using: "+ infoHash3);
    					   		//System.out.println("Base Vendor: "+ baseVendor);
@@ -444,7 +517,8 @@ import com.intuit.quickbase.util.QuickBaseException;
    			System.out.println("$$$$$$$$$$$$$$$ Value of IsActive: "+ deleteQuickBaseVendor.getIsInActive());
    			if(deleteQuickBaseVendor.getIsInActive().equals("0")){
 			       infoHash4.put("26", "1");
-			       primaryKey1 = qdb15.editRecord(vendorTableId, infoHash4,deleteQuickBaseVendor.getQuickBasePrimaryKey() );               				   
+			       this.qdb13 = new QuickBaseClient(loginID.trim() ,passWord.trim(), strURL);
+			       primaryKey1 = qdb13.editRecord(vendorTableId, infoHash4,deleteQuickBaseVendor.getQuickBasePrimaryKey() );               				   
 			       System.out.println("SUCCESSFULLY DELETED a Base Record with Primary key: "+deleteQuickBaseVendor.getQuickBasePrimaryKey());
    			}else{
    				System.out.println("NOTHING TO DELETE"); 
@@ -468,18 +542,18 @@ import com.intuit.quickbase.util.QuickBaseException;
 	    		   		// 38 is listID
 				    VendorRet addBooksVendor = (VendorRet)tempQuickBooksVendor.get(l);
    			   		infoHash2=new HashMap();
-   			   			infoHash2.put("12", clientId); //Hard Code ClinetID just for Add
-   			   			infoHash2.put("36", addBooksVendor.getTimeModified());			   	  	
-   			   			infoHash2.put("7",  addBooksVendor.getName());
-   			   			infoHash2.put("11",  addBooksVendor.getCompanyName());
-   			   			infoHash2.put("25", addBooksVendor.getCreditLimit());
-   			   			infoHash2.put("14", addBooksVendor.getAccountNumber());
-   			   			infoHash2.put("21", addBooksVendor.getType());
-   			   			infoHash2.put("8", addBooksVendor.getTermsRef());
-   			   			infoHash2.put("26", addBooksVendor.getIsInActive());
-   			   			infoHash2.put("38", addBooksVendor.getListID()); // the account is inActive = 0 (active)
-			   	  	
-			   	  	primaryKey1 = qdb15.addRecord(vendorTableId, infoHash2);
+   			   		infoHash2.put("12", clientId); //Hard Code ClinetID just for Add
+   			   		infoHash2.put("36", addBooksVendor.getTimeModified());			   	  	
+   			   		infoHash2.put("7",  addBooksVendor.getName());
+   			   		infoHash2.put("11",  addBooksVendor.getCompanyName());
+   			   		infoHash2.put("25", addBooksVendor.getCreditLimit());
+   			   		infoHash2.put("14", addBooksVendor.getAccountNumber());
+   			   		infoHash2.put("21", addBooksVendor.getType());
+   			   		infoHash2.put("8", addBooksVendor.getTermsRef());
+   			   		infoHash2.put("26", addBooksVendor.getIsInActive());
+   			   		infoHash2.put("38", addBooksVendor.getListID()); // the account is inActive = 0 (active)
+   			   		this.qdb13 = new QuickBaseClient(loginID.trim() ,passWord.trim(), strURL);
+			   	  	primaryKey1 = qdb13.addRecord(vendorTableId, infoHash2);
         	        System.out.println ("SUCCESSFUL INSERT WITH PRIMARY KEY "+primaryKey1+"\n infoHash2 "+infoHash2);
    		   }
  		   System.out.println("DONE SYNCing RECORDS XXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
@@ -489,7 +563,43 @@ import com.intuit.quickbase.util.QuickBaseException;
  			throw new  java.lang.UnsupportedOperationException("Please implement " + this.getClass().getName() + "#receiveResponseXML");
  		}
 	}  
-
+   public String getCompanyName(Element companyQueryRs){
+	   String companyName = null;
+	   String clientId = null;
+	   Vector quickBaseCompanys = null;
+	   HashMap hashmap1 = null;//new  HashMap();
+	   try { 
+			Iterator companyRetList = companyQueryRs.getChildren("CompanyRet").iterator();
+			while (companyRetList.hasNext()) {
+				Element companyRet = (Element)companyRetList.next();
+				companyName = companyRet.getChildText("CompanyName");
+			}
+	   } catch (Exception ex){
+		   System.out.println("Exception at getCompanyName method "+ex.getMessage());
+	   }
+	   try{
+		   QuickBaseClient qdb13 = new QuickBaseClient(this.loginID.trim() ,this.passWord.trim(), strURL);
+		   quickBaseCompanys=qdb13.doQuery(accountsTableId, "{.EX.'"+companyName+"'}", "8", "3", s4);
+		   for(int j = 0; j <= quickBaseCompanys.size() - 1; j++)
+		   {
+			    hashmap1 = (HashMap)quickBaseCompanys.elementAt(j);
+			    Iterator iterator = hashmap1.values().iterator();
+           		while (iterator.hasNext()) 
+           		{   
+					clientId = (String)iterator.next();
+           		}
+		   }
+		   
+	   } catch (QuickBaseException e) {
+		   // TODO Auto-generated catch block
+		   e.printStackTrace();
+	   } catch (Exception e) {
+		   // TODO Auto-generated catch block
+		   e.printStackTrace();
+	   }
+				
+	   return clientId;
+   }
     
     /*
      * 
@@ -502,7 +612,7 @@ import com.intuit.quickbase.util.QuickBaseException;
 	
     @SuppressWarnings("unchecked")
 	public Vector getQuickBooksAccounts(Element accountQueryRs) {
-
+    	
 		String accountNumber =null;	
 		String accountType =null;		
 		String accountBalance =null;		
@@ -513,10 +623,6 @@ import com.intuit.quickbase.util.QuickBaseException;
 		Date quickBooksDate ;	
     	Vector quickBooksAccounts = new Vector();
 		try { 
-			System.out.println("Received response  ....");
-			//String requestID = accountQueryRs.getAttributeValue("requestID");
-			//System.out.println("RequestID: "+ requestID);
-    	
 			Iterator accountRetList = accountQueryRs.getChildren("AccountRet").iterator();
 			while (accountRetList.hasNext()) {
 				
@@ -543,8 +649,6 @@ import com.intuit.quickbase.util.QuickBaseException;
 				String datetime = accountRet1.getChildText("TimeModified").substring(0,19);				
 				quickBooksDate = (Date)formatter.parse(datetime);
 				account.setTimeModified(quickBooksDate);
-				//account.setTimeModified(datetime);
-				
 	
 				fullName = accountRet1.getChildText("FullName");
 				if(fullName!=null) account.setFullName(fullName);
@@ -560,10 +664,6 @@ import com.intuit.quickbase.util.QuickBaseException;
 				} else {
 	   					account.setIsInActive("1");
 				}
-								
-				//account.setSublevel(accountRet1.getChildText("Sublevel"));	
-				//account.setName(accountRet1.getChildText("Name"));
-				//account.setTotalBalance(accountRet1.getChildText("TotalBalance"));
 				//System.out.println("Account: " + account.toString());
 				quickBooksAccounts.add(account);
 			}
@@ -584,8 +684,9 @@ import com.intuit.quickbase.util.QuickBaseException;
      * */
     
     @SuppressWarnings("unchecked")
+    
 	public Vector getQuickBooksVendors(Element vendorQueryRs) {
-
+    	
 		String companyName =null;
 		String accountNumber = null;
 		String isActive =null;		
@@ -595,7 +696,7 @@ import com.intuit.quickbase.util.QuickBaseException;
 		String timeCreated =null;		
 		String name =null;
 		String creditLimit = null;	
-		Date quickBooksDate ;	
+		Date quickBooksDate;	
     	Vector quickBooksVendors = new Vector();
 		try { 
 			System.out.println("Received response  ....");
@@ -604,31 +705,25 @@ import com.intuit.quickbase.util.QuickBaseException;
 			
 			while (vendorRetList.hasNext()) {
 				
-				//System.out.println("Debug 11");
+				
 				Element vendorRet1 = (Element)vendorRetList.next();
 				VendorRet vendor = new VendorRet();
 				
-				//System.out.println("Debug 12");
+				
 				String datetime = vendorRet1.getChildText("TimeModified").substring(0,19);	
 				System.out.println("ZZZZZZZZZZZZZZZZZZZZZZZZZZZ  Date from quickbooks: "+ datetime);
-				//quickBooksDate = (Date)formatter.parse(datetime);
 				
 				//System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX   quickBooksDate:" + quickBooksDate);
 				vendor.setTimeModified(datetime);
 				
-				//System.out.println("Debug 13");
+				
 				accountNumber = vendorRet1.getChildText("AccountNumber");
 				if(accountNumber!=null) vendor.setAccountNumber(accountNumber);
-				else  vendor.setAccountNumber("");
+				else  vendor.setAccountNumber("");		
 				
-				//System.out.println("Debug 14");
 				companyName = vendorRet1.getChildText("CompanyName");
 				if(companyName!=null) vendor.setCompanyName(companyName);
 				else  vendor.setCompanyName("");
-				
-				//System.out.println("Debug 15");
-				
-				
 
 				Iterator vendorTypeRefList = vendorRet1.getChildren("VendorTypeRef").iterator();
 				Element vendorTypeRef = null;
@@ -643,7 +738,6 @@ import com.intuit.quickbase.util.QuickBaseException;
 						vendor.setType("");
 					}
 				}
-				
 				
 				timeCreated = vendorRet1.getChildText("TimeCreated");
 				if(timeCreated!=null) {
@@ -660,9 +754,7 @@ import com.intuit.quickbase.util.QuickBaseException;
 				else  {
 					vendor.setName("");
 				}
-				
-			
-				 
+							 
 				Iterator vendorTermsRefList = vendorRet1.getChildren("TermsRef").iterator();
 				Element vendorTermsRef = null;
 				while (vendorTermsRefList.hasNext()) {
@@ -714,8 +806,8 @@ import com.intuit.quickbase.util.QuickBaseException;
     
     
 		@SuppressWarnings("unchecked")
-		public Vector getQuickBaseAccounts() {
-
+		public Vector getQuickBaseAccounts(String clientId) {
+			
 		HashMap hashmap1 = null;//new  HashMap();
     	Vector quickBaseAccounts = null;
     	Vector accountRetAccounts = new Vector();
@@ -723,10 +815,9 @@ import com.intuit.quickbase.util.QuickBaseException;
     	String quickBooksDateModifiedInQuickBase ="";
     	try {
 
-    		QuickBaseClient qdb13 = new QuickBaseClient(loginID ,passWord, strURL);
-			quickBaseAccounts = qdb13.doQuery(accountsTableId, "{8.EX.'"+clientId+"'}", "3.7.10.20.24.6.26.28", "3", s4);
-			
-			for(int j = 0; j <= quickBaseAccounts.size() - 1; j++)
+    		QuickBaseClient qdb13 = new QuickBaseClient(this.loginID.trim() ,this.passWord.trim(), strURL);
+			quickBaseAccounts=qdb13.doQuery(accountsTableId, "{8.EX.'"+clientId+"'}", "3.7.10.20.24.6.26.28", "3", s4);
+				for(int j = 0; j <= quickBaseAccounts.size() - 1; j++)
 			   {
 				    hashmap1 = (HashMap)quickBaseAccounts.elementAt(j);
 				    Iterator iterator = hashmap1.values().iterator();
@@ -764,7 +855,7 @@ import com.intuit.quickbase.util.QuickBaseException;
     	
     }
 		@SuppressWarnings("unchecked")
-		public Vector getQuickBaseVendors(){
+		public Vector getQuickBaseVendors(String clientId){
 
 			HashMap hashmap1 = null;//new  HashMap();
 	    	Vector quickBaseVendors = null;
@@ -773,7 +864,7 @@ import com.intuit.quickbase.util.QuickBaseException;
 	    	String quickBooksDateModifiedInQuickBase ="";
 	    	try {
 
-	    		QuickBaseClient qdb13 = new QuickBaseClient(loginID ,passWord, strURL);	
+	    		QuickBaseClient qdb13 = new QuickBaseClient(loginID.trim() ,passWord.trim(), strURL);	
 	    		quickBaseVendors = qdb13.doQuery(vendorTableId, "{12.EX.'"+clientId+"'}", "7.11.14.21.26.3.8.25.36.38", "7", s4);
 				// 7 is vendorname
 	    		// 11 is company name
@@ -815,9 +906,7 @@ import com.intuit.quickbase.util.QuickBaseException;
 		           			vendor.setCompanyName(((String)iterator.next()).trim());
 		           			vendor.setCreditLimit(((String)iterator.next()).trim());
 		           			vendor.setName(((String)iterator.next()).trim());
-		           			
-		           			
-		           			
+		      
 		           			System.out.println("################################# quickBooksDateModifiedInQuickBase "+quickBooksDateModifiedInQuickBase);
 		           			if((quickBooksDateModifiedInQuickBase!=null) && (!quickBooksDateModifiedInQuickBase.equals(""))){
 		           				vendor.setTimeModified(quickBooksDateModifiedInQuickBase);
@@ -839,6 +928,81 @@ import com.intuit.quickbase.util.QuickBaseException;
 			}
 	   		return vendorRetVendors;
 	    	
-	    }
+		}
+		
+		static public String getContents(File aFile) {
+		    //...checks on aFile are elided
+		    StringBuilder contents = new StringBuilder();
+		    
+		    try {
+		      //use buffering, reading one line at a time
+		      //FileReader always assumes default encoding is OK!
+		      BufferedReader input =  new BufferedReader(new FileReader(aFile));
+		      try {
+		        String line = null; //not declared within while loop
+		        /*
+		        * readLine is a bit quirky :
+		        * it returns the content of a line MINUS the newline.
+		        * it returns null only for the END of the stream.
+		        * it returns an empty String if two newlines appear in a row.
+		        */
+		        while (( line = input.readLine()) != null){
+		          contents.append(line);
+		          contents.append(System.getProperty("line.separator"));
+		        }
+		      }
+		      finally {
+		        input.close();
+		      }
+		    }
+		    catch (IOException ex){
+		      ex.printStackTrace();
+		    }
+		    
+		    return contents.toString();
+		  }
+
+		  /**
+		  * Change the contents of text file in its entirety, overwriting any
+		  * existing text.
+		  *
+		  * This style of implementation throws all exceptions to the caller.
+		  *
+		  * @param aFile is an existing file which can be written to.
+		  * @throws IllegalArgumentException if param does not comply.
+		  * @throws FileNotFoundException if the file does not exist.
+		  * @throws IOException if problem encountered during write.
+		  */
+		  static public void setContents(File aFile, String aContents)
+		                                 throws FileNotFoundException, IOException {
+		    if (aFile == null) {
+		      throw new IllegalArgumentException("File should not be null.");
+		    }
+		    if (!aFile.exists()) {
+		      throw new FileNotFoundException ("File does not exist: " + aFile);
+		    }
+		    if (!aFile.isFile()) {
+		      throw new IllegalArgumentException("Should not be a directory: " + aFile);
+		    }
+		    if (!aFile.canWrite()) {
+		      throw new IllegalArgumentException("File cannot be written: " + aFile);
+		    }
+
+		    //use buffering
+		    Writer output = new BufferedWriter(new FileWriter(aFile));
+		    try {
+		      //FileWriter always assumes default encoding is OK!
+		      output.write( aContents );
+		    }
+		    finally {
+		      output.close();
+		    }
+		  }
+		  
+		public void init(String loginID, String passWord){
+			 System.out.println("Initializing Quickbaseclient.....");
+			 this.qdb13 = new QuickBaseClient(loginID ,passWord, strURL);
+			 System.out.println("....done initializing Quickbaseclient.....");
+		}
     }
     
