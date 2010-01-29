@@ -842,13 +842,40 @@ public class Lookup
 public String exportBills() {
 	 
 	    //String s1 ="{'90'.EX.'"+clientId+"'}AND{'27'.EX.'Accept'}AND{'131'.EX.'"+recode+"'}";
-	    String s1 ="{'90'.EX.'"+clientId+"'}AND{'27'.EX.'Accept'}";
+	    String billCriteria ="{'90'.EX.'"+clientId+"'}AND{'27'.EX.'Accept'}";
+	    
+	   
+	    
 		
-	    String s2 = "13.14.112.23.24.124.25.3";
-		String s3 = "3";
-		String s4 = "sortorder-AD";
-		String s2a = "16.17.22.15";
-		String s3a = "16";
+
+	    String billColumns = "13.14.112.23.24.124.25.3.33";
+	    
+	    //  13    vendorName
+	    //  14    terms
+	    //  112   accountNumber
+	    //  23    invoiceNumber
+	    //  24    invoiceDate
+	    //  124   countApp
+	    //  25    invoiceDueDate
+	    //  3     primaryKey
+	    //  33    notes (description)
+	    
+		String billSort = "3";
+		String billSortOrder = "sortorder-AD";
+		
+		
+		
+		String lineItemColumns = "16.17.22.15.14";
+		String lineItemSort = "14";
+		String lineItemSortOrder = "sortorder-AD";
+		// 16  accountNumber
+		// 17  accountName
+		// 22  amount
+		// 15  description
+		// 14  lineNumber
+		
+		
+		
 		String u = "QuickBaseAdmin@docorganiz.com";
 		String p = "QBadd1234#*";
 		HashMap hashmap1 = null;
@@ -865,8 +892,10 @@ public String exportBills() {
 		String invoiceDueDateProcessed = "";
 		String lineAmt = "";
 		String lineDesc = "";
+		String lineNum = "";
 		String accName = "";
 		String accNum = "";
+		String description = "";
 		String xml = "";
 		String updatedStatusCode = "";
 		HashMap infoHash = new  HashMap();
@@ -881,13 +910,13 @@ public String exportBills() {
 		Vector vector= null;
 		try {
 			
-			System.out.println("invoiceTableId: " + invoiceTableId);
+			/*System.out.println("invoiceTableId: " + invoiceTableId);
 			System.out.println("s1: " + s1);
 			System.out.println("s2: " + s2);
 			System.out.println("s3: " + s3);
-			System.out.println("s4: " + s4);
-			//vector = qdb12.doQuery(invoiceTableId,s1, s2, s3, s4);
-			vector = qdb12.doQuery("bes8a4tgq",s1, s2, s3, s4);
+			System.out.println("s4: " + s4);*/
+			vector = qdb12.doQuery(invoiceTableId,billCriteria, billColumns, billSort, billSortOrder);
+			
 		} catch (QuickBaseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -907,6 +936,28 @@ public String exportBills() {
    		 
        	    while (iterator.hasNext()) 
 			{
+       	    	
+       	        	//  13    vendorName
+       		    	//  14    terms
+       		    	//  112   accountNumber
+       		    	//  23    invoiceNumber
+       		    	//  24    invoiceDate
+       		    	//  124   countApp
+       		    	//  25    invoiceDueDate
+       		    	//  3     primaryKey
+       	    	    //  33
+     			 // System.out.println("1: Memo\t "+ iterator.next());
+     			 // System.out.println("2: HeaderID\t "+ iterator.next());
+     		     // System.out.println("3: Account Number\t "+ iterator.next());
+     			 // System.out.println("4: Invoice Due Date:\t "+ iterator.next());
+     			 // System.out.println("5: Invoice Date:\t "+ iterator.next());
+     			 // System.out.println("6: Invoice Number\t "+ iterator.next());
+     			 // System.out.println("7: Terms \t "+ iterator.next());
+     			 // System.out.println("8: Count App\t "+ iterator.next());
+     			 // System.out.println("9: VendorName\t "+ iterator.next());
+     			  
+     	     description = (String)iterator.next(); 
+     	     System.out.println("ExportBills - Debug 3 - Description: "+description);
 			 headerID=(String)iterator.next();
 			 headerIdsArray[j]=headerID;
 			 System.out.println("ExportBills - Debug 3 - HeaderID: "+headerID);
@@ -931,13 +982,13 @@ public String exportBills() {
 			 xml = xml + "<FullName>"+ vendor.trim()+ "</FullName>"+"</VendorRef>";
 			 xml = xml + "<TxnDate>"+ invoiceDateProcessed + "</TxnDate>";
 			 xml = xml + "<DueDate>"+ invoiceDueDateProcessed + "</DueDate>";
-      	     xml = xml + "<Memo>" + invoiceNum + "</Memo>";
+      	     xml = xml + "<Memo>" + description + "</Memo>";
 
 			 //query corresponding Line Item
 		
 			 Vector lineItemVector = new Vector();
 			 try {
-				 lineItemVector = qdb12.doQuery(lineItemTableId,"{'6'.EX."+headerID+"}", s2a, s3a, s4);
+				 lineItemVector = qdb12.doQuery(lineItemTableId,"{'6'.EX."+headerID+"}", lineItemColumns, lineItemSort, lineItemSortOrder);
 				 System.out.println("ExportBills - Debug 13 - LineItem Vector Size: "+ lineItemVector.size());
 			 } catch (QuickBaseException e) {
 					// TODO Auto-generated catch block
@@ -954,19 +1005,41 @@ public String exportBills() {
 				 System.out.println("Value of i" + i);
 				 System.out.println("ExportBills - Debug 14 - Interating through lineItemVecotr ....");
          	     hashmap2 = (HashMap)lineItemVector.elementAt(i);
+         	     System.out.println("okay here....");
          	     Iterator iterator2 = hashmap2.values().iterator();
+         	     System.out.println("okay here too ....");
          	     while (iterator2.hasNext()) 
 			     {
+         	    	System.out.println("okay here..three..");
          	    	xml = xml + "<ExpenseLineAdd>";
          	    	xml = xml + "<AccountRef>";
+         	    	
+         	    	
+         	        // 16  accountNumber
+         			// 17  accountName
+         			// 22  amount
+         			// 15  description
+         			// 14  lineNumber
+         	    	
+         	    	
+         	    	//System.out.println("1: Amount \t "+ iterator2.next());
+       			    //System.out.println("2: LineNumber \t "+ iterator2.next());
+       		        //System.out.println("3: Description \t "+ iterator2.next());
+       			    //System.out.println("4: AccountName\t "+ iterator2.next());
+       			    //System.out.println("5: AccountNumber\t "+ iterator2.next());
+       			  
+       			  
 					lineAmt = (String)iterator2.next();
-					System.out.println("ExportBills - Debug 15 - LineAmt: "+lineAmt);
+					System.out.println("ExportBills - Amount: "+lineAmt);
+					lineNum = (String)iterator2.next();
+					System.out.println("ExportBills - Line Number: "+ lineNum);
 		 			lineDesc = (String)iterator2.next();
-					System.out.println("ExportBills - Debug 16 - LineDesc: "+lineDesc);
+					System.out.println("ExportBills - Description: "+lineDesc);
 		 			accName = (String)iterator2.next();
-					System.out.println("ExportBills - Debug 17 - AccName: "+accName);
+					System.out.println("ExportBills - AccountName: "+accName);
 		 			accNum = (String)iterator2.next();
-					System.out.println("ExportBills - Debug 18 - AccNum: "+accNum);
+					System.out.println("ExportBills - AccountNumber: "+accNum);
+				
 					
 					xml = xml + "<FullName>"+ accName +"</FullName>";
          	        xml = xml + "</AccountRef>";
