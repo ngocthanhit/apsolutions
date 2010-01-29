@@ -35,6 +35,8 @@ public class Lookup
     private String u;
     public String clientArray[];
     public String vendorArray[];
+    
+    
     private int clientSize=0;
     private int clientSequenceId = 0;
     private String vendorName="";
