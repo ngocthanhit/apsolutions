@@ -256,7 +256,7 @@ import com.intuit.quickbase.util.QuickBaseException;
             			document = builder1.build(new InputSource(new StringReader(response1)));
             			Element qbxml = document.getRootElement();
             			Element qbxmlrs = (Element)qbxml.getChild("QBXMLMsgsRs");
-            			accountQueryRs = (Element)qbxmlrs.getChild("AccountQueryRs");
+            			//accountQueryRs = (Element)qbxmlrs.getChild("AccountQueryRs");
             			vendorQueryRs = (Element)qbxmlrs.getChild("VendorQueryRs");
             			companyQueryRs = (Element)qbxmlrs.getChild("CompanyQueryRs");
            
@@ -270,22 +270,22 @@ import com.intuit.quickbase.util.QuickBaseException;
                		
 					Vector quickBooksAccounts=null;
 					Vector quickBooksVendors=null;
-					quickBooksAccounts = getQuickBooksAccounts(accountQueryRs);
+					//quickBooksAccounts = getQuickBooksAccounts(accountQueryRs);
 					quickBooksVendors = getQuickBooksVendors(vendorQueryRs);
 					clientId = getCompanyName(companyQueryRs);
 					System.out.println("ClientId: "+ clientId);
                		
                		// First check if there are any records at all 
-             		Vector quickBaseAccounts = getQuickBaseAccounts(clientId);
+             		//Vector quickBaseAccounts = getQuickBaseAccounts(clientId);
              		Vector quickBaseVendors = getQuickBaseVendors(clientId);
              		
-             		System.out.println("Total Number of quickBase Accounts>>>>>: " + quickBaseAccounts.size() );
-             		System.out.println("Total Number of quickBooks Accounts>>>>: " + quickBooksAccounts.size() );
+             		//System.out.println("Total Number of quickBase Accounts>>>>>: " + quickBaseAccounts.size() );
+             		//System.out.println("Total Number of quickBooks Accounts>>>>: " + quickBooksAccounts.size() );
              		
              		System.out.println("Total Number of QuickBase Vendors>>>>>: " + quickBaseVendors.size() );
              		System.out.println("Total Number of QuickBooks Vendors>>>>: " + quickBooksVendors.size() );
              		
-             		syncAccountsInQuickBase(quickBooksAccounts,quickBaseAccounts,clientId);
+             		//syncAccountsInQuickBase(quickBooksAccounts,quickBaseAccounts,clientId);
              		syncVendorsInQuickBase(quickBooksVendors,quickBaseVendors, clientId);
 
           		    System.out.println("DONE PROCESSING RECORDS XXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
@@ -493,7 +493,7 @@ import com.intuit.quickbase.util.QuickBaseException;
    					   		primaryKey1 = qdb13.editRecord(vendorTableId, infoHash3, baseVendor.getQuickBasePrimaryKey() );
    					   		System.out.println("Updating primary key"+ baseVendor.getQuickBasePrimaryKey());
    					   		System.out.println("Successfully UPDATEd a Base Record Primary key we are using: "+ infoHash3);
-   					   		//System.out.println("Base Vendor: "+ baseVendor);
+   					   		System.out.println("Updating Base Vendor: "+ baseVendor);
    					   		//System.out.println("Book Vendor: "+ booksVendor);
  					   
    				   			}catch(Exception e2){
@@ -519,7 +519,7 @@ import com.intuit.quickbase.util.QuickBaseException;
 			       infoHash4.put("26", "1");
 			       this.qdb13 = new QuickBaseClient(loginID.trim() ,passWord.trim(), strURL);
 			       primaryKey1 = qdb13.editRecord(vendorTableId, infoHash4,deleteQuickBaseVendor.getQuickBasePrimaryKey() );               				   
-			       System.out.println("SUCCESSFULLY DELETED a Base Record with Primary key: "+deleteQuickBaseVendor.getQuickBasePrimaryKey());
+			       System.out.println("Set base record to IsInActive to true for a Base Record with Primary key: "+deleteQuickBaseVendor.getQuickBasePrimaryKey());
    			}else{
    				System.out.println("NOTHING TO DELETE"); 
    			}
@@ -541,6 +541,7 @@ import com.intuit.quickbase.util.QuickBaseException;
 				   		// 36 is quickbooksmodified date
 	    		   		// 38 is listID
 				    VendorRet addBooksVendor = (VendorRet)tempQuickBooksVendor.get(l);
+				    System.out.println("About to insert new vendor record: "+addBooksVendor);
    			   		infoHash2=new HashMap();
    			   		infoHash2.put("12", clientId); //Hard Code ClinetID just for Add
    			   		infoHash2.put("36", addBooksVendor.getTimeModified());			   	  	
