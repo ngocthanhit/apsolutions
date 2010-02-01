@@ -160,26 +160,17 @@ import com.intuit.quickbase.util.QuickBaseException;
               		//asRtn[0] = "{F5FCCBC3-AA13-4e28-9DBE-3E571823F2BB}"; //myGUID.toString();
                        
                         String token = String.valueOf(System.currentTimeMillis());
-
-                        String fileName = String.valueOf("QUERY"+token+".txt");
-              			
-                        asRtn[0] = token; //myGUID.toString();
-                        
-                       
-                  
-              			
+                        String fileName = String.valueOf("QUERY"+token+".txt");       			
+                        asRtn[0] = token; //myGUID.toString();    			
               			loginID = authenticate.getStrUserName();
               			passWord = authenticate.getStrPassword();
               			
-              			
-              			
-              			
-
               		    System.out.println("UserName: " + authenticate.getStrUserName());
               			System.out.println("Password: " + authenticate.getStrPassword());
               			boolean isAuthenticated;           			
               		    isAuthenticated = lookup.isAuthenticated(loginID,passWord);
               			System.out.println("Is Authenticated: "+ isAuthenticated);
+              			
               			//Checks for authentication and sends a result back to QBWC
               			if(isAuthenticated) {
               				{asRtn[1] = "";}
@@ -256,7 +247,7 @@ import com.intuit.quickbase.util.QuickBaseException;
             			document = builder1.build(new InputSource(new StringReader(response1)));
             			Element qbxml = document.getRootElement();
             			Element qbxmlrs = (Element)qbxml.getChild("QBXMLMsgsRs");
-            			//accountQueryRs = (Element)qbxmlrs.getChild("AccountQueryRs");
+            			accountQueryRs = (Element)qbxmlrs.getChild("AccountQueryRs");
             			vendorQueryRs = (Element)qbxmlrs.getChild("VendorQueryRs");
             			companyQueryRs = (Element)qbxmlrs.getChild("CompanyQueryRs");
            
@@ -270,22 +261,22 @@ import com.intuit.quickbase.util.QuickBaseException;
                		
 					Vector quickBooksAccounts=null;
 					Vector quickBooksVendors=null;
-					//quickBooksAccounts = getQuickBooksAccounts(accountQueryRs);
+					quickBooksAccounts = getQuickBooksAccounts(accountQueryRs);
 					quickBooksVendors = getQuickBooksVendors(vendorQueryRs);
 					clientId = getCompanyName(companyQueryRs);
 					System.out.println("ClientId: "+ clientId);
                		
                		// First check if there are any records at all 
-             		//Vector quickBaseAccounts = getQuickBaseAccounts(clientId);
+             		Vector quickBaseAccounts = getQuickBaseAccounts(clientId);
              		Vector quickBaseVendors = getQuickBaseVendors(clientId);
              		
-             		//System.out.println("Total Number of quickBase Accounts>>>>>: " + quickBaseAccounts.size() );
-             		//System.out.println("Total Number of quickBooks Accounts>>>>: " + quickBooksAccounts.size() );
+             		System.out.println("Total Number of quickBase Accounts>>>>>: " + quickBaseAccounts.size() );
+             		System.out.println("Total Number of quickBooks Accounts>>>>: " + quickBooksAccounts.size() );
              		
-             		System.out.println("Total Number of QuickBase Vendors>>>>>: " + quickBaseVendors.size() );
-             		System.out.println("Total Number of QuickBooks Vendors>>>>: " + quickBooksVendors.size() );
+             		//System.out.println("Total Number of QuickBase Vendors>>>>>: " + quickBaseVendors.size() );
+             		//System.out.println("Total Number of QuickBooks Vendors>>>>: " + quickBooksVendors.size() );
              		
-             		//syncAccountsInQuickBase(quickBooksAccounts,quickBaseAccounts,clientId);
+             		syncAccountsInQuickBase(quickBooksAccounts,quickBaseAccounts,clientId);
              		syncVendorsInQuickBase(quickBooksVendors,quickBaseVendors, clientId);
 
           		    System.out.println("DONE PROCESSING RECORDS XXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
@@ -293,9 +284,104 @@ import com.intuit.quickbase.util.QuickBaseException;
              		response.setReceiveResponseXMLResult(100);
              		return response;
              	}
+@SuppressWarnings("unchecked")
+public void syncAccountsInQuickBase(Vector quickBooksAccountVector, Vector updateQuickBaseAccountVector, String clientId){
+	
+	HashMap infoHash4 =null;
+	String primaryKey1 ="";
+	
+		/*	*********************************************/
+		/* 				Get QuickBase Data              */
+		/************************************************/		
 
-	@SuppressWarnings("unchecked")
-	public void syncAccountsInQuickBase(Vector quickBooksAccounts, Vector quickBaseAccounts, String clientId){
+   	    Vector insertQuickBooksAccountVector = quickBooksAccountVector;
+   	    Vector deleteQuickBaseAccountVector = null;
+   	
+		AccountRet baseAccount = null;
+		AccountRet booksAccount = null;
+		
+		try{ 
+			// if quickbase is empty and quickbooks isn't do a direct insert of all quickbooks
+			if ((quickBooksAccountVector.size() > 0)&& (updateQuickBaseAccountVector.size() ==0)) {
+				insertQuickBooksAccountRecordsInQuickBase( insertQuickBooksAccountVector,  clientId);
+			} else {
+					int baseCount =0;
+				    Iterator baseItr = updateQuickBaseAccountVector.iterator();
+				    while(baseItr.hasNext()){
+				    	
+				    	baseAccount = (AccountRet)baseItr.next();
+				    	System.out.println("Base Account " + baseCount + " of quickBaseAccounts....");
+				    	booksAccount = null;
+
+				    	int booksCount =0;
+				    	Iterator booksItr = quickBooksAccountVector.iterator();
+   				    
+   				    while(booksItr.hasNext()){
+   				    	booksAccount = (AccountRet)booksItr.next();			    	
+   				    	
+						System.out.println("Books account count " + booksCount);
+
+						booksCount++;
+
+					
+						if(baseAccount.getFullName().trim().equals(booksAccount.getFullName().trim())) {
+							System.out.println("Found Account  of quickBaseAccounts...."+ booksAccount+"\n"+baseAccount);
+	   						updateQuickBooksAccountRecordsInQuickBase(baseAccount, booksAccount, clientId);
+							//Remove the Element from BooksVector since its already found
+							booksItr.remove();
+							baseItr.remove();
+							//Break Books Loop
+							break;
+						}else{
+							System.out.println("NOT Found Account");
+							//continue;
+						}
+						
+							
+   				    }//End of Books While
+   				 	//baseCount++;
+				    }//End of Base While
+				    
+
+			    
+				    insertQuickBooksAccountVector = quickBooksAccountVector;
+				    deleteQuickBaseAccountVector = updateQuickBaseAccountVector;
+		   		
+
+			         System.out.println("INSERT SIZE IS   "+insertQuickBooksAccountVector.size());
+			         System.out.println("DELETE SIZE IS   "+deleteQuickBaseAccountVector.size());
+			         
+			       //DELETE  
+			       System.out.println("DELETE VECTOR SIZE"+deleteQuickBaseAccountVector.size());
+	   		   for (int k = 0; k <deleteQuickBaseAccountVector.size(); k++) {
+	   			   infoHash4=new HashMap();
+	   			   AccountRet deleteQuickBaseVendor = ((AccountRet)deleteQuickBaseAccountVector.get(k));
+	   			   //System.out.println("$$$$$$$$$$$$$$$ Value of IsActive: "+ deleteQuickBaseVendor.getIsInActive());
+	   			   if(deleteQuickBaseVendor.getIsInActive().equals("0")){
+				       infoHash4.put("26", "1");
+				       this.qdb13 = new QuickBaseClient(loginID.trim() ,passWord.trim(), strURL);
+				       primaryKey1 = qdb13.editRecord(accountsTableId, infoHash4,deleteQuickBaseVendor.getQuickBasePrimaryKey() );               				   
+				       System.out.println("SUCCESSFULLY DELETED Set base record to IsInActive to true for a Base Record with Primary key: "+deleteQuickBaseVendor.getQuickBasePrimaryKey());
+	   			   }else{
+	   				   System.out.println("NOTHING TO DELETE"); 
+	   			   }
+	   		   } // end of delete for loop
+	   		   	
+	   		   //call insert
+	   		   	insertQuickBooksAccountRecordsInQuickBase( quickBooksAccountVector,  clientId);
+			
+			
+		}// end of if (insert only)
+		   System.out.println("DONE SYNCing RECORDS XXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+		} catch (Exception ex){
+			ex.printStackTrace();
+			System.out.println("Message: "+ ex.getMessage());
+			throw new  java.lang.UnsupportedOperationException("Please implement " + this.getClass().getName() + "#receiveResponseXML");
+		}
+}  
+
+	/*@SuppressWarnings("unchecked")
+	public void syncAsccountsInQuickBase(Vector quickBooksAccounts, Vector quickBaseAccounts, String clientId){
 		System.out.println("VALUE OF LOGINID: "+ this.loginID);
  		System.out.println("VALUE OF PASSWORD: "+ this.passWord);
 		HashMap infoHash2 =null;
@@ -304,9 +390,9 @@ import com.intuit.quickbase.util.QuickBaseException;
 
 		String primaryKey1 ="";
 		
-   		/************************************************/
-   		/* 				Get QuickBase Data              */
-   		/************************************************/		
+   		*//************************************************//*
+   		 				Get QuickBase Data              
+   		*//************************************************//*		
 
    		Vector tempQuickBooksAccount = quickBooksAccounts;
    		Vector tempQuickBaseAccount = quickBaseAccounts;
@@ -353,14 +439,14 @@ import com.intuit.quickbase.util.QuickBaseException;
    					   		try{
    					   		    this.qdb13 = new QuickBaseClient(loginID.trim() ,passWord.trim(), strURL);
    					   			primaryKey1 = qdb13.editRecord(accountsTableId, infoHash3, baseAccount.getQuickBasePrimaryKey() );
-   					   			System.out.println("Updating Primary key"+ baseAccount.getQuickBasePrimaryKey());
-   					   			System.out.println("Successfully updated a QuickBase Account Record: "+ infoHash3);
+   					   			//System.out.println("Updating Primary key"+ baseAccount.getQuickBasePrimaryKey());
+   					   			//System.out.println("Successfully updated a QuickBase Account Record: "+ infoHash3);
    					   			//System.out.println("Base ACCT: "+ baseAccount);
    					   			//System.out.println("Book ACCT: "+ booksAccount);
  					   
    				   			}catch(Exception e2){
    				   				System.out.println("Problem while editing "+ infoHash3 + "\nwith PK "+baseAccount.getQuickBasePrimaryKey());
-   				   				System.out.println("Exception while editing an Account record in Quickbase: "+e2.getMessage());
+   				   				//System.out.println("Exception while editing an Account record in Quickbase: "+e2.getMessage());
    				   			}
    					   }
 					   infoHash3=null;
@@ -383,7 +469,7 @@ import com.intuit.quickbase.util.QuickBaseException;
 			       }
 			       this.qdb13 = new QuickBaseClient(loginID.trim() ,passWord.trim(), strURL);
 			       primaryKey1 = qdb13.editRecord(accountsTableId, infoHash4, deleteQuickBaseAccount.getQuickBasePrimaryKey() );               				   
-			       System.out.println("SUCCESSFULLY DELETED a Base Record with Primary key: "+deleteQuickBaseAccount.getQuickBasePrimaryKey());
+			       //System.out.println("SUCCESSFULLY DELETED a Base Record with Primary key: "+deleteQuickBaseAccount.getQuickBasePrimaryKey());
    			}
    		}
    		   
@@ -411,7 +497,7 @@ import com.intuit.quickbase.util.QuickBaseException;
  			throw new  java.lang.UnsupportedOperationException("Please implement " + this.getClass().getName() + "#receiveResponseXML");
  		}
 	}
-
+*/
     /*
      * 
      * syncVendorsInQuickBase
@@ -419,144 +505,89 @@ import com.intuit.quickbase.util.QuickBaseException;
      * */
 	
 	@SuppressWarnings("unchecked")
-	public void syncVendorsInQuickBase(Vector quickBooksVendors, Vector quickBaseVendors, String clientId){
+	public void syncVendorsInQuickBase(Vector quickBooksVendorVector, Vector updateQuickBaseVendorVector, String clientId){
 		
-		HashMap infoHash2 =null;
-		HashMap infoHash3 =null;
 		HashMap infoHash4 =null;
-
 		String primaryKey1 ="";
 		
    		/*	*********************************************/
    		/* 				Get QuickBase Data              */
    		/************************************************/		
 
-   		Vector tempQuickBooksVendor = quickBooksVendors;
-   		Vector tempQuickBaseVendor = quickBaseVendors;
+	   	Vector insertQuickBooksVendorVector = quickBooksVendorVector;
+	   	Vector deleteQuickBaseVendorVector = null;
    		VendorRet baseVendor = null;
    		VendorRet booksVendor = null;
    		
-   		try{
-		for (int i = 0; i <= quickBaseVendors.size()-1; i++) {
-			baseVendor = (VendorRet)quickBaseVendors.get(i);
-   			for (int j = 0;  j<= quickBooksVendors.size()-1; j++) {
-   				booksVendor = (VendorRet)quickBooksVendors.get(j);
-   				//if( (baseVendor.getName().equals(booksVendor.getName()))||(baseVendor.getListID().equals(booksVendor.getListID())) ) {
-   				if(baseVendor.getName().equals(booksVendor.getName())) {
-   		   					
-   					System.out.println(">>>>>>>>>>> PROCESSING NEW VENDOR WHERE THE NAMES ARE EQUAL >>>>>>>>>>>");
-   					System.out.println("\n\nBase is >>>"+baseVendor);
-   					System.out.println("Book is >>>"+booksVendor);
-  					 
-   					tempQuickBooksVendor.remove(j);
-   					tempQuickBaseVendor.remove(i);
-   					infoHash3=new HashMap();
-   					   
-   				
-   					if(!baseVendor.getCompanyName().equals(booksVendor.getCompanyName())) {
-   					   infoHash3.put("11",  booksVendor.getCompanyName());
-   					}
+   		try{ 
+   			// if quickbase is empty and quickbooks isn't do a direct insert of all quickbooks
+   			if ((quickBooksVendorVector.size() > 0)&& (updateQuickBaseVendorVector.size() ==0)) {
+   				insertQuickBooksVendorRecordsInQuickBase( insertQuickBooksVendorVector,  clientId);
+   			} else {
+   					int baseCount =0;
+   				    Iterator baseItr = updateQuickBaseVendorVector.iterator();
+   				    while(baseItr.hasNext()){
+   				    	
+   				    	baseVendor = (VendorRet)baseItr.next();
+						System.out.println("Base Vendor " + baseCount + " of quickBaseVendors....");
+						booksVendor = null;
 
-   					if(!baseVendor.getCreditLimit().equals(booksVendor.getCreditLimit())){
-   	   				    infoHash3.put("25",  booksVendor.getCreditLimit());
-   					}else{
-   						System.out.println("baseVendor.getCreditLimit() >>>"+baseVendor.getCreditLimit()+"baseVendor.getCreditLimit() >>>"+baseVendor.getCreditLimit());
-   					}
-   					if(!baseVendor.getName().equals(booksVendor.getName())) {
-    				   infoHash3.put("7",  booksVendor.getName());
-   					}
-   					if(!baseVendor.getType().equals(booksVendor.getType())) {
-    				   infoHash3.put("21",  booksVendor.getType());
-   					}
-   					if(!baseVendor.getTermsRef().equals(booksVendor.getTermsRef())) {
-   					   infoHash3.put("8", booksVendor.getTermsRef());
-   					}
-   					if(!baseVendor.getAccountNumber().equals(booksVendor.getAccountNumber())) {
-   					   infoHash3.put("14", booksVendor.getAccountNumber());
-   					} 
-   					if(!baseVendor.getListID().equals(booksVendor.getListID())) {
-    				   infoHash3.put("38", booksVendor.getListID());
-   					}
-   					if(!baseVendor.getIsInActive().equals(booksVendor.getIsInActive())) {
-   					   infoHash3.put("26", booksVendor.getIsInActive()); // the vendor is inActive = 0 (active)
-   					}
-   					if( (booksVendor.getTimeModified()!=null)&&(baseVendor.getTimeModified()!=null)){
-   						if(! (baseVendor.getTimeModified().equals(booksVendor.getTimeModified())) ){
-   							   infoHash3.put("36", booksVendor.getTimeModified());
-   						}
-   					}else if( (booksVendor.getTimeModified()!=null)&&(baseVendor.getTimeModified()==null)){
-   						   infoHash3.put("36", booksVendor.getTimeModified());
-   					}
-   					if(!infoHash3.isEmpty()){
-   					   	try{
-   					   	    this.qdb13 = new QuickBaseClient(loginID.trim() ,passWord.trim(), strURL);
-   					   		primaryKey1 = qdb13.editRecord(vendorTableId, infoHash3, baseVendor.getQuickBasePrimaryKey() );
-   					   		System.out.println("Updating primary key"+ baseVendor.getQuickBasePrimaryKey());
-   					   		System.out.println("Successfully UPDATEd a Base Record Primary key we are using: "+ infoHash3);
-   					   		System.out.println("Updating Base Vendor: "+ baseVendor);
-   					   		//System.out.println("Book Vendor: "+ booksVendor);
- 					   
-   				   			}catch(Exception e2){
-   				   				System.out.println("Problem while editing "+ infoHash3 + "\nwith PK "+baseVendor.getQuickBasePrimaryKey());
-   				   				System.out.println("Exception at Edit Record Accounts "+e2.getMessage());
-   				   			}
-   					   }else{
-   						   System.out.println("NOTHING TO UPDATE : "+baseVendor.getQuickBasePrimaryKey());
-   					   }
-					   infoHash3=null;
-					   break;	   
-   				   }
-   			   } // end books for
-   		   } //end base for
-   		   // For add records
-   		
-   		   System.out.println("DELETE VECTOR SIZE"+tempQuickBaseVendor.size());
-   		for (int k = 0; k <= tempQuickBaseVendor.size()-1; k++) {
-   			infoHash4=new HashMap();
-   			VendorRet deleteQuickBaseVendor = ((VendorRet)tempQuickBaseVendor.get(k));
-   			System.out.println("$$$$$$$$$$$$$$$ Value of IsActive: "+ deleteQuickBaseVendor.getIsInActive());
-   			if(deleteQuickBaseVendor.getIsInActive().equals("0")){
-			       infoHash4.put("26", "1");
-			       this.qdb13 = new QuickBaseClient(loginID.trim() ,passWord.trim(), strURL);
-			       primaryKey1 = qdb13.editRecord(vendorTableId, infoHash4,deleteQuickBaseVendor.getQuickBasePrimaryKey() );               				   
-			       System.out.println("Set base record to IsInActive to true for a Base Record with Primary key: "+deleteQuickBaseVendor.getQuickBasePrimaryKey());
-   			}else{
-   				System.out.println("NOTHING TO DELETE"); 
-   			}
-   		}
-   		   System.out.println("INSERT VECTOR SIZE >>: " + tempQuickBooksVendor.size());
-   		    if(tempQuickBooksVendor.size()==0){
-				System.out.println("NOTHING TO INSERT"); 
-			}
-   		   for (int l = 0; l <= tempQuickBooksVendor.size()-1; l++) {
-   			   
-   			       		// 7 is vendorname
-				   		// 11 is company name
-				   		// 14 is account no
-				   		// 21 type
-				   		// 26 vendorIsInactive
-				   		// 3 is primary key
-				   		// 8 is paymentTerms
-				   		// 25 is creditLimit
-				   		// 36 is quickbooksmodified date
-	    		   		// 38 is listID
-				    VendorRet addBooksVendor = (VendorRet)tempQuickBooksVendor.get(l);
-				    System.out.println("About to insert new vendor record: "+addBooksVendor);
-   			   		infoHash2=new HashMap();
-   			   		infoHash2.put("12", clientId); //Hard Code ClinetID just for Add
-   			   		infoHash2.put("36", addBooksVendor.getTimeModified());			   	  	
-   			   		infoHash2.put("7",  addBooksVendor.getName());
-   			   		infoHash2.put("11",  addBooksVendor.getCompanyName());
-   			   		infoHash2.put("25", addBooksVendor.getCreditLimit());
-   			   		infoHash2.put("14", addBooksVendor.getAccountNumber());
-   			   		infoHash2.put("21", addBooksVendor.getType());
-   			   		infoHash2.put("8", addBooksVendor.getTermsRef());
-   			   		infoHash2.put("26", addBooksVendor.getIsInActive());
-   			   		infoHash2.put("38", addBooksVendor.getListID()); // the account is inActive = 0 (active)
-   			   		this.qdb13 = new QuickBaseClient(loginID.trim() ,passWord.trim(), strURL);
-			   	  	primaryKey1 = qdb13.addRecord(vendorTableId, infoHash2);
-        	        System.out.println ("SUCCESSFUL INSERT WITH PRIMARY KEY "+primaryKey1+"\n infoHash2 "+infoHash2);
-   		   }
+	   					int booksCount =0;
+	   				    Iterator booksItr = quickBooksVendorVector.iterator();
+	   				    
+	   				    while(booksItr.hasNext()){
+	   				    	booksVendor = (VendorRet)booksItr.next();			    	
+	   				    	
+							System.out.print("Books vendor count " + booksCount);
+
+							booksCount++;
+							if(baseVendor.getName().trim().equals(booksVendor.getName().trim())) {
+								System.out.println("Found Vendor  of quickBaseVendors...."+ booksVendor+"\n"+baseVendor);
+								updateQuickBooksVendorRecordsInQuickBase( baseVendor,  booksVendor,  clientId);
+								//Remove the Element from BooksVector since its already found
+								booksItr.remove();
+								baseItr.remove();
+								//Break Books Loop
+								break;
+							}else{
+								System.out.println("NOT Found Vendor");
+								//continue;
+							}
+							
+								
+	   				    }//End of Books While
+	   				 	//baseCount++;
+   				    }//End of Base While
+   				    
+
+  			        // System.out.println("AFTER REMOVE THE SIZE IS   "+quickBooksVendorVector.size());
+   			        // System.out.println("AFTER REMOVE THE SIZE IS   "+updateQuickBaseVendorVector.size());
+   			    
+   			    insertQuickBooksVendorVector = quickBooksVendorVector;
+   		   		deleteQuickBaseVendorVector = updateQuickBaseVendorVector;
+   		   		
+   			         
+   			       //DELETE  
+   			       System.out.println("DELETE VECTOR SIZE"+deleteQuickBaseVendorVector.size());
+		   		   for (int k = 0; k <deleteQuickBaseVendorVector.size(); k++) {
+		   			   infoHash4=new HashMap();
+		   			   VendorRet deleteQuickBaseVendor = ((VendorRet)deleteQuickBaseVendorVector.get(k));
+		   			   //System.out.println("$$$$$$$$$$$$$$$ Value of IsActive: "+ deleteQuickBaseVendor.getIsInActive());
+		   			   if(deleteQuickBaseVendor.getIsInActive().equals("0")){
+					       infoHash4.put("26", "1");
+					       this.qdb13 = new QuickBaseClient(loginID.trim() ,passWord.trim(), strURL);
+					       primaryKey1 = qdb13.editRecord(vendorTableId, infoHash4,deleteQuickBaseVendor.getQuickBasePrimaryKey() );               				   
+					       System.out.println("SUCCESSFULLY DELETED Set base record to IsInActive to true for a Base Record with Primary key: "+deleteQuickBaseVendor.getQuickBasePrimaryKey());
+		   			   }else{
+		   				   System.out.println("NOTHING TO DELETE"); 
+		   			   }
+		   		   } // end of delete for loop
+		   		   	
+		   		   //call insert
+		   		   	insertQuickBooksVendorRecordsInQuickBase( quickBooksVendorVector,  clientId);
+   			
+   			
+   		}// end of if (insert only)
  		   System.out.println("DONE SYNCing RECORDS XXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
  		} catch (Exception ex){
  			ex.printStackTrace();
@@ -564,6 +595,207 @@ import com.intuit.quickbase.util.QuickBaseException;
  			throw new  java.lang.UnsupportedOperationException("Please implement " + this.getClass().getName() + "#receiveResponseXML");
  		}
 	}  
+	
+	public void updateQuickBooksAccountRecordsInQuickBase(AccountRet baseAccount, AccountRet booksAccount, String clientId){
+		
+		
+	       HashMap infoHash3 = null;
+	       String updateFlag = null;
+
+				infoHash3=new HashMap();
+				if(!baseAccount.getFullName().equals(booksAccount.getFullName())) 
+					   infoHash3.put("7",  booksAccount.getFullName());
+
+					   if(!baseAccount.getAccountNumber().equals(booksAccount.getAccountNumber())) 
+					   infoHash3.put("6",  booksAccount.getAccountNumber());
+					   
+					   if(!baseAccount.getAccountType().equals(booksAccount.getAccountType())) 
+					   infoHash3.put("10", booksAccount.getAccountType());
+
+					   if(!baseAccount.getDesc().equals(booksAccount.getDesc())) 
+					   infoHash3.put("20", booksAccount.getDesc());
+
+					   if(!baseAccount.getIsInActive().equals(booksAccount.getIsInActive())) 
+					   infoHash3.put("24", booksAccount.getIsInActive()); // the account is inActive = 0 (active)
+					   	   
+					   if( (booksAccount.getTimeModified()!=null)&&(baseAccount.getTimeModified()!=null)){
+						   if( (baseAccount.getTimeModified().before(booksAccount.getTimeModified())) ){
+							   infoHash3.put("26", booksAccount.getTimeModified().toString());
+						   }
+					   }else if( (booksAccount.getTimeModified()!=null)&&(baseAccount.getTimeModified()==null)){
+						   infoHash3.put("26", booksAccount.getTimeModified().toString());
+					   }
+						   
+					   if(!infoHash3.isEmpty()){
+					   		try{
+					   		    this.qdb13 = new QuickBaseClient(loginID.trim() ,passWord.trim(), strURL);
+					   		 updateFlag = qdb13.editRecord(accountsTableId, infoHash3, baseAccount.getQuickBasePrimaryKey() );
+					   			//System.out.println("Updating Primary key"+ baseAccount.getQuickBasePrimaryKey());
+					   			//System.out.println("Successfully updated a QuickBase Account Record: "+ infoHash3);
+					   			//System.out.println("Base ACCT: "+ baseAccount);
+					   			//System.out.println("Book ACCT: "+ booksAccount);
+					   
+				   			}catch(Exception e2){
+				   				System.out.println("Problem while editing "+ infoHash3 + "\nwith PK "+baseAccount.getQuickBasePrimaryKey());
+				   				System.out.println("Exception at Edit Record Accounts "+e2.getMessage());
+							}
+							infoHash3 = null;
+							
+						}else{
+						   System.out.println("NOTHING TO UPDATE : "+baseAccount.getQuickBasePrimaryKey());
+						}
+					}	
+		
+
+	public void updateQuickBooksVendorRecordsInQuickBase(VendorRet baseVendor, VendorRet booksVendor, String clientId){
+		
+		
+	       HashMap infoHash3 = null;
+	       String updateFlag = null;
+
+				infoHash3=new HashMap();
+			   
+		
+				if(!baseVendor.getCompanyName().equals(booksVendor.getCompanyName())) {
+					infoHash3.put("11",  booksVendor.getCompanyName());
+				}
+
+				if(!baseVendor.getCreditLimit().equals(booksVendor.getCreditLimit())){
+					infoHash3.put("25",  booksVendor.getCreditLimit());
+				}
+				if(!baseVendor.getName().equals(booksVendor.getName())) {
+					infoHash3.put("7",  booksVendor.getName());
+				}
+				if(!baseVendor.getType().equals(booksVendor.getType())) {
+					infoHash3.put("21",  booksVendor.getType());
+				}
+				if(!baseVendor.getTermsRef().equals(booksVendor.getTermsRef())) {
+					infoHash3.put("8", booksVendor.getTermsRef());
+				}
+				if(!baseVendor.getAccountNumber().equals(booksVendor.getAccountNumber())) {
+					infoHash3.put("14", booksVendor.getAccountNumber());
+				} 
+				if(!baseVendor.getListID().equals(booksVendor.getListID())) {
+					infoHash3.put("38", booksVendor.getListID());
+				}
+				if(!baseVendor.getIsInActive().equals(booksVendor.getIsInActive())) {
+					infoHash3.put("26", booksVendor.getIsInActive()); // the vendor is inActive = 0 (active)
+				}
+				if( (booksVendor.getTimeModified()!=null)&&(baseVendor.getTimeModified()!=null)){
+					if(! (baseVendor.getTimeModified().equals(booksVendor.getTimeModified())) ){
+					   infoHash3.put("36", booksVendor.getTimeModified());
+					}
+				if( (booksVendor.getTimeModified()!=null)&&(baseVendor.getTimeModified()==null)){
+				   infoHash3.put("36", booksVendor.getTimeModified());
+				}
+				if(!infoHash3.isEmpty()){
+					try{
+						this.qdb13 = new QuickBaseClient(loginID.trim() ,passWord.trim(), strURL);
+						System.out.println("Updating primary key"+ baseVendor.getQuickBasePrimaryKey());
+						updateFlag = qdb13.editRecord(vendorTableId, infoHash3, baseVendor.getQuickBasePrimaryKey() );
+						System.out.println("Successfully updated There was an update required, Base Record with Primary key: " + baseVendor.getQuickBasePrimaryKey() + "...  we are using: "+ infoHash3);
+						//System.out.println("Updating Base Vendor: "+ baseVendor);
+						//System.out.println("Book Vendor: "+ booksVendor);
+		   
+					}catch(Exception e2){
+		   				System.out.println("Problem while editing "+ infoHash3 + "\nwith PK "+baseVendor.getQuickBasePrimaryKey());
+		   				System.out.println("Exception at Edit Record Accounts "+e2.getMessage());
+					}
+					infoHash3 = null;
+					
+				}else{
+				   System.out.println("NOTHING TO UPDATE : "+baseVendor.getQuickBasePrimaryKey());
+				}
+			}	
+	}
+	
+public void insertQuickBooksVendorRecordsInQuickBase(Vector quickBooksInsertVector, String clientId) throws Exception{
+	
+	
+       HashMap infoHash2 = null;	
+       String primaryKey1= null;
+       Vector tempQuickBooksVendor = quickBooksInsertVector;
+	   System.out.println("INSERT VECTOR SIZE >>: " + quickBooksInsertVector.size());
+	   if(tempQuickBooksVendor.size()==0){
+			System.out.println("NOTHING TO INSERT"); 
+	   }
+	   VendorRet addBooksVendor = null;
+	   for (int l = 0; l <quickBooksInsertVector.size(); l++) {
+		   
+		       		// 7 is vendorname
+			   		// 11 is company name
+			   		// 14 is account no
+			   		// 21 type
+			   		// 26 vendorIsInactive
+			   		// 3 is primary key
+			   		// 8 is paymentTerms
+			   		// 25 is creditLimit
+			   		// 36 is quickbooksmodified date
+ 		   		// 38 is listID
+				System.out.println("Inserting  vendor " + l + " of quickBaseVendors....");
+				addBooksVendor = (VendorRet)quickBooksInsertVector.get(l);
+			    System.out.println("About to insert new vendor record: "+addBooksVendor);
+		   		infoHash2=new HashMap();
+		   		infoHash2.put("12", clientId); //Hard Code ClinetID just for Add
+		   		infoHash2.put("36", addBooksVendor.getTimeModified());			   	  	
+		   		infoHash2.put("7",  addBooksVendor.getName());
+		   		infoHash2.put("11",  addBooksVendor.getCompanyName());
+		   		infoHash2.put("25", addBooksVendor.getCreditLimit());
+		   		infoHash2.put("14", addBooksVendor.getAccountNumber());
+		   		infoHash2.put("21", addBooksVendor.getType());
+		   		infoHash2.put("8", addBooksVendor.getTermsRef());
+		   		infoHash2.put("26", addBooksVendor.getIsInActive());
+		   		infoHash2.put("38", addBooksVendor.getListID()); // the account is inActive = 0 (active)
+		   		this.qdb13 = new QuickBaseClient(loginID.trim() ,passWord.trim(), strURL);
+		   	  	primaryKey1 = qdb13.addRecord(vendorTableId, infoHash2);
+ 	        System.out.println ("SUCCESSFUL INSERT WITH PRIMARY KEY "+primaryKey1+"\n infoHash2 "+infoHash2);
+	   }
+	   
+}
+public void insertQuickBooksAccountRecordsInQuickBase(Vector quickBooksInsertVector, String clientId) throws Exception{
+	
+	
+    HashMap infoHash2 = null;	
+    String primaryKey1= null;
+	   System.out.println("INSERT VECTOR SIZE >>: " + quickBooksInsertVector.size());
+	   if(quickBooksInsertVector.size()==0){
+			System.out.println("NOTHING TO INSERT"); 
+	   }
+	   AccountRet addBooksAccount = null;
+	   for (int l = 0; l <quickBooksInsertVector.size(); l++) {
+		   
+		       		// 7 is vendorname
+			   		// 11 is company name
+			   		// 14 is account no
+			   		// 21 type
+			   		// 26 vendorIsInactive
+			   		// 3 is primary key
+			   		// 8 is paymentTerms
+			   		// 25 is creditLimit
+			   		// 36 is quickbooksmodified date
+		   		// 38 is listID
+				System.out.println("Inserting  vendor " + l + " of quickBaseVendors....");
+				addBooksAccount = (AccountRet)quickBooksInsertVector.get(l);
+			    System.out.println("About to insert new vendor record: "+addBooksAccount);
+			    infoHash2=new HashMap();
+				   infoHash2.put("8", clientId); //Hard Code ClinetID just for Add
+				   infoHash2.put("26", addBooksAccount.getTimeModified().toString());
+				   infoHash2.put("7",  addBooksAccount.getFullName());
+				   infoHash2.put("6",  addBooksAccount.getAccountNumber());
+				   infoHash2.put("10", addBooksAccount.getAccountType());
+				   infoHash2.put("20", addBooksAccount.getDesc());
+				   infoHash2.put("24", addBooksAccount.getIsInActive()); // the account is inActive = 0 (active)
+				   infoHash2.put("28", addBooksAccount.getListId());
+				   this.qdb13 = new QuickBaseClient(loginID.trim() ,passWord.trim(), strURL);
+	        	   primaryKey1 = this.qdb13.addRecord(accountsTableId, infoHash2);
+	        	   System.out.println ("Insert response"+primaryKey1+"\n infoHash2 "+infoHash2);
+	        System.out.println ("SUCCESSFUL INSERT WITH PRIMARY KEY "+primaryKey1+"\n infoHash2 "+infoHash2);
+	   }
+	   
+}	
+	
+	
+	
    public String getCompanyName(Element companyQueryRs){
 	   String companyName = null;
 	   String clientId = null;
@@ -660,7 +892,9 @@ import com.intuit.quickbase.util.QuickBaseException;
 				else  account.setListId("");			
 						
 				isActive = accountRet1.getChildText("IsActive");
+				System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@  QuickBooksIsActive Value: "+ isActive);
 				if (isActive.equals("true")){
+					
 					account.setIsInActive("0");
 				} else {
 	   					account.setIsInActive("1");
@@ -712,7 +946,7 @@ import com.intuit.quickbase.util.QuickBaseException;
 				
 				
 				String datetime = vendorRet1.getChildText("TimeModified").substring(0,19);	
-				System.out.println("ZZZZZZZZZZZZZZZZZZZZZZZZZZZ  Date from quickbooks: "+ datetime);
+				//System.out.println("ZZZZZZZZZZZZZZZZZZZZZZZZZZZ  Date from quickbooks: "+ datetime);
 				
 				//System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX   quickBooksDate:" + quickBooksDate);
 				vendor.setTimeModified(datetime);
@@ -908,10 +1142,10 @@ import com.intuit.quickbase.util.QuickBaseException;
 		           			vendor.setCreditLimit(((String)iterator.next()).trim());
 		           			vendor.setName(((String)iterator.next()).trim());
 		      
-		           			System.out.println("################################# quickBooksDateModifiedInQuickBase "+quickBooksDateModifiedInQuickBase);
+		           			//System.out.println("################################# quickBooksDateModifiedInQuickBase "+quickBooksDateModifiedInQuickBase);
 		           			if((quickBooksDateModifiedInQuickBase!=null) && (!quickBooksDateModifiedInQuickBase.equals(""))){
 		           				vendor.setTimeModified(quickBooksDateModifiedInQuickBase);
-		           				System.out.println("$$$$$$$$$$$$QuickBaseDate after date conversion: "+ vendor.getTimeModified());
+		           				//System.out.println("$$$$$$$$$$$$QuickBaseDate after date conversion: "+ vendor.getTimeModified());
 		           			}else if(quickBooksDateModifiedInQuickBase==null){
 		           				vendor.setTimeModified(null);	           				
 		           			}
