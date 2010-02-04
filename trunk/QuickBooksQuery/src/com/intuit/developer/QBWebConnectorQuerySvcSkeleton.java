@@ -60,10 +60,10 @@ import com.intuit.quickbase.util.QuickBaseException;
 		 QuickBaseClient qdb13 = null;	
 		 Lookup lookup = new Lookup();
 		 //ServletContext context
- 		// lookup = (Lookup)getServletContext().getAttribute("lookup");
+ 		 //lookup = (Lookup)getServletContext().getAttribute("lookup");
  		 //Context initial = new InitialContext();
  		 //Context environment =
- 		//(Context)initial.lookup("java:comp/env");
+ 		 //(Context)initial.lookup("java:comp/env");
 
         /**
          * Auto generated method signature
@@ -355,13 +355,13 @@ public void syncAccountsInQuickBase(Vector quickBooksAccountVector, Vector updat
 			       System.out.println("DELETE VECTOR SIZE"+deleteQuickBaseAccountVector.size());
 	   		   for (int k = 0; k <deleteQuickBaseAccountVector.size(); k++) {
 	   			   infoHash4=new HashMap();
-	   			   AccountRet deleteQuickBaseVendor = ((AccountRet)deleteQuickBaseAccountVector.get(k));
+	   			   AccountRet deleteQuickBaseAccount = ((AccountRet)deleteQuickBaseAccountVector.get(k));
 	   			   //System.out.println("$$$$$$$$$$$$$$$ Value of IsActive: "+ deleteQuickBaseVendor.getIsInActive());
-	   			   if(deleteQuickBaseVendor.getIsInActive().equals("0")){
-				       infoHash4.put("26", "1");
+	   			   if(deleteQuickBaseAccount.getIsInActive().equals("0")){
+				       infoHash4.put("24", "1");
 				       this.qdb13 = new QuickBaseClient(loginID.trim() ,passWord.trim(), strURL);
-				       primaryKey1 = qdb13.editRecord(accountsTableId, infoHash4,deleteQuickBaseVendor.getQuickBasePrimaryKey() );               				   
-				       System.out.println("SUCCESSFULLY DELETED Set base record to IsInActive to true for a Base Record with Primary key: "+deleteQuickBaseVendor.getQuickBasePrimaryKey());
+				       primaryKey1 = qdb13.editRecord(accountsTableId, infoHash4,deleteQuickBaseAccount.getQuickBasePrimaryKey() );               				   
+				       System.out.println("SUCCESSFULLY DELETED Set base record to IsInActive to true for a Base Record with Primary key: "+deleteQuickBaseAccount.getQuickBasePrimaryKey());
 	   			   }else{
 	   				   System.out.println("NOTHING TO DELETE"); 
 	   			   }
@@ -799,20 +799,27 @@ public void insertQuickBooksAccountRecordsInQuickBase(Vector quickBooksInsertVec
    public String getCompanyName(Element companyQueryRs){
 	   String companyName = null;
 	   String clientId = null;
+	   String clientTableId = "bes8a4tgn";
 	   Vector quickBaseCompanys = null;
 	   HashMap hashmap1 = null;//new  HashMap();
 	   try { 
 			Iterator companyRetList = companyQueryRs.getChildren("CompanyRet").iterator();
 			while (companyRetList.hasNext()) {
 				Element companyRet = (Element)companyRetList.next();
+
 				companyName = companyRet.getChildText("CompanyName");
+				System.out.println("ZZZZZZZZZZZZZZZZZZZXXXXXXXXXXXXXXXXXX COMPANYNAME:" + companyName);
 			}
 	   } catch (Exception ex){
 		   System.out.println("Exception at getCompanyName method "+ex.getMessage());
 	   }
 	   try{
 		   QuickBaseClient qdb13 = new QuickBaseClient(this.loginID.trim() ,this.passWord.trim(), strURL);
-		   quickBaseCompanys=qdb13.doQuery(accountsTableId, "{.EX.'"+companyName+"'}", "8", "3", s4);
+		   System.out.println("Login ID:" + this.loginID.trim());
+		   System.out.println("Password: "+ this.passWord.trim());
+		   System.out.println("STRURL: "+ strURL);
+		   //quickBaseCompanys=qdb13.doQuery(accountsTableId, "{.EX.'"+companyName+"'}", "8", "3", s4);
+		   quickBaseCompanys=qdb13.doQuery(clientTableId, "{6.EX.'"+companyName+"'}", "3", "3", s4);
 		   for(int j = 0; j <= quickBaseCompanys.size() - 1; j++)
 		   {
 			    hashmap1 = (HashMap)quickBaseCompanys.elementAt(j);
@@ -820,11 +827,13 @@ public void insertQuickBooksAccountRecordsInQuickBase(Vector quickBooksInsertVec
            		while (iterator.hasNext()) 
            		{   
 					clientId = (String)iterator.next();
+					System.out.println("XXXXXXXXX"+ clientId);
            		}
 		   }
 		   
 	   } catch (QuickBaseException e) {
 		   // TODO Auto-generated catch block
+		   System.out.println("Error retrieving clientID from QuickBase");
 		   e.printStackTrace();
 	   } catch (Exception e) {
 		   // TODO Auto-generated catch block
