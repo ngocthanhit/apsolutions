@@ -322,9 +322,8 @@ public void syncAccountsInQuickBase(Vector quickBooksAccountVector, Vector updat
 						System.out.println("Books account count " + booksCount);
 
 						booksCount++;
-
-					
-						if(baseAccount.getFullName().trim().equals(booksAccount.getFullName().trim())) {
+                        
+						if(baseAccount.getListId().equals(booksAccount.getListId().trim())) {
 							System.out.println("Found Account  of quickBaseAccounts...."+ booksAccount+"\n"+baseAccount);
 	   						updateQuickBooksAccountRecordsInQuickBase(baseAccount, booksAccount, clientId);
 							//Remove the Element from BooksVector since its already found
@@ -332,11 +331,26 @@ public void syncAccountsInQuickBase(Vector quickBooksAccountVector, Vector updat
 							baseItr.remove();
 							//Break Books Loop
 							break;
-						}else{
+							
+						}
+						/*else{
+							if (baseAccount.getListId()==null){
+								if(baseAccount.getFullName().trim().equals(booksAccount.getFullName().trim())) {
+									System.out.println("Found Account  of quickBaseAccounts...."+ booksAccount+"\n"+baseAccount);
+									updateQuickBooksAccountRecordsInQuickBase(baseAccount, booksAccount, clientId);
+									//Remove the Element from BooksVector since its already found
+									booksItr.remove();
+									baseItr.remove();
+									//Break Books Loop
+									break;
+								} else {
+									System.out.println("Not Found Account");
+								}
+							}
 							System.out.println("NOT Found Account");
 							//continue;
 						}
-						
+						*/
 							
    				    }//End of Books While
    				 	//baseCount++;
@@ -541,7 +555,9 @@ public void syncAccountsInQuickBase(Vector quickBooksAccountVector, Vector updat
 							System.out.print("Books vendor count " + booksCount);
 
 							booksCount++;
-							if(baseVendor.getName().trim().equals(booksVendor.getName().trim())) {
+							
+							if(baseVendor.getListID().trim().equals(booksVendor.getListID().trim())) {
+							
 								System.out.println("Found Vendor  of quickBaseVendors...."+ booksVendor+"\n"+baseVendor);
 								updateQuickBooksVendorRecordsInQuickBase( baseVendor,  booksVendor,  clientId);
 								//Remove the Element from BooksVector since its already found
@@ -603,11 +619,14 @@ public void syncAccountsInQuickBase(Vector quickBooksAccountVector, Vector updat
 	       String updateFlag = null;
 
 				infoHash3=new HashMap();
-				if(!baseAccount.getFullName().equals(booksAccount.getFullName())) 
+					   if(!baseAccount.getFullName().equals(booksAccount.getFullName())) 
 					   infoHash3.put("7",  booksAccount.getFullName());
 
 					   if(!baseAccount.getAccountNumber().equals(booksAccount.getAccountNumber())) 
 					   infoHash3.put("6",  booksAccount.getAccountNumber());
+					   
+					   // if(!baseAccount.getListId().equals(booksAccount.getListId())) 
+					   // infoHash3.put("28",  booksAccount.getListId());
 					   
 					   if(!baseAccount.getAccountType().equals(booksAccount.getAccountType())) 
 					   infoHash3.put("10", booksAccount.getAccountType());
