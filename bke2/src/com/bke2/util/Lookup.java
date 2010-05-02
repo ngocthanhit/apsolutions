@@ -17,7 +17,9 @@ public class Lookup
 
  
 		//System.out.println("invoiceTableId11 >>"+invoiceTableId11);
+//10@bookkeepingexpress.com
 
+        //String systemLogin = "sashiatwork@gmail.com";
         String systemLogin = "sashiatwork@gmail.com";
         String systemPassword = "SRquic12";
         private int timeOutLimit = 864000000;
@@ -669,7 +671,7 @@ String franchiseNumber="";
                                  s7=s7+"\n vendorIdArray["+i+"] = \""+vendorId+"\";";
 
                                //System.out.println("vendorName >>> "+vendorName+"vendorTerm >>> "+vendorTerm);
-                          }
+                          } 
 
 
             }
@@ -975,7 +977,7 @@ String franchiseNumber="";
            Lookup lookup = new Lookup();
 
 
-            System.out.println("isAuthenticated ?  "+lookup.isAuthenticated("sashiatwork@gmail.com", "SRquic12"));
+            System.out.println("isAuthenticated ?  "+lookup.isAuthenticated(lookup.systemLogin, "SRquic12"));
 
             //lookup.isAuthenticated("peterprep@docorganiz.com", "Preparer9$");
 
