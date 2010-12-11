@@ -10,12 +10,13 @@
 
  		Lookup lookup = (Lookup)getServletContext().getAttribute("lookup");
 	
-		System.out.println("After Lookup  billId is >>"+billId);
-		
    ServletContext context = this.getServletContext();  
 	
 	String invoiceTableId = context.getInitParameter( "invoiceTableId" ); 
 	
+	
+		System.out.println("Calling Check Activate Choice JSP for the billId  >>"+billId+" invoiceTableId"+invoiceTableId);
+		
 	
 	String message ="";
 	
@@ -25,7 +26,7 @@
 	 			//Insert Group
 	  		if( (billId!=null)) {
 						
-						Vector resultBillVector =lookup.getEditInfo(invoiceTableId,  "{'3'.EX."+billId+"}", "106", "", "");
+						 Vector resultBillVector =lookup.getEditInfo(invoiceTableId,  "{'3'.EX."+billId+"}", "106", "", "");
 
 						// Get HashMap from Vector
 						HashMap hashmap4Bill = (HashMap)resultBillVector.elementAt(0);

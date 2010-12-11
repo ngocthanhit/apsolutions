@@ -1,9 +1,10 @@
 <%
-  ServletContext context2 = this.getServletContext() ;  
+
+ServletContext context2 = this.getServletContext();  
 
    
-   String invoiceTableId = context2.getInitParameter( "invoiceTableId" ); 
-	String itemTableId = context2.getInitParameter( "itemTableId" );
+String invoiceTableId = context2.getInitParameter( "invoiceTableId" ); 
+String itemTableId = context2.getInitParameter( "itemTableId" );
 	
 //Invoice Column IDs
    
@@ -36,13 +37,21 @@ String  lineStatusTrail_ColID = "24"; //Status String
 
    String v0 = request.getParameter("v0");
 	
-	
+	 
    String cid = request.getParameter("cid");
 	
    String st = request.getParameter("st");
 	
    String ordStr = request.getParameter("ord");
+   
+   String nextVid = request.getParameter("nextVid");
 
+   if(nextVid!=null){
+   System.out.println("nextVid value is NOT null"+nextVid);
+ }else{System.out.println("nextVid value is  NULL"+nextVid);
+ }
+
+    //v0=cid;
     
 	String sortByOrder1="";
 	if(ordStr!=null)
@@ -128,14 +137,31 @@ boolean notFound = true;
 
 	
 	
-				System.out.println(" == NULL so loading the reportIdArray >>> "+nxt);
+				System.out.println(" == NULL so loading the reportIdArray nxt i>>> "+nxt);
 
-	 			resultArrayVector1 =lookup.getEditInfo(invoiceTableId,  "{'90'.EX."+cid+"}AND{'27'.EX."+st+"}", queryStr1, sortByAttributes1, sortByOrder1);
+	 			//resultArrayVector1 =lookup.getEditInfo("bes8a4tgq",  "{'90'.EX.'"+cid+"'}AND{'27'.EX.'"+st+"'}", queryStr1, sortByAttributes1, sortByOrder1);
+				resultArrayVector1 =lookup.getEditInfo("bes8a4tgq",  "{'90'.EX.'"+cid+"'}AND{'27'.EX.'"+st+"'}", "3", "3", "3");
 				// Get HashMap from Vector
 				HashMap hMap1 = null;
 				Iterator iKey1 = null;
 				String reportIdArray[] = new String[resultArrayVector1.size()];
+    		
     		int totSize =  resultArrayVector1.size();
+		       
+		    
+    		
+    		System.out.println(" == totSize"+totSize);
+		    
+		    /*
+    		System.out.println(" == cid"+cid);
+    		System.out.println(" == st"+st);
+		    System.out.println(" == invoiceTableId"+invoiceTableId);
+		    
+				System.out.println(" == queryStr1"+queryStr1);
+				System.out.println(" == sortByAttributes1"+sortByAttributes1);
+		    */
+		       
+		       
 		        for(int i = 0; i <=  (totSize - 1); i++)
             {
                 hMap1 = (HashMap)resultArrayVector1.elementAt(i);
@@ -155,7 +181,7 @@ boolean notFound = true;
 
 	
 	// Invoice Edit													
-	String queryAttributeList="84.3.83.86.91.18.20.23.24.26.29.25.27.30.31.58.33.106.107.100";
+	String queryAttributeList="84.3.83.86.91.18.20.23.24.26.29.25.27.30.31.58.33.106.107.100.145";
 	String sortAttributes="3";
 	String sortOrder="sortorder-AD";
 	Iterator itKey = null;
@@ -173,21 +199,23 @@ boolean notFound = true;
  		// Iterate over the keys in the map
   if(hashmap4Bill!=null){  
   	itKey = hashmap4Bill.keySet().iterator();
+		itKey1 =  hashmap4Bill.keySet().iterator();
 	}
-//	itKey1 = hashmap4Bill.keySet().iterator();
 
      Object keyString =null;
      Object valueString =null;
 
-if(itKey!=null){
-  /*
+if(itKey1!=null){
+
+
+  
     while (itKey1.hasNext()) {
         // Get key
         keyString = itKey1.next();
         valueString = hashmap4Bill.get(keyString);
         System.out.println(keyString.toString() +"\t" +valueString.toString());
     }
- */
+
     
 //1
 String clientName = (String) hashmap4Bill.get(itKey.next());
@@ -236,7 +264,11 @@ String imageURL =(String) hashmap4Bill.get(itKey.next());
 //13
 String franchiseName =(String) hashmap4Bill.get(itKey.next());
 
+
 //14
+String workflowId =(String) hashmap4Bill.get(itKey.next());
+
+//15
 String reworkAmtStr =(String) hashmap4Bill.get(itKey.next());
 
 double reworkAmt=0.0;
@@ -244,14 +276,14 @@ if(reworkAmtStr.length()>0){
 			reworkAmt=Double.parseDouble(reworkAmtStr);
 }
 
-//15
+//16
 String vendorId =(String) hashmap4Bill.get(itKey.next());
 
  
 String activateFlag =(String) hashmap4Bill.get(itKey.next());
 
 
-//16
+//17
 String unclassAmtStr =(String) hashmap4Bill.get(itKey.next());
 
 double unclassAmt=0.0;
@@ -280,6 +312,8 @@ if(disapprovedAmtStr.length()>0){
    
 double residualAmtFloat=reworkAmt+unclassAmt+disapprovedAmt;
 String residualAmt = ""+residualAmtFloat;
+
+         
 
 	%>
 
@@ -597,77 +631,6 @@ function groupIdOnBlur(obj33){
 
 }
 
-function insertAllocationTable(invInc){
-//alert('current insertAllocTable invInc  '+invInc);
-var inc = invInc*1+1;
-
-		var invRowCtr = document.getElementById('invRowCtr').value*1;
-		invRowCtr++;
-
-//alert('current insertAllocTable invRowCtr  '+invRowCtr);
-		
-		var x=document.getElementById('InvoiceTable').insertRow(invRowCtr);		
-		
-////		var x=document.getElementById('InvoiceTable').insertRow(inc);		
-	
-	
-		
-		//document.getElementById('invRowCtr').value = incRowCtr+1;
-		
-		x.vAlign="top";   		
-		var x0=x.insertCell(0);
-		x0.colSpan="5";
-		x0.width="100%";
-		x0.innerHTML="<table id=AllocationTable"+invInc+"  class='allo' cellpadding='2' border='1' width='100%'></table><tr><td align='left' colspan='8'><button name='addAllocation"+invInc+"' id='addAllocation"+invInc+"' class='tbutton'  onClick='insertAllocationRow("+invInc+");'>Line Item</button><button name='duplicate"+invInc+"' id='duplicate"+invInc+"' class='tbutton'  onClick='duplicate("+invInc+");'>Duplicate</button></td></tr><input type=hidden name=allocCtr"+invInc+" id=allocCtr"+invInc+" value=1></table>";
-	
- 		
-    return true;
-    			
-}
-
-function insertAllocationHeader(inc){
-
-
-		var x=document.getElementById('AllocationTable'+inc).insertRow(0);
-    			
-		var x0=x.insertCell(0);
-		x0.vAlign="top";
-		x0.width="5%";
-		
-		x0.innerHTML="Ln #<label/>";
-		var x1=x.insertCell(1);
-		
-		//x1.vAlign="top";
-		x1.width="20%";
-		x1.innerHTML="Description<label/>";
-			
-		var x2=x.insertCell(2);
-		x2.width="15%";
-		x2.innerHTML="GL Acct<label/>";
-		
-		var x3=x.insertCell(3);
-		x3.width="8%";
-		x3.innerHTML="CCntr<label/>";
-		
-		var x4=x.insertCell(4);
-		x4.width="8%";
-		x4.innerHTML="LOC<label/>";
-		
-		var x5=x.insertCell(5);
-		x5.width="15%";
-		x5.innerHTML="Amount<label/>";
-		
-		var x6=x.insertCell(6);
-		x6.width="5%";
-		x6.innerHTML="Notes<label/>";
-		
-		var x7=x.insertCell(7);
-		x7.width="5%";
-		x7.innerHTML="Details<label/>";
-			
-    return true;     	
-	}
-
  
 function insertLineItemRow()
 { 	
@@ -736,77 +699,6 @@ function insertLineItemRow()
 	}
 	
  
-  function insertAllocationRow(aId)
-    {
-	
-	var toBinsertedAt= document.getElementById('allocCtr'+aId).value;
-	
-    var x=document.getElementById('AllocationTable'+aId).insertRow(toBinsertedAt);
-    
- 	   		var x0=x.insertCell(0)
-				x0.width="5%";
-    		x0.align="middle";
-        x0.innerHTML="<input type='hidden' id='allocationId"+aId+"l"+toBinsertedAt+"'  name='allocationId"+aId+"l"+toBinsertedAt+"' value='III'><label>"+toBinsertedAt+"</label><input type='hidden' name='lineNumber"+aId+"l"+toBinsertedAt+"'  id='lineNumber"+aId+"l"+toBinsertedAt+"' value="+toBinsertedAt+">";
-
-        var x1=x.insertCell(1)
-    		x1.width="20%"; 
-        //changed col from 40 to 30 by ramya
-        x1.innerHTML="<textarea name='description"+aId+"l"+toBinsertedAt+"'  id='description"+aId+"l"+toBinsertedAt+"' rows='2' cols='30'  onfocus=descriptionFocus(this); onblur=descriptionBlur(this,'"+aId+"','"+toBinsertedAt+"');  value=''>  </textarea>";
-
-  			var x2=x.insertCell(2)
-    		x2.width="15%";
-        x2.innerHTML="<input name='cd1"+aId+"l"+toBinsertedAt+"'  id='cd1"+aId+"l"+toBinsertedAt+"' class='inps' onfocus=setCd1(this);  onblur=cd1Blur(this,'"+aId+"','"+toBinsertedAt+"');   maxlength='12' size='12'>";
-
-        var x3=x.insertCell(3)
-    		x3.width="5%";
-    		x3.innerHTML="<input name='cd2"+aId+"l"+toBinsertedAt+"'  id='cd2"+aId+"l"+toBinsertedAt+"' class='inps' onfocus=setCd2(this);  onblur=cd2Blur(this,'"+aId+"','"+toBinsertedAt+"');   maxlength='5' size='5'>";
-
-        var x3=x.insertCell(4)
-    		x3.width="5%";
-    		x3.innerHTML="<input name='cd3"+aId+"l"+toBinsertedAt+"'  id='cd3"+aId+"l"+toBinsertedAt+"' class='inps' onfocus=setCd3(this);  onblur=cd3Blur(this,'"+aId+"','"+toBinsertedAt+"');   maxlength='5' size='5'>";
-  		    			
-				var x4=x.insertCell(5)
-    		x4.width="15%";
-    		x4.innerHTML="<input name='purchase_amt"+aId+"l"+toBinsertedAt+"'  id='purchase_amt"+aId+"l"+toBinsertedAt+"' class='inps' onfocus=paFocus(this,"+toBinsertedAt+"); onBlur=paBlur(this,"+aId+","+toBinsertedAt+");  size='10'><input type=hidden name=sub_tot"+aId+"l"+toBinsertedAt+" id=sub_tot"+aId+"l"+toBinsertedAt+" ><input type=hidden name=sub_total"+aId+"l"+toBinsertedAt+" id=sub_total"+aId+"l"+toBinsertedAt+" >";
-
-				var x5=x.insertCell(6)
-    		x5.width="5%";																						
-     		x5.innerHTML="<IMG id='allocationComm"+aId+"l"+toBinsertedAt+"b' style='align: right; ' height=24 alt='' onclick=commentWindow('Comment.html','allocationComm"+aId+"l"+toBinsertedAt+"');  onselect='commentWindow('Comment.html','allocationComm"+aId+"l"+toBinsertedAt+"');' src='images/notes.png' width=20 border=1><input   type='hidden' name='allocationComm"+aId+"l"+toBinsertedAt+"h' id='allocationComm"+aId+"l"+toBinsertedAt+"h' ></input><input type='hidden' name='allocationComm"+aId+"l"+toBinsertedAt+"' id='allocationComm"+aId+"l"+toBinsertedAt+"' ></input>";
-
-
-
-				var x6=x.insertCell(7)
-    		x6.width="5%";																										
-    		
- 				var hiddenX6Str="<IMG id='addAgent"+aId+"l"+toBinsertedAt+"'   name='addAgent'addAllocation"+aId+"l"+toBinsertedAt+"' style='align: right; ' height=24 alt='' onclick= src='images/popup.png' width=20 border=1>";
- 				hiddenX6Str=hiddenX6Str+" <input   type=hidden name='allocationComm"+aId+"l"+toBinsertedAt+"' id='allocationComm"+aId+"l"+toBinsertedAt+"' ><input type=hidden name='allocationComm"+aId+"l"+toBinsertedAt+"' id='allocationComm"+aId+"l"+toBinsertedAt+"' > <input  type=hidden name='agentId"+aId+"l"+toBinsertedAt+"'  id='agentId"+aId+"l"+toBinsertedAt+"' > <input  type=hidden name='empId"+aId+"l"+toBinsertedAt+"'  id='empId"+aId+"l"+toBinsertedAt+"' > <input  type=hidden name='empName"+aId+"l"+toBinsertedAt+"'  id='empName"+aId+"l"+toBinsertedAt+"'>  <input  type=hidden name='labCat"+aId+"l"+toBinsertedAt+"'  id='labCat"+aId+"l"+toBinsertedAt+"'>  <input type=hidden name='labDesc"+aId+"l"+toBinsertedAt+"'  id='labDesc"+aId+"l"+toBinsertedAt+"'>  <input type=hidden name='hours"+aId+"l"+toBinsertedAt+"'  id='hours"+aId+"l"+toBinsertedAt+"'>	  <input  type=hidden name='agent_amount"+aId+"l"+toBinsertedAt+"'  id='agent_amount"+aId+"l"+toBinsertedAt+"'> <input  type=hidden name='agentComm"+aId+"l"+toBinsertedAt+"'  id='agentComm"+aId+"l"+toBinsertedAt+"'>";
-				
-				x6.innerHTML=hiddenX6Str;
-
-	   
-	 
-	if( (aId==1)&&(toBinsertedAt==1) ){
-	document.getElementById('vendorName').focus();
-	}else{
-	
-		document.getElementById('description'+aId+'l'+toBinsertedAt).focus();
-	}
-	
-//alert('alloc 3');
-
-	toBinsertedAt++;
-	document.getElementById('allocCtr'+aId).value=toBinsertedAt;
-  return true;
-//alert('End Alloc Insertion');
- }
-
-
-
-//	var nameIdArray = new Array(vendorIdArray,vendorNameArray);
-		//alert('ablove fill other of VIA vendorIdArray '+vendorIdArray);
-		//alert('ablove fill other of VIA vendorNameArray '+vendorNameArray);
-		//alert('ablove fill other of VIA nameIdArray '+nameIdArray);
-		
 	function fillOtherClientValue(svn)
 	{
 	var found='false'
@@ -996,12 +888,14 @@ var voucherVar;
 	//	alert('invoiceCount '+invoiceCount);
 
 		var url1 = 'iaded.jsp?uac=<%=ac%>';
-
-
+		
+		
 
 		if(document.getElementById('invCtr').value==1){
 
 			imageWindow=window.open(url1,"Invoice","menubar=no,scrollbars=auto,status=yes,scrollbars=yes,resizable=yes,height="+imageV+",width="+imageH);
+			//popGetImage(1);
+			imageWindow.document.uploadForm.Object1.src =document.getElementById('invoiceImageURL').value;
 
 		}else if(invoiceCount!=null){
 
@@ -1017,7 +911,10 @@ var voucherVar;
 			setCookie("invoiceVar", invoiceVar, 30);
 
 			imageWindow=window.open(url1,"Invoice","menubar=no,scrollbars=auto,status=yes,scrollbars=yes,resizable=yes,height="+imageV+",width="+imageH);
-
+			//popGetImage(1);
+			//alert("image location>>"+document.getElementById('invoiceImageURL').value);
+			//imageWindow.document.uploadForm.Object1.src =document.getElementById('invoiceImageURL').value;
+			
 
 		}
 
@@ -1027,8 +924,8 @@ var voucherVar;
 		//imageWindow.blur();
 		return true;
 	}
-
-
+	
+	
     function popGetImage(invoiceCount){
     
 		//alert('invoiceCount  '+invoiceCount);
@@ -1045,7 +942,7 @@ var voucherVar;
 
 		if (!imageWindow.closed && imageWindow.location) {
 
-			imageWindow.document.uploadForm.Object1.src=document.getElementById('invoiceImageURL').value;
+			imageWindow.document.uploadForm.Object1.src =document.getElementById('invoiceImageURL').value;
 			
 		}else{
 			//alert('4');
@@ -1377,11 +1274,14 @@ function trimStr(sString)
 return sString;
 }
 
+
+var svFlg=false;
+
 function validate(svr){
 
 //svr.value=trimStr(svr.value);
 
-	  var ff='false';
+	  var ff=false;
 
       if(svr.name=='clientName'){
       var clientHiddenVar = "";
@@ -1390,12 +1290,12 @@ function validate(svr){
       
       var clientHiddenVar = "";
       
-	  		if(svr.value=='')	ff='false';
+	  		if(svr.value=='')	ff=false;
 	  		
 	  		for (i in clientNameArray) {
 	  		  //if (clientNameArray[i] .equals( trim(svr.value) ) ) {
 					if ( clientNameArray[i]==svr.value ) {
-	  		  	ff='true';
+	  		  	ff=true;
 	  		  	//fillOther(svr);
 	  		  	clientHiddenVar = clientHiddenArray[i];
 	  		  	//alert('Client Hidden Array '+clientHiddenVar);
@@ -1410,16 +1310,17 @@ function validate(svr){
 	  		document.getElementById('franchiseName').innerHTML=clientHiddenVar.split("&")[1];
 	  		document.getElementById('franchiseId').innerHTML=clientHiddenVar.split("&")[2];
 	  		document.getElementById('franchiseIdh').value=clientHiddenVar.split("&")[2];
+	  		document.getElementById('workflowId').value=clientHiddenVar.split("&")[3];
   		}  	
      }
 	  		  	
   }
 	else
       if(svr.name=='vendor_name'){
-		if(svr.value=='')	ff='false';
+		if(svr.value=='')	ff=false;
 		for (i in vendorNameArray) {
 		  if (vendorNameArray[i] == svr.value) {
-		  	ff='true';
+		  	ff=true;
 		  	fillOther(svr);
 	  		document.getElementById('vendorId').style.backgroundColor='white';
 		  	break;
@@ -1428,52 +1329,52 @@ function validate(svr){
       }
 	else
 	  if(svr.name.indexOf('voucher_date',0)!=-1)	{
-	    if(svr.value=='')	ff='false';
+	    if(svr.value=='')	ff=false;
 		for (i in voucherDateArray) {
 		  if (voucherDateArray[i] == svr.value) {
-      	  ff='true'; break; }
+      	  ff=true; break; }
         }
 	  }
 	else
 	  if(svr.name=='process_status'){
-	 	if(svr.value=='')	ff='false';
+	 	if(svr.value=='')	ff=false;
 		for (i in approverTo1) {
 		  if (approverTo1[i] == svr.value) {
-		  	  ff='true'; break; 
+		  	  ff=true; break; 
 		  }
         }
       }
 	else
 	  if(svr.name=='approver'){
-	 	if(svr.value=='')	ff='false';
+	 	if(svr.value=='')	ff=false;
 		for (i in approverArray) {
 		  if (approverArray[i] == svr.value) {
-		  	  ff='true'; break; }
+		  	  ff=true; break; }
         }
       }
 	else
 	  if(svr.name.indexOf('invoice_no',0)!=-1)	{
 	    if(svr.value=='')	{
-	    	ff='false';
+	    	ff=false;
 	    	//svr.focus();//
 	    } else{
-	    	ff='true';
+	    	ff=true;
 	    }
 	  }
 	else
 	  if(svr.name.indexOf('invoice_date',0)!=-1)	{
-	    if(svr.value=='')	ff='false';
+	    if(svr.value=='')	ff=false;
 		for (i in invoiceDateArray) {
 		  if (invoiceDateArray[i] == svr.value) {
-      	  ff='true'; break; }
+      	  ff=true; break; }
         }
 	  }
 	else
 	  if(svr.name.indexOf('natural_act',0)!=-1)	{
-	    if(svr.value=='')	ff='false';
+	    if(svr.value=='')	ff=false;
 		for (i in naturalAccountArray) {
 		  if (naturalAccountArray[i] == svr.value) {
-      	  ff='true'; break; }
+      	  ff=true; break; }
         }
 	  }
 	else
@@ -1483,29 +1384,28 @@ function validate(svr){
 	  	inInvoiceArea=false;
 	  	inAllocationArea=false;
 
-	    if(svr.value=='')	ff='false';
+	    if(svr.value=='')	ff=false;
 		for (i in pcArray) {
 		  if (pcArray[i] == svr.value) {
-      	  ff='true'; break; }
+      	  ff=true; break; }
         }
 	  }
 
 
-      if((ff=='false')){
-		 //svr.style.backgroundColor='yellow';
+   if((ff==false)){
+		 svr.style.backgroundColor='orange';
+	 }else{
+	  	svr.style.backgroundColor='white';
+	 }
 
-	  }else{
-	   //svr.style.backgroundColor='white';
-	  }
-
-
-	  }
+ return ff;
+}
 
 
 
 
 function initialize(){
-    
+  
 	  <%if(ac.equals("ad")){%>	
 				document.getElementById('franchiseName').innerHTML="";
 	  		document.getElementById('franchiseId').innerHTML="";
@@ -1525,6 +1425,7 @@ function initialize(){
 			//document.getElementById('lineStatus1').value='UNC';
 		}
 		<%}%>
+		
 	  document.getElementById('clientName').focus();
 }
 
@@ -1634,11 +1535,27 @@ function checkAllLineStatus(){
 }
 
 function edLoad(){
+     var availableWidth =screen.availWidth;
+    var availableHeight =screen.availHeight;
+        availableWidth = ( (1*availableWidth/2) + (0.0980*(availableWidth/2)) );
+
+   // availableWidth = availableWidth/2;
+    //alert('window.screen.availWidth is >>'+availableWidth);
+    window.resizeTo(availableWidth,screen.height);
+    window.moveTo(availableWidth,availableHeight); 
+
 //alert('A0');
 		popImage(1);	
 
 //alert('A');
 
+
+	var lineCtrStr = document.getElementById('lineCtr').value;
+	//alert('lineCtrStr'+lineCtrStr);
+	  
+	  document.getElementById('clientName').focus();
+		document.getElementById('clientName').blur();
+		document.getElementById('vendor').blur();
 	  document.getElementById('clientName').focus();
 
 		checkAllLineStatus(); 
@@ -1666,6 +1583,8 @@ function edLoad(){
 	
 	  tallyPayAmt();
 	  document.getElementById('status').value='<%=fromStatus%>';			  
+	
+	
 	}
 
 function setInvoiceImage(svrr){
@@ -2006,37 +1925,6 @@ alert(' dep_code '+ document.getElementById('dep_code'+aa1).value)
 
 }
 
-function validatePA(svr1,svr2,svr3){
-
-alert(svr1.name)
-alert(svr2.name)
-alert(svr3.name)
-var stat1='true';
-var stat2='true';
-var stat3='true';
-		if(isNaN(filterNum(svr2.value))){
-			 stat2='false';
-		}
-		if( ((svr1.value)>filterNum(svr2.value))||(filterNum(svr2.value)*1<=0) ){
-		  //svr3.style.backgroundColor='yellow';
-		  //svr2.style.backgroundColor='yellow';
-		  stat2='false'
-		  stat3='false'
-		}else{
-		  //svr3.style.backgroundColor='white';
-		  //svr2.style.backgroundColor='white';
-		}
-
-		if(filterNum(svr2.value)*1>document.getElementById('vendorUB').value){
-		  stat2='false'
-		}
-
-		if(stat2=='true'){svr2.style.backgroundColor='white';}
-		else {svr2.style.backgroundColor='yellow';}
-
-
-}
-
 function nextObj(objName){
 
 	//alert('objName '+objName);
@@ -2125,6 +2013,30 @@ document.getElementById('vid1').value=iGList[nextIndex];
 	return true;
 }
 
+function validateStatus(){
+
+svr11 = document.getElementById('status');
+	var tmpToStatusArray =  getToStatus('<%=fromStatus%>', document.getElementById('activateFlag').value);
+	
+	var svFlg = false;
+	for (i in tmpToStatusArray) {
+			if(  tmpToStatusArray[i]==svr11.value ){
+					svFlg = true;
+					break;
+			}else{
+					continue;
+					svFlg = false;
+			}       
+	}
+
+	if(!svFlg){
+		svr11.style.backgroundColor='orange';
+	}else{
+		svr11.style.backgroundColor='White';
+	}
+
+ return svFlg;
+}
 
 function insertUnSavedItems(){
 
@@ -2133,11 +2045,34 @@ var invoiceId = document.getElementById('invoiceId').value;
 var currentItemCtr =  document.getElementById('lineCtr').value;
 var itemIdVal=null;		
 
+//alert('lineStatusOrange  '+document.getElementById('lineStatusOrange').value);
+
+if(document.getElementById('lineStatusOrange').value){
+		alert("This record cannot be saved until you select a valid Line Status");
+		return false;
+}
+
+if(!validateStatus()){
+		
+		/*
+		var answer = confirm ("This record cannot be saved until you select a valid Status");
+		
+		if (answer)
+			alert ("Woo Hoo! So am I.")
+		else
+			alert ("Darn. Well, keep trying then.")
+		*/
+		
+		
+		alert("This record cannot be saved until you select a valid Status");
+		return;
+		
+}else{
 	if( (invoiceId!='III') ){
   	 //alert('inside pa blur Allocation Edit ');
      editValue(document.getElementById('status').value,'<%=invoiceStatus_ColID%>','<%=invoiceTableId%>',invoiceId);
   }  
-  
+}  
   	
 			for(i=1; i<=currentItemCtr; i++){
 				
@@ -2165,32 +2100,43 @@ function saveAndReturn(ss11){
 
 function next1(){
 var tempStr = "<%=reportIdArrayStr%>";
+
+
+//alert('nxtStr  '+nxtStr);
+
 document.getElementById('reportIdArrayStr').value="<%=reportIdArrayStr%>";
 var reportIdArrayTemp = tempStr.split(",");
 document.getElementById('mv').value='sn';
-document.getElementById('nxt').value=eval(<%=nxt%>+1);
+//document.getElementById('nxt').value=eval(<%=nxt%>+1);
 
 //alert('tempStr '+tempStr+' reportIdArrayTemp '+reportIdArrayTemp)
 var x=0;
   for (i in reportIdArrayTemp) {
         			   	  if (  (reportIdArrayTemp[i] == '<%=vid%>' ) ){
+        			   	 // alert('equal value of i is'+i);
  	      			   	  	  x = i*1+1;
- 	//      			   	  	  alert(' tempStr[i+1] '+reportIdArrayTemp[x]+' next index x is '+x+' current index i is '+i);
+ 	      			   	  	  //alert('reportIdArrayTemp'+reportIdArrayTemp+' tempStr[i+1] '+reportIdArrayTemp[x]+' next index x is '+x+' current index i is '+i);
         			   	  		document.getElementById('nxt').value = ""+x;
         			   	  		document.getElementById('vid1').value = reportIdArrayTemp[x];
+        			   	  		document.getElementById('nextVid').value = reportIdArrayTemp[x];
 												document.getElementById('vid').value = reportIdArrayTemp[x];
+												
 												break;
             		   	}else{
             		   			continue;
             		   	}
 	}
 	
-	if(x>=reportIdArrayTemp.length){
+	
+	//alert('reportIdArrayTemp.length '+reportIdArrayTemp.length);
+	
+	if(x==reportIdArrayTemp.length){
+			//alert('x value'+x+' reportIdArrayTemp.length '+reportIdArrayTemp.length);
 			window.location = "https://docorganiz.quickbase.com/db/<%=returnAppName%>";
 			imageWindow.close();
-	}else{
-			document.voucherInvoiceAllocation.submit();
-	}	
+	}else{		
+		document.voucherInvoiceAllocation.submit();
+	}
 
 }
 
@@ -2239,40 +2185,10 @@ function nextBill(){
  }
 
 
-
-/*
-function submitImageWindow(){
-
-	alert('fromDir1.value '+imageWindow.document.uploadForm.fromDir1.value);
-	if((imageWindow.document.uploadForm.fromDir1.value==null)||(imageWindow.document.uploadForm.fromDir1.value=="")) {
-		//alert('SRC   '+imageWindow.document.Object1.src)
-		imageWindow.document.uploadForm.fromDir1.value=imageWindow.document.uploadForm.Object1.src;
-	}
-
-	if(imageWindow.document.uploadForm.fromDir1.value.length>1){
-		//alert('Has New Local image attached NEED TO SUBMIT')
-		//imageWindow.document.uploadForm.submit();
-		imageWindow.document.uploadForm.submitButton.click();
-
-	}else{
-		alert('Has No image');
-	}
-}
-*/
-
 function imageSubmitCaller(invoiceCount){
 
 var currentInvoiceCount = document.getElementById('currentInvoiceCount').value;
 	//alert('Image to be submitted '+invoiceCount);
-/*
-	//alert('imageWindow.document.uploadForm.fromDir1.value    '+imageWindow.document.uploadForm.fromDir1.value);
-	if((imageWindow.document.uploadForm.fromDir1.value==null)||(imageWindow.document.uploadForm.fromDir1.value=="")) {
-		//alert('SRC   '+imageWindow.document.Object1.src)
-		//imageWindow.document.uploadForm.fromDir1.value=convertPath(imageWindow.document.uploadForm.Object1.src);
-	}
-
-
-*/
 
 		document.getElementById('inim').value=invoiceCount;
 
@@ -2328,58 +2244,6 @@ var currentInvoiceCount = document.getElementById('currentInvoiceCount').value;
 
 	}
 	
-function imageSubmitCaller343(invoiceCount){
-
-//	alert('Image tobe submitted '+invoiceCount);
-
-/*
-	//alert('imageWindow.document.uploadForm.fromDir1.value    '+imageWindow.document.uploadForm.fromDir1.value);
-	if((imageWindow.document.uploadForm.fromDir1.value==null)||(imageWindow.document.uploadForm.fromDir1.value=="")) {
-		//alert('SRC   '+imageWindow.document.Object1.src)
-		//imageWindow.document.uploadForm.fromDir1.value=convertPath(imageWindow.document.uploadForm.Object1.src);
-	}
-*/
-
-		document.getElementById('inim').value=invoiceCount;
-
-		var previousinim = document.getElementById('previousinim').value;
-		if( (previousinim!=null) &&(previousinim.length>0) ){
-			//alert('previously Clicked on Invoice count  '+previousinim);
-
-			if (previousinim!=invoiceCount){
-			 //alert('First Click');
-
-				//var imageVar=imageWindow.document.uploadForm.Object1.src;
-				//alert('From Dir1 '+imageWindow.document.uploadForm.fromDir1.value.length)
-				if(imageWindow.document.uploadForm.fromDir1.value.length>1){
-					//alert('Has New Local image attached NEED TO SUBMIT')
-					imageWindow.document.uploadForm.submitButton.click();
-
-				}else{
-//					alert('Does NOT Have New Local image attached NEED NOT SUBMIT')
-				}
-
-
-			}else{
-//				//alert('Clicking on same Invoice '+invoiceCount);
-				if(imageWindow.document.uploadForm.fromDir1.value.length>1){
-//					alert('Has New Local image attached NEED TO SUBMIT')
-					imageWindow.document.uploadForm.submitButton.click();
-				}else{
-//					alert('Does NOT Have New Local image attached NEED NOT SUBMIT')
-				}
-			}
-
-		}else{
-
-				if(imageWindow.document.uploadForm.fromDir1.value.length>1){
-				//				alert('Has New Local image attached so Iam submitting')
-								imageWindow.document.uploadForm.submitButton.click();
-				}
-
-		}
-
-	}
 
 
 var currentInvoiceCount;
@@ -2717,24 +2581,35 @@ function getVendorId(vendorName){
 
 
 
-
 function clientNameBlur(svr11){
 	
 	svr11.style.backgroundColor='white';
-	
-	svr11.value = trimStr(svr11.value);
-	
-	validate(svr11);
-	
+	var svFlg = validate(svr11);
 	var invoiceId = document.getElementById('invoiceId').value;
 	var clientId = document.getElementById('clientId').value;
 	//alert('invoiceId.val'+invoiceId);
-	
-  if( (invoiceId!='III')   ){
-     //alert('B4 Add Invoice  >>>>> ');     
-     editValue(clientId,'<%=clientId_ColID%>','<%=invoiceTableId%>',invoiceId);
-  }  
 
+	if(!svFlg){
+				alert('Please enter a recognized Client name to proceed.');
+				//document.getElementById('clientId').value='';
+	  		//document.getElementById('franchiseName').innerHTML='';
+	  		//document.getElementById('franchiseId').innerHTML='';
+	  		//document.getElementById('franchiseIdh').value='';
+	  		document.getElementById('clientName').value = document.getElementById('previousClient').value;
+	 }else{ 		   	 
+	  	if( (invoiceId!='III')   ){
+	  			
+	  					
+	  						document.getElementById('previousClient').value = document.getElementById('clientName').value;
+    
+	  			 			editValue(clientId,'<%=clientId_ColID%>','<%=invoiceTableId%>',invoiceId);
+  		}
+  		if( (document.getElementById('vendor').value!='')||(document.getElementById('vendor').value!=null)   ){
+   	 			vendorBlur();
+  		} 
+  		
+  				 
+		}
 }
 
 
@@ -2749,7 +2624,6 @@ var voucherAdded=false;
 
 //VENDOR
 function vendorFocus(sv1){
-
 	var clientIdVar = document.getElementById('clientId').value;
 	if((clientIdVar.length>0)){
 				populateAllDropDown(clientIdVar);
@@ -2776,19 +2650,37 @@ function vendorBlur(svr11){
 		svr11.value = trimStr(svr11.value);
 	
 		svr11.style.backgroundColor='white';
-  	//validate(svr11);
-		//alert('selected vendorName >> '+svr11.value);
-		if(svr11.value.length!=0){
-			vendorTermVal = getVendorTerm(svr11.value)/milli;
-			
-			if(isNaN(vendorTermVal)){
-				//alert('isNAN vendorTermVal >> '+vendorTermVal);
-				vendorTermVal=30;
+  
+  
+	var tmpVendorArray = vendorArray;
+	var svFlg = false;
+	for (i in tmpVendorArray) {
+			if(  tmpVendorArray[i]==svr11.value ){
+					svFlg = true;
+					break;
 			}else{
-				//alert('valid vendorTermVal >> '+vendorTermVal);			
-			}
+					continue;
+					svFlg = false;
+			}       
+	}
+
+	if(!svFlg){
+		svr11.style.backgroundColor='orange';
+		alert ('Please enter a recognized Vendor to proceed.');
+		svr11.value = document.getElementById('previousVendor').value;
+	}else
+	{
+		if(svr11.value.length!=0){
+				vendorTermVal = getVendorTerm(svr11.value)/milli;
 			
-			document.getElementById('vendorId').value = getVendorId(svr11.value);
+				if(isNaN(vendorTermVal)){
+					//alert('isNAN vendorTermVal >> '+vendorTermVal);
+					vendorTermVal=30;
+				}else{
+					//alert('valid vendorTermVal >> '+vendorTermVal);			
+				}
+			
+				document.getElementById('vendorId').value = getVendorId(svr11.value);
 				var date = new Date();
         var time = date.getTime()
         field = document.getElementById("invoiceDueDate");
@@ -2796,18 +2688,25 @@ function vendorBlur(svr11){
         var date2 = new Date(time);
         field.value = date2.print("%m/%d/%Y");
     		//alert('selected field.value >> '+field.value);
-		}
+			}
 		
-	var invoiceId = document.getElementById('invoiceId').value;
-	var vendorId = document.getElementById('vendorId').value;
-	//alert('invoiceId.val'+invoiceId);
+			var invoiceId = document.getElementById('invoiceId').value;
+			var vendorId = document.getElementById('vendorId').value;
+			//alert('invoiceId.val'+invoiceId);
 	
-  if( (invoiceId!='III')   ){
-     //alert('B4 Add Invoice  >>>>> ');     
-     editValue(vendorId,'<%=vendorId_ColID%>','<%=invoiceTableId%>',invoiceId);
-  }  
+	
+			  if( (invoiceId!='III')   ){
+  	  		 //alert('B4 Add Invoice  >>>>> ');   
+  	  		 
+						document.getElementById('previousVendor').value = document.getElementById('vendor').value;  
+    				document.getElementById('previousVendorId').value = document.getElementById('vendorId').value;  
+    	 			editValue(vendorId,'<%=vendorId_ColID%>','<%=invoiceTableId%>',invoiceId);
+  			} 
 		
-		
+			}	
+			
+			svr11.style.backgroundColor='White';
+	
 }
 
 
@@ -2879,21 +2778,14 @@ function invoiceAmtBlur(svr11){
 	
   if( (invoiceId!='III')   ){
      //alert('B4 Add Invoice  >>>>> ');     
-     editValue(svr11.value,'<%=invoiceAmt_ColID%>','<%=invoiceTableId%>',invoiceId);
-     
-     
+      editValue(svr11.value,'<%=invoiceAmt_ColID%>','<%=invoiceTableId%>',invoiceId);
      //getActivateChoiceFlag('<%=billId%>');
-     
      //alert('calling getToStatus at invoiceAmtBlur');
-     
-  	 //getToStatus('<%=fromStatus%>', document.getElementById('activateFlag').value);
- 		
- 		getActivateChoiceFlag('<%=billId%>');     	
+     //getToStatus('<%=fromStatus%>', document.getElementById('activateFlag').value);
+ 		 getActivateChoiceFlag('<%=billId%>');     	
   }  
-  
-  	getToStatus('<%=fromStatus%>', document.getElementById('activateFlag').value);
-		tallyPayAmt();  
-  
+ 	getToStatus('<%=fromStatus%>', document.getElementById('activateFlag').value);
+	tallyPayAmt();  
 }
 
 
@@ -2958,10 +2850,12 @@ function getToStatus(fromStatus,activateFlag1){
 
 	var j=0;
 	
+	var workflowId = document.getElementById('workflowId').value;
+	
 	var toStatusArray1 = new Array();
 
   for (i in allStatusArray) {
-        			   	  if (  (allStatusArray[i].split(",")[3] == fromStatus) && (allStatusArray[i].split(",")[1] == activateFlag1) ){
+        			   	  if (  (allStatusArray[i].split(",")[3] == fromStatus) && (allStatusArray[i].split(",")[4] == workflowId) && (allStatusArray[i].split(",")[1] == activateFlag1) ){
         			   	  		//alert(allStatusArray[i].split(",")[0]);
 												//toStatusArray[j] = allStatusArray[i].split(",")[0];
 												toStatusArray1[j] = allStatusArray[i].split(",")[0];
@@ -2975,12 +2869,13 @@ function getToStatus(fromStatus,activateFlag1){
 
 
 function setToLineStatus(count1){
-
+//alert(' setToLineStatus  count1');
+	var workflowId = document.getElementById('workflowId').value;
 	var j=0;
 	var toLineStatusArray = new Array();
   //alert(document.getElementById('fromLineStatus'+count1).value); 
   for (i in lineClassificationArray) {
-        			   	  if ( (lineClassificationArray[i].split(",")[2] == '<%=fromStatus%>') && (lineClassificationArray[i].split(",")[0] ==  document.getElementById('fromLineStatus'+count1).value) ) {
+        			   	  if ( (lineClassificationArray[i].split(",")[2] == '<%=fromStatus%>') && (lineClassificationArray[i].split(",")[4] == workflowId )  && (lineClassificationArray[i].split(",")[0] ==  document.getElementById('fromLineStatus'+count1).value) ) {
 													toLineStatusArray[j] = lineClassificationArray[i].split(",")[1];
 													//toLineStatusArray2[j] = lineClassificationArray[i].split(",")[1]+","+lineClassificationArray[i].split(",")[3];
 													j++;
@@ -2998,28 +2893,53 @@ var previousLineStatus ="";
 function lineStatusBlur(sv1,count){
 
   if(trimStr(sv1.value)==""){
-  	sv1.value = previousLineStatus;
+  	//sv1.value = previousLineStatus;
   }else{	
 		sv1.value = trimStr(sv1.value);
 	}
 	
-	sv1.style.backgroundColor='white';		
+	var tmpToLineStatusArray = setToLineStatus(count);
+	var svFlg = false;
+	for (i in tmpToLineStatusArray) {
+			if(  tmpToLineStatusArray[i]==sv1.value ){
+					svFlg = true;
+					break;
+			}else{
+					continue;
+					svFlg = false;
+			}       
+	}
+
+	if(!svFlg){
+		sv1.style.backgroundColor='orange';
+		document.getElementById('lineStatusOrange').value=true;
+		return true;
+	}else{
+		document.getElementById('lineStatusOrange').value=false;
+		sv1.style.backgroundColor='White';
+	}	
+	
 	var invoiceIdVal = document.getElementById('invoiceId').value;
 	var lineItemIdVal = document.getElementById('lineItemId'+count).value;
 	//alert('invoiceIdVal '+invoiceIdVal+' lineItemIdVal '+lineItemIdVal);
-  if( (lineItemIdVal=='III') && (isLineItemComplete(count))  ){
+	
+	if(svFlg){
+					sv1.style.backgroundColor='white';
+  	if( (lineItemIdVal=='III') && (isLineItemComplete(count))  ){
      //alert('B4 Add Line Item  >>>>> ');
      addBKEValue('line',count);
      //alert('After Line Item>>>>> 7');
      //tallyPayAmt();
   	 //tallyResidualAmt();
-  }else{
+  	}else{
   		editValue(sv1.value,'<%=lineStatusTrail_ColID%>','<%=itemTableId%>',lineItemIdVal);
   		getActivateChoiceFlag('<%=billId%>');     	
-  }
-  getToStatus('<%=fromStatus%>', document.getElementById('activateFlag').value);
-  tallyPayAmt();
-  
+  	}
+  	getToStatus('<%=fromStatus%>', document.getElementById('activateFlag').value);
+  	tallyPayAmt();
+ 	}else{
+		sv1.style.backgroundColor='orange'; 
+ 	} 
  }	
 	
 	
@@ -3037,7 +2957,20 @@ function statusFocus(sv1){
 		}else{
 		//alert('Load the next set of Status values');
 
-		var toStatusObject = actb(sv1, getToStatus('<%=fromStatus%>', document.getElementById('activateFlag').value));
+
+	var testStatusArray = getToStatus('<%=fromStatus%>', document.getElementById('activateFlag').value);
+	/*
+	alert('testStatusArray'+testStatusArray);
+	var ff=false;
+	for (i in testStatusArray) {
+	      if(testStatusArray[i]==sv1.value){
+					sv1.style.backgroundColor='white';  
+					ff=true;    	
+	      }
+	}
+*/			
+
+		var toStatusObject = actb(sv1, testStatusArray);
 		
 		//var toStatusObject = actb(sv1,toStatusArray);
 		
@@ -3059,8 +2992,20 @@ function statusBlur(svr11){
 		svr11.value = trimStr(svr11.value);
 	}
 	
-	svr11.style.backgroundColor='white';
-	
+	var testStatusArray = getToStatus('<%=fromStatus%>', document.getElementById('activateFlag').value);
+	//alert('testStatusArray'+testStatusArray);
+	var ff=false;
+	for (i in testStatusArray) {
+	      if(testStatusArray[i]==svr11.value){
+					svr11.style.backgroundColor='white';  
+					ff=true;    	
+	      }
+	}
+	if(ff){
+		svr11.style.backgroundColor='white';
+	}else{
+		svr11.style.backgroundColor='orange';
+	}
 }
 
 
@@ -3138,6 +3083,7 @@ function accountNameFocus(sv1,count){
 		
 		}
 
+/*
 function accountNameBlur(svr1,count){
 	svr1.style.backgroundColor='white';
 	if(svr1.value.length>0)
@@ -3153,6 +3099,41 @@ function accountNameBlur(svr1,count){
 	 }  
 
 	}
+*/
+
+function accountNameBlur(svr1,count){
+	svr1.style.backgroundColor='white';
+	
+	if(svr1.value.length>0){
+		var svFlg = validate(svr1);
+ 		
+ 	if(svFlg){
+ 			document.getElementById('accountNumber'+count).style.backgroundColor='white';
+ 			document.getElementById('accountNumber'+count).value = getAccountNumber(trimStr(svr1.value),count);
+  	}else{
+ 			document.getElementById('accountNumber'+count).style.backgroundColor='orange';
+  		document.getElementById('accountNumber'+count).value='';
+  	
+  	}
+  	
+  }	else{
+  	//svr1.style.backgroundColor='orange';
+		//document.getElementById('accountNumber'+count).style.backgroundColor='orange';
+  
+  }
+  	//alert ('accountNameBlur validate flg '+svFlg);
+		var lineItemId = document.getElementById('lineItemId'+count).value;
+  	var accountId = document.getElementById('accountId'+count).value;
+		//alert('invoiceId.val'+invoiceId);
+		
+	if( (lineItemId!='III') && (svFlg)   ){
+    	 //alert('B4 Add Invoice  >>>>> ');     
+  	   editValue(accountId,'<%=accountId_ColID%>','<%=itemTableId%>',lineItemId);
+	 }  
+
+	}
+
+
 
 function lineItemDescFocus(sv1,count){
 	sv1.style.backgroundColor='SkyBlue';
@@ -3182,199 +3163,28 @@ function lineStatusClear(sv1){
 }		
 
 function lineStatusFocus(sv1,count){
-
+		
 		if(sv1.value.length==0){	
 			sv1.value='UNC';
 		}	
+		
 		previousLineStatus=sv1.value;
 		sv1.value="";
 		sv1.style.backgroundColor='SkyBlue';
+
 		var toLineStatusObject = actb(sv1,setToLineStatus(count));
 		toLineStatusObject.actb_lim = 5;
 		toLineStatusObject.actb_firstText = false;
 		toLineStatusObject.actb_startcheck = 0;
 		toLineStatusObject.actb_mouse = true;
+
 }
 
 
 /******************************/
 
-function voucherNameOnBlur(svr11){
-	svr11.style.backgroundColor='white';
-	validate(svr11);
-
-	inVoucherArea=false;
-
-	var voucherId = document.getElementById('voucherId').value;
-
-	var vendorId = document.getElementById('vendorId').value;
-
-	//alert('add voucher function voucherId length = '+voucherId.length+'  voucherId>>> '+voucherId);
-
-	if(voucherId.length==0){
-			if(isVoucherComplete()&&(!voucherAdded)){
-
-//A				editUserInfo();
-//A				addValue('voucher',0,0);
-				//pausecomp(1000);
-				//voucherAdded=true;
-				nextObj('process_status');
-			}
-	}else {
-
-	//if( voucherId.length>0){
-		if(isVoucherComplete()){
-			//alert('In Edit voucher');
-			editValue(vendorId,'<%=vendor_idCID%>','<%= voucherTableId%>',voucherId);
-			nextObj('invoiceNumber');
-			//break;
-			//alert('Done Edit voucher');
-		}
-	}
-
-}
 
 
-
-
-function groupDateBlur(obj){
-alert('inside groupdate on blur');
-        obj.style.backgroundColor='white';
-alert('inside groupdate on blur>>>>>1');
-        validate(obj);
-alert('inside groupdate on blur');       
-        var voucherId = document.getElementById('voucherId').value;
-alert('inside groupdate on blur>>>>>2');        
-        //alert('voucher ID '+voucherId+' objvalue '+obj.value);
-        if(voucherId.length>0){
-alert('inside groupdate on blur>>>>3');        
-							alert('has voucherID>>>>4');
-                        editValue(obj.value,'<%=voucher_dateCID%>','<%= voucherTableId%>',voucherId);
-        }
-}
-
-
-function approverOnBlur(svr11){
-//alert('inside approveronblur');
-	svr11.style.backgroundColor='white';
-	validate(svr11);
-
-	inVoucherArea=true;
-
-	var voucherId = document.getElementById('voucherId').value;
-
-	var vendorId = document.getElementById('vendorId').value;
-
-//alert('add voucher function voucherId length = '+voucherId.length+'  voucherId>>> '+voucherId);
-
-	if(voucherId.length==0){
-	
-	//		alert("inside if statement "+ isVoucherComplete()+"   voucherAdded " + voucherAdded )
-			if(isVoucherComplete()&&(!voucherAdded)){
-				
-		//		alert('before added value for voucher');
-
-				editUserInfo();
-				addValue('voucher',0,0);
-			//	alert('added value for voucher');
-				//pausecomp(1000);
-				voucherAdded=true;
-				nextObj('invoice_no1');
-			}
-	}else {
-
-	//if( voucherId.length>0){
-		if(isVoucherComplete()){
-			//alert('In Edit voucher');
-			editValue(svr11.value,'<%=approverCID%>','<%= voucherTableId%>',voucherId);
-			nextObj('invoice_no1');
-			//break;
-			//alert('Done Edit voucher');
-		}
-	}
-
-}
-
-
-
-
-
-
-function statusBlurOnEdit(obj){ 
-	//alert('inside on blur on edit');
-	setStatus(obj);
-	//alert('inside on blur on edit 1')
-	obj.style.backgroundColor='white';
-	validate(obj);
-
-	var voucherId = document.getElementById('voucherId').value;
-	//alert('voucher ID '+voucherId+' objvalue '+obj.value);
-	if(voucherId.length>0){
-	//alert('inside status blur 1');
-			editValue(obj.value,'<%= process_status_trailCID%>','<%= voucherTableId%>',voucherId); 
-	//alert('inside status blur 2');
-	}
-}
-
-
-
-function cd1OnBlur(obj1212,a1,b1){
-
-//alert('1  a1 '+a1+' b1 '+b1);        
-        obj1212.style.backgroundColor='white';
-//alert('2');
-        validate(obj1212);
-	var allocationIdVal = document.getElementById('allocationId'+a1+'l'+b1).value;
-        //alert('obj1212.value '+ obj22.value+' invoiceIdVal '+invoiceIdVal);
-        if( allocationIdVal!='III' ){
-                editValue(obj1212.value,'<%=naturalActCID%>','<%=allocationTableId%>',allocationIdVal);
-        }
-//alert('3');
-}
-
-function cd2OnBlur(obj1212,a1,b1){
-
-//alert('1  a1 '+a1+' b1 '+b1);        
-        obj1212.style.backgroundColor='white';
-//alert('2');
-        validate(obj1212);
-	var allocationIdVal = document.getElementById('allocationId'+a1+'l'+b1).value;
-        //alert('obj1212.value '+ obj22.value+' invoiceIdVal '+invoiceIdVal);
-        if( allocationIdVal!='III' ){
-                editValue(obj1212.value,'<%=pcCID%>','<%=allocationTableId%>',allocationIdVal);
-        }
-//alert('3');
-}
-
-function cd3OnBlur(obj1212,a1,b1){
-
-//alert('1  a1 '+a1+' b1 '+b1);        
-        obj1212.style.backgroundColor='white';
-//alert('2');
-        validate(obj1212);
-	var allocationIdVal = document.getElementById('allocationId'+a1+'l'+b1).value;
-        //alert('obj1212.value '+ obj22.value+' invoiceIdVal '+invoiceIdVal);
-        if( allocationIdVal!='III' ){
-                editValue(obj1212.value,'<%=cd3CID%>','<%=allocationTableId%>',allocationIdVal);
-        }
-//alert('3');
-
-
-}
-
-function purchaseAmountBlur(paObj,a1,b1){
- 
-//alert('1  a1 '+a1+' b1 '+b1);
-        paObj.style.backgroundColor='white';
-//alert('paObj'+paObj.value);
-       // validate(paObj);
-        var allocationIdVal = document.getElementById('allocationId'+a1+'l'+b1).value;
-        //alert('obj1212.value '+ obj22.value+' invoiceIdVal '+invoiceIdVal);
-        if( allocationIdVal!='III' ){
-                editValue(paObj.value,'<%=purchaseAmountCID%>','<%=allocationTableId%>',allocationIdVal);
-        }
-//alert('3');
-}
 
 
 
@@ -3586,6 +3396,7 @@ function duplicate11(){
 
 <table class="groupTbl" cellpadding="2" width="100%" bgcolor="#ffffff" border="1">
  <input  value="<%=activateFlag%>" type=hidden name=activateFlag id=activateFlag >
+ <input  value="<%=workflowId%>" type=hidden name=workflowId id=workflowId >
 	 
 <input type=hidden name=voucher_date id=voucher_date >
 <input type=hidden name=status_date id=status_date >
@@ -3604,13 +3415,6 @@ function duplicate11(){
     	<span id='franchiseId' style='align : middle;'><%=franchiseId%></span>
 	  		<input value="<%=franchiseId%>" type=hidden name="franchiseIdh" id="franchiseIdh" >
     </td> 
-    <!--
-    <td width="3%">    	
-    		<IMG id="voucherCommb" style="align: right;" height=24 alt="" onclick="commentWindow('Comment.html','voucherComm');"  onselect="commentWindow('Comment.html','voucherComm');"  <%if ( true ){%>  src="/bke1/images/notes1.png"  <%}else{%> src="images/notes.png" <%}%> width=20 border=1>    		
-        <input value="<%=billNotes%>"  type="hidden" name="voucherCommh" id="voucherCommh" ></input>    	
-    		<input type="hidden" name="voucherComm" id="voucherComm" ></input>
-		</td>
-		-->
  </tr>
 </table>
 
@@ -3674,17 +3478,6 @@ function duplicate11(){
   
   <tr valign="top">  	
   	
-	 <!-- 
-	  <td width="10%" nowrap><span class=rqrd>*</span>Status:</td>
-    <td width="15%">
-    	<input name="status"  id="status" onfocus="statusFocus(this);" onblur="statusBlur(this);"  class="inps" maxlength="15" size="15">    	
-    </td> 
-	  <td width="10%" nowrap><span class=rqrd>*</span>Residual Amt:</td>
-    <td width="20%">
-    	<span id=residualAmt> </span>   	
-    	<input type=hidden name='residualAmtH' id='residualAmtH'>
-    </td>
-   --> 
     
 	  <td width="10%" nowrap><span class=rqrd>*</span>Pay Amt:</td>
     <td width="15%">    	
@@ -3774,7 +3567,7 @@ Line Item ID#   25
         							// Get key
         							keyString = itKey1.next();
         							valueString = hashmap4Item.get(keyString);
-        							System.out.println(keyString.toString() +"\t" +valueString.toString());
+        							System.out.println(keyString.toString() +"\t >>>> " +valueString.toString());
     						}
 
 String fromLineStatus=(String) hashmap4Item.get(itKey.next());
@@ -3831,7 +3624,7 @@ String accountNumber=(String) hashmap4Item.get(itKey.next());
     
     <td width="3%" nowrap align=middle>
     	
-	  		<IMG id="lineItemComm<%=lineItemCounter%>b" style="align: right;" height=24 alt="" onclick="commentWindow('Comment.html?lineCt=<%=lineItemCounter%>','lineItemComm<%=lineItemCounter%>');"  onselect="commentWindow('Comment.html','lineItemComm<%=lineItemCounter%>');"   <%if ( lineNotes.length() >0 ){%> src="images/notes1.png" <%}else{%>  src="/bke1/images/notes.png"  <%}%>  width=20 border=1>
+	  		<IMG id="lineItemComm<%=lineItemCounter%>b" style="align: right;" height=24 alt="" onclick="commentWindow('Comment.html?lineCt=<%=lineItemCounter%>','lineItemComm<%=lineItemCounter%>');"  onselect="commentWindow('Comment.html','lineItemComm<%=lineItemCounter%>');"   <%if ( lineNotes.length() >0 ){%> src="images/notes1.png" <%}else{%>  src="images/notes.png"  <%}%>  width=20 border=1>
 	  		<input value="<%=lineNotes%>"  type="hidden" name="lineItemComm<%=lineItemCounter%>h" id="lineItemComm<%=lineItemCounter%>h" ></input>    	
     		<input type="hidden" name="lineItemComm<%=lineItemCounter%>" id="lineItemComm<%=lineItemCounter%>" ></input>
 
@@ -3907,6 +3700,11 @@ String accountNumber=(String) hashmap4Item.get(itKey.next());
 
  
 						<input type="hidden" name="nxt" id="nxt" >
+						<input type="hidden" name="lineStatusOrange" id="lineStatusOrange" >
+    				<input type=hidden name=previousVendor id=previousVendor >
+    				<input type=hidden name=previousVendorId id=previousVendorId >
+    				<input type=hidden name=previousClient id=previousClient >
+    				<input type=hidden name=previousClientId id=previousClientId >
 
 						<input type="hidden" name="ord" id="ord" value="<%=ordStr%>">
 
@@ -3914,6 +3712,7 @@ String accountNumber=(String) hashmap4Item.get(itKey.next());
 						<input type="hidden" name="cid" id="cid" value="<%=cid%>">
 						<input type="hidden" name="vid" id="vid" value="<%=vid%>">
  						<input type="hidden" name="qid" id="qid" value="<%=qid1%>">
+ 						<input type="hidden" name="nextVid" id="nextVid" value="<%=nextVid%>">
  						<input type="hidden" name="reportIdArrayStr" id="reportIdArrayStr" value="<%=reportIdArrayStr%>">
  						
 						<input type="hidden" name="mv" id="mv" >
@@ -3946,28 +3745,6 @@ String accountNumber=(String) hashmap4Item.get(itKey.next());
  						
 </form>
 
-<script type="text/javascript">
-	/*
-
- <td><input type="text" name="date" id="f_date_c" readonly="1" /></td>
- <td><img src="img.gif" id="f_trigger_c" style="cursor: pointer; border: 1px solid red;" title="Date selector"
-      onmouseover="this.style.background='red';" onmouseout="this.style.background=''" /></td>
-</table>
-</form>
-
-
-    Calendar.setup({
-        inputField     :    "invoiceDate",     // id of the input field
-        ifFormat       :    "%m/%d/%Y",      // format of the input field
-        button         :    "invoiceDateImg",  // trigger for the calendar (button ID)
-        align          :    "Tl",           // alignment (defaults to "Bl")
-        singleClick    :    true
-    });
-   
-   
-  */  
-</script>
-
 
 
 <script type="text/javascript">
@@ -3987,16 +3764,7 @@ String accountNumber=(String) hashmap4Item.get(itKey.next());
         var date2 = new Date(time);
         field.value = date2.print("%m/%d/%Y");
     }
-/*	  
-    Calendar.setup({
-        inputField     :    "invoiceDate",
-        ifFormat       :     "%m/%d/%Y",
-        showsTime      :    false,
-        singleClick    :    true,
-        timeFormat     :    "",     
- 				onUpdate       :    catcalcInvoiceDate
-    });
-*/
+
 
     Calendar.setup({
         inputField     :    "invoiceDate",     // id of the input field
@@ -4022,16 +3790,7 @@ String accountNumber=(String) hashmap4Item.get(itKey.next());
         field.value = date2.print("%m/%d/%Y");
     }
  
- /* 
-    Calendar.setup({
-        inputField     :    "invoiceDueDate",
-        ifFormat       :     "%m/%d/%Y",
-        showsTime      :    false,
-        timeFormat     :    "",   
-        singleClick    :    true,  
- 				onUpdate       :    catcalcInvoiceDueDate
-    }); 
- */   
+ 
     Calendar.setup({
         inputField     :    "invoiceDueDate",
         ifFormat       :     "%m/%d/%Y",
@@ -4048,7 +3807,7 @@ String accountNumber=(String) hashmap4Item.get(itKey.next());
         <tr>
           <td valign="top">
             <div align="center">
-            	<a>Copyright 2009 by DocOrganiz Corporation. All Rights Reserved.</a>            
+            	<a>Copyright 2010 by DocOrganiz Corporation. All Rights Reserved.</a>            
             </div>
           </td>
         </tr>
@@ -4056,3 +3815,9 @@ String accountNumber=(String) hashmap4Item.get(itKey.next());
       <input type=hidden name=u id=u value='<%=(String)u%>' >
 </body>
 </html>
+
+
+
+
+
+

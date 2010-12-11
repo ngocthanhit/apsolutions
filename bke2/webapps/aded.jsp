@@ -29,6 +29,15 @@
 	 String reportIdArrayStr = request.getParameter("reportIdArrayStr");
     
     System.out.println("mv >>>>>>>>>>>"+mv);
+ 		 
+ 		 if(nxt!=null){
+				System.out.println("nxt has values and vid1 is "+vid1+"  vid is"+vid);
+			  vid=vid1;
+				
+		}else{
+			System.out.println("nxt has no values");
+		}
+ 		 
  		 	
    String clientName1 = request.getParameter("clientName");
    String clientId1 = request.getParameter("clientId");
@@ -40,7 +49,12 @@
    System.out.println(" mv >>>>> "+mv);
  
    String skipArray = request.getParameter("skipArray");
+   /*
+   if(skipArray !=null){
+   		session.setAttribute( "sessionSkipArray", skipArray );
 
+   }*/
+   
 	 String qbid = request.getParameter("u");
 
 System.out.println("qbid >" +qbid);
@@ -73,12 +87,32 @@ System.out.println("qbid >" +qbid);
  		  } 
 	}
 	
+	String imageParam = (String)session.getAttribute("imageParam");
+	
+	System.out.println("imageParam>>>"+imageParam);
+	
+	if( imageParam == null ){
+		//System.out.println("imageParam is NULL ");
+		//System.out.println("imageParam is NULL ");
+	  session.setAttribute("imageParam",imageH+","+imageV);
+	}	
+	
 		 
 	String strURL = "https://docorganiz.quickbase.com/db/";
 	
 	String login = cookieuid1+"@"+cookieuid2;
 	String password = cookiepassword;
 	int cookieTime = 60*60*24*365;
+ 	
+ 	/*
+ 	if( (login.length()>4)&&(u.length>0) ){
+ 		if(! (login.equals(u)){
+ 			response.sendRedirect("login.jsp?ac="+ac+"&u="+u+"&vid="+vid+"&msg=Please logon with the same credentials");
+	 		return;
+	 	}	
+ 	
+ 	}
+ */
  
  	if((login.length()<4)||(password==null)||(password.length()<2)){
  		System.out.println("Please logon with your credentials");
@@ -173,16 +207,6 @@ System.out.println("qbid >" +qbid);
 		  //session.setAttribute( "franchiseId",franchiseId );
 
 	  }
-	  //System.out.println("qbid >" +qbid+ ">" +login);
-	  
-	  /*
- 		if(!qbid.equalsIgnoreCase(login)){
- 			System.out.println("login"+login+"\t  qbid"+qbid+"\t vid "+vid);
- 			System.out.println("Please logon with the same credentials that you used in Quick Base Application");
- 			response.sendRedirect("login.jsp?ac="+ac+"&u="+qbid+"&vid="+vid+"&msg=Please logon with the same credentials that you used in Quick Base Application");
-	 		return;	
-		}
-		*/
 		
   } 
   
@@ -194,7 +218,12 @@ System.out.println("qbid >" +qbid);
 	if( request.getParameter("mv")!=null){
 
 		if( request.getParameter("mv").equals("sr") ){
+				session.setAttribute( "sessionSkipArray", "" );
 				response.sendRedirect("https://docorganiz.quickbase.com/db/"+applicationName);
+		}
+		if( request.getParameter("mv").equals("sn") ){
+			skipArray= (String)session.getAttribute( "sessionSkipArray" );
+			System.out.println(" Session value of skipArray is >>>>>>>>>"+skipArray);
 		}
   }
 		

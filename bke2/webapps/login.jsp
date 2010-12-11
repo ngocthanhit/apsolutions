@@ -14,11 +14,20 @@
  String imageH =  request.getParameter("imageH");
  String imageV = request.getParameter("imageV");
  
+ 
+   String cid = request.getParameter("cid");
+	
+   String st = request.getParameter("st");
+	
+ 
  String lastImageLocation = request.getParameter("lastImageLocation");
  String lastVoucherNumber = request.getParameter("lastVoucherNumber");
  if(image == null) image = "SXGA Dual - 768 by 1024 ~3:4 ratio";
  if(imageH == null) imageH = "768";
  if(imageV == null) imageV = "1024";
+ 
+ System.out.println("U & P"+login+" >> "+password);
+ session.setAttribute("imageParam",imageH+","+imageV);
  
  String msg = request.getParameter("msg");
  if (msg == null) msg = "";
@@ -53,23 +62,14 @@
  
 Cookie[] cookieArray = request.getCookies(); 
 
-//if ( (request.getParameter("sess")!=null)||(session.getAttribute("lookup")==null) ){
 
-/*
-    if (session != null) {
-    	Lookup lookup = new Lookup();
-        session.setAttribute("lookup", lookup);
-        //value = session.getAttribute("com.mycompany.session-param");
-    }
-
-*/
 
 
 if ( (request.getParameter("lac")==null) ){
 
 	if( cookieArray != null) { 
 
-		  //System.out.println("Cookie Set");
+		  System.out.println("Cookie Set");
 
 		  for( int i = cookieArray.length-1; i >= 0; i-- ) { 
 		    Cookie cookie = cookieArray[i]; 
@@ -81,9 +81,10 @@ if ( (request.getParameter("lac")==null) ){
 		    	cookiepassword = cookie.getValue();
 		    	//System.out.println("Password Cookie exists "+cookiepassword);
 		    	}
-		 
-		    
+		    	
 		    if(cookie.getName().equals("imageH")){
+		    
+		      //if(imageH.equals(cookie.getValue()))
 		    	imageH = cookie.getValue();
 		    	//System.out.println("imageH Cookie exists "+imageH);
 		    	}
@@ -118,17 +119,43 @@ if ( (request.getParameter("lac")==null) ){
 		    
 		  } 
 	}
-}	
-else {	
-if ( request.getParameter("lac").equals("lac") ){
+}	else {
+	 if ( request.getParameter("lac").equals("lac") ){
 
+  //Old cookie account info
+  if( cookieArray != null) { 
+
+		  //System.out.println("Cookie Set");
+
+		  for( int i = cookieArray.length-1; i >= 0; i-- ) { 
+		    Cookie cookie = cookieArray[i]; 
+		    if(cookie.getName().equals("uid1"))
+		    	cookieuid1 = cookie.getValue();
+		    if(cookie.getName().equals("uid2"))
+		    	cookieuid2 = cookie.getValue();
+		    if(cookie.getName().equals("password")){
+		    	cookiepassword = cookie.getValue();
+		    	//System.out.println("Password Cookie exists "+cookiepassword);
+		    	}
+				}
 	
+	 }			
+	 
+	//Current user account info 
 	if( (login!=null)&&(password!=null) ){
 		String[] uids = login.split ("@");
  		uid1 = uids[0];
  //		System.out.println("uid1  "+uid1);
  		uid2 = uids[1];
  //		System.out.println("uid2  "+uid2);
+ 
+   }
+ 
+ if( (cookieuid1+"@"+cookieuid2).equals(login) ){
+ 	System.out.println(">>>>>>>>>>>  Cookie and Current logins are same");
+ }else{
+	System.out.println(">>>>>>>>>>>  cookieuid1"+cookieuid1+" login  "+login);
+ }
  
  		Cookie cookie1 = new Cookie("uid1",uid1);
 		cookie1.setMaxAge(cookieTime); 
@@ -168,14 +195,6 @@ if ( request.getParameter("lac").equals("lac") ){
 		cookie9.setMaxAge(cookieTime); 
 		response.addCookie(cookie9); 
 	
-		/*
-		if(lastImageLocation.length()>0){
-			if (! (new File(lastImageLocation).isDirectory()) ){
-				lastImageLocation =  new File(lastImageLocation).getParent();
-			}
-		}
-		*/
-		
  		Cookie cookie10 = new Cookie("lastImageLocation",lastImageLocation);
 		cookie10.setMaxAge(cookieTime); 
 		response.addCookie(cookie10); 
@@ -187,6 +206,13 @@ if ( request.getParameter("lac").equals("lac") ){
 		
 		
 			if(ac1.equals("ad")||ac1.equals("ed")){
+			//	response.sendRedirect("aded.jsp?ac="+ac+"&u="+u+"&vid="+vid);
+			}else if(ac1.equals("ad")||ac1.equals("ed")){
+			//	response.sendRedirect("aded.jsp?ac="+ac+"&u="+u+"&vid="+vid);
+			} 
+				
+				
+			if(ac1.equals("ad")||ac1.equals("ed")){
 				response.sendRedirect("aded.jsp?ac="+ac+"&u="+u+"&vid="+vid);
 			}else if(ac1.equals("vu")){
 				response.sendRedirect("vu.jsp?ac="+ac+"&u="+u+"&vid="+vid);
@@ -196,12 +222,8 @@ if ( request.getParameter("lac").equals("lac") ){
 		
 		
 
-	}else{
-		System.out.println("No username/Password");
-	
-	    }
 	}
-}
+	}
 
 %>
 	

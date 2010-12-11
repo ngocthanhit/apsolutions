@@ -225,13 +225,7 @@ ServletContext context4 = this.getServletContext();
   System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 222"); 	      
   
 	  System.out.println("Just load the page for insert @@@@  should be NULLL   :"+request.getParameter("vendor_id"));  	
-	  /*
-	  if( (cookieuid1.length()==0)&&(cookieuid2.length()==0)&&(cookiepassword.length()==0) ){ 
-			response.sendRedirect("/bke1/login.jsp?ac="+ac+"&u="+qbid+"&vid="+vid); 
-		}
-		*/
-		//isLogged2QB
-		
+	 
 		boolean isAuthenticated;
 	  isAuthenticated = lookup.isAuthenticated(login,password);
 	  System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ isAuthenticated  "+isAuthenticated); 	     

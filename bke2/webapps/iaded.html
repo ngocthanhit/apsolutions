@@ -1,14 +1,3 @@
-<%  
-
-		
-		ServletContext getContext = this.getServletContext() ;  
-	
-	String getURL = getContext.getInitParameter( "url" ); 
-
-
-%>
-
-
 <html>
 <head>
 <title>Docorganiz Image Management</title>
@@ -97,18 +86,45 @@ function prevclick() {
 <script type="text/javascript">
 
 
+var skipArrayObject = eval("self.opener.document.voucherInvoiceAllocation.skipArray");	
+var skipArrayValue = skipArrayObject.value;
+var skipArray = skipArrayValue.split(",");
+
+/*
+
+function getSkipArrayObject(){
+	var skipArrayObject = eval("self.opener.document.voucherInvoiceAllocation.skipArray");	
+	return skipArrayObject;
+}
+
+function getSkipArray(){
+	var skipArray = getSkipArrayObject.value.split();
+	//eval("self.opener.document.voucherInvoiceAllocation.skipArray");	
+	alert('current skip array is '+skipArray);
+	return skipArray;
+}
+*/
+
+var skipArrayLength = 0;
+
+///var originalSkipArrayLength = skipArray.length;
+///var routineCounter = 0;
+///var skipArrayTempLength = 0;
+var skipArrayTemp = new Array();
+
+
 function isFileSkipped(availableFile){
 
 	if( (skipArray==null)||(skipArray=="") ){
-//		alert('skipArray.length >> '+skipArray.length);
+		///alert('skipArray >> '+skipArray+'skipArray.length >> '+skipArray.length);
 		return false;
 	}
 
 
 
-		//var skipArrayTemp = skipArray.split(",");
+//		var skipArrayTemp = skipArray.split(",");
 
-//		alert(' value of skipArray   '+skipArray);
+		///alert(' value of skipArray   '+skipArray);
 
 		for(var i=1; i<=(skipArray.length);i++){
 //				alert(' skipArray[i]  ->'+skipArray[i]+'availableFile ->'+availableFile);
@@ -198,16 +214,6 @@ if(imagesLength<=0){
 return true;
 }
 
-function getFileName(){
-	var strPath = 'C:\Documents and Settings\BSPROGS\Desktop\DeVry\Previous work\BIS 440\ESSS_Case_Study.zip';
-	var strPathArray = strPath.split('\\');
-	//alert('strPathArray'+strPathArray);
-
-	//alert('strPathArray[0]'+strPathArray[0]);
-
-	var strFileName = strPathArray[strPathArray.length-1];
-	return strFileName;
-}
 
 function loadThisFile(ctr){
 			var imageLocation  = dir+"\\"+availableFilesArray[ctr];
@@ -218,15 +224,6 @@ function loadThisFile(ctr){
 }
 
 
-var skipArrayObject = eval("self.opener.document.voucherInvoiceAllocation.skipArray");
-var skipArray = skipArrayObject.value.split(",");
-var skipArrayLength = 0;
-
-var originalSkipArrayLength = skipArray.length;
-var routineCounter = 0;
-var skipArrayTempLength = 0;
-var skipArrayTemp = new Array();
-
 		if((skipArray.length==1)&&(skipArray[0].length)){
 			skipArrayLength=0;
 		}else{
@@ -234,13 +231,17 @@ var skipArrayTemp = new Array();
 		}
 
 function skipPressed(){
-	//alert(' skipArray; '+skipArray);
+
+	
+	///alert(' starting skipressed skipArray value is >>'+skipArray);
 	//alert(' skipArrayLength.size() '+skipArray.length);
 	//alert(' skipArray.length '+skipArray.length);
 	//alert(' originalSkipArrayLength; '+originalSkipArrayLength);
 
 	var imageCounter = getCurrentImageIndex();
-		//alert(' skipArray; '+skipArray);
+	
+	
+		///alert(' imageCounter; '+imageCounter);
 		//alert(' skipArrayLength '+skipArrayLength);
 		//alert('routineCounter '+routineCounter);
 
@@ -259,10 +260,15 @@ function skipPressed(){
 		//skipArrayObject.value =skipArrayObject.value+skipArray;
 		//skipArrayTemp[routineCounter] = availableFilesArray[imageCounter];
 		skipArray[skipArrayLength]=availableFilesArray[imageCounter];
+		///alert('adding new image to skip array'+skipArray[skipArrayLength]);
 		//alert('skipArrayTemp  '+skipArrayTemp);
 		//skipArray[originalSkipArrayLength]=availableFilesArray[imageCounter];
 		//alert('skipArrayTemp  '+skipArrayTemp)
+		//alert('skipArray  '+skipArray);
 		skipArrayObject.value =skipArray;
+		document.getElementById('skipArray').value=skipArray;
+		///alert(' after adding one image in skipressed the "skipArray value" is >>'+skipArray);
+	
 	}
 	//originalSkipArrayLength++;
 	//alert('imageCounter '+imageCounter+'Total imagesLength '+imagesLength );
@@ -273,8 +279,9 @@ function skipPressed(){
 		return false;
 	} else {
 
+		///alert('skipArrayLength'+skipArrayLength);
 		skipArrayLength++;
-		routineCounter++;
+		///routineCounter++;
 		loadThisFile(imageCounter+1);
 		//skipArrayTempLength++;
 	}
@@ -393,12 +400,8 @@ function sendImageCall()
 			//pausecomp(100);
 			var toFileTemp=Math.floor(Math.random()*10000);
 			toFile=toFileTemp+invoiceId+".pdf";
-					
-	
-	
 			document.getElementById('fileName').value=toFile;
-			var urll = document.getElementById('url').value;
-			submissionResult=document.docorganiz.sendFile(fromFile,toFile,invoiceId,urll);
+			submissionResult=document.docorganiz.sendFile(fromFile,toFile,invoiceId);
 				
 		}
 		if (fromFile.length>0) {
@@ -408,7 +411,7 @@ function sendImageCall()
 			
 			delcall(fromFile);
 			
-
+			//addImageObject.src='/bke2/images/image1.png';
 		}else{
 			//alert ('Cannot delete File ');
 
@@ -521,6 +524,19 @@ document.onkeydown = function(){
 
 function init(){
 
+//alert('window.screen.availWidth is >>'+window.screen.availWidth+'window.screen.availHeight is >>'+window.screen.availHeight);
+    var availableWidth = window.screen.availWidth;
+    var availableHeight =screen.availHeight;
+    availableWidth = ((1*availableWidth/2) - (0.0980*(availableWidth/2)));
+		//availableWidth = (availableWidth/2);
+		//alert('avialableWidth '+avialableWidth);
+    //alert('window.screen.availWidth is >>'+availableWidth);
+    window.resizeTo(availableWidth,screen.height);
+    window.moveTo(0,0);
+   
+   
+    //alert('window.screen.availWidth is >>'+window.screen.availWidth+'window.screen.availHeight is >>'+window.screen.availHeight);
+   // alert('window.innerWidth is >>'+window.innerWidth+'window.innerHeight is >>'+window.innerHeight);
 	initialize();
 
 	<%if( (new File(writeURL).exists())&&(!mv.equals("clear")) ) {%>
@@ -531,16 +547,10 @@ function init(){
 		//alert('has uac '+uac);
 		if(uac=='ad'){
 				loadAFile();
+		}else{
+				document.getElementById('Object1').src=eval("self.opener.document.voucherInvoiceAllocation.invoiceImageURL.value");
 		}
-	}else{
-		//alert('has no uac '+uac);
 	}
-	//var currentInvoiceCount = self.opener.document.voucherInvoiceAllocation.currentInvoiceCount.value;
-	if( uac=='ad' ){
-		
-	}
-  //window.
-  //opener.focus();
 	return true;
 }
 
@@ -553,6 +563,18 @@ function init(){
 
 <span id="message" ></span>
 <table  id="ImageTable" >
+	
+	<!--	
+		<tr>
+		<td >
+			<input  type="file" name="fromDir"  id="fromDir" ONCHANGE="ld(this.value);" >
+			<input type="button"  class='tbutton' name="submitButton" id="submitButton"  onClick="submitImage();" value="Submit">
+		</td>
+	</tr>
+	-->
+	<!--
+	Invoice # :<span id="invoiceNumber" name="invoiceNumber">
+	<input  type="hidden" name="fromDir"  id="fromDir" >
 	<tr>
 		<td align="left">
 			<input  type="file" name="fromDir"  id="fromDir" ONCHANGE="ld(this.value);" >
@@ -560,7 +582,7 @@ function init(){
 			Invoice # :<span id="invoiceNumber" name="invoiceNumber"></span>
 		</td>
 	</tr>
-
+-->
 
 
 	<!--
@@ -573,25 +595,45 @@ function init(){
 	<input  type="hidden" name=fromDir1  id=fromDir1 >
 	<input type="hidden"  name="vo" id="vo" value='<%=vo%>'>
 	<input type="hidden"  name="in" id="in" value='<%=in%>'>
+	<input type="hidden"  name="skipArray" id="skipArray">
 	<input type="hidden"  name="invoiceId" id="invoiceId">
 	<input type=hidden  name="toDir" id="toDir"  >
 	<input type=hidden  name="successfullFile" id="successfullFile" value="<%=successfullFile%>" >
 	<input type=hidden  name="lastAccesedDir" id="lastAccesedDir"  value="<%=lastAccesedDir%>">
 	<input type=hidden  name="lastImageLocation" id="lastImageLocation"  value="<%=lastImageLocation%>">
-	<input type=hidden  name="url" id="url"  value="<%=getURL%>">
 
-
+<tr>
+	
+		<td align="left">
+			
+			<input  type="file" name="fromDir"  id="fromDir" ONCHANGE="ld(this.value);" >
+			<input type="button"  class='tbutton' name="submitButton" id="submitButton"  onClick="submitImage();" value="Submit">
+			Invoice # :<span id="invoiceNumber" name="invoiceNumber"></span>
+		</td>
+</tr>
+	
 	<tr>
-		<td colspan='3'>
-<OBJECT id="Object1"  name="Object1" WIDTH="<%=imageHi*0.75%>" HEIGHT="<%=imageVi*0.78%>" classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" VIEWASTEXT>
+		<td  width="95%" height="95%">
+			
+						<!-- 1920 1200
+						<OBJECT id="Object1"  name="Object1" WIDTH="<%=imageHi*0.4190	%>" HEIGHT="<%=imageVi*0.8715%>" classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" VIEWASTEXT>
+						-->
+						<!-- 1680 X 1050
+						<OBJECT id="Object1"  name="Object1" WIDTH="<%=imageHi*0.3190	%>" HEIGHT="<%=imageVi*0.6715%>" classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" VIEWASTEXT>
+						-->
+						<!-- 1440x900 -->
+						<!--
+						<OBJECT id="Object1"  name="Object1" WIDTH="<%=imageHi*0.3030	%>" HEIGHT="<%=imageVi*0.6255%>" classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" VIEWASTEXT>
+						-->
+						<OBJECT id="Object1"  name="Object1" WIDTH="<%=imageHi%>" HEIGHT="<%=imageVi%>" classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" VIEWASTEXT>
+						
+							<param name="_cx" value="<%=imageHx%>">
+							<param name="_cy" value="<%=imageVy%>">
+						</OBJECT>
 
-				<param name="_cx" value="<%=imageHx%>">
-				<param name="_cy" value="<%=imageVy%>">
-			</OBJECT>
-
-			<APPLET CODE="FileDeleteApplet.class" archive="DelApplet.jar" NAME="docorganiz" WIDTH=0.0px HEIGHT=0.0px >
-			</APPLET >
-
+						<APPLET CODE="FileDeleteApplet.class" archive="DelApplet.jar" NAME="docorganiz" WIDTH=0.0px HEIGHT=0.0px >	</APPLET >
+					
+			
 		</td>
 	</tr>
 

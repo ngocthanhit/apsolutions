@@ -1,4 +1,4 @@
-  <%@ page language="java" import="com.intuit.quickbase.util.*,com.bke1.util.*,com.bke1.domain.*" %> 
+  <%@ page language="java" import="com.intuit.quickbase.util.*,com.bke2.util.*,com.bke2.domain.*" %> 
   <%@ page buffer="128kb"%>  
   <%@ page import="java.util.*,java.io.*,java.text.*,java.sql.Timestamp"%>
   <%@ page import="java.text.SimpleDateFormat"%>      
@@ -36,14 +36,16 @@
    String vid1 = request.getParameter("vid1");
 	 String nxt = request.getParameter("nxt");
 	 String reportIdArrayStr = request.getParameter("reportIdArrayStr");
-
-	 if(nxt == null) 	{
-	 		
-	 		nxt="0";	 		
-	 	}else{
-	 		System.out.println(" VID1 is "+vid1);
-	 		vid = vid1;
-	 	}
+ 
+ 		 if(nxt!=null){
+				System.out.println("nxt has values and vid1 is "+vid1+"  vid is"+vid);
+			  vid=vid1;
+				
+		}else{
+			System.out.println("nxt has no values");
+		}
+ 		 
+ 		 
 	 		//System.out.println(" nxt value "+nxt+" Current VID is "+vid);
 	 	
 
@@ -229,13 +231,7 @@
   System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 222"); 	      
   
 	  System.out.println("Just load the page for insert @@@@  should be NULLL   :"+request.getParameter("vendor_id"));  	
-	  /*
-	  if( (cookieuid1.length()==0)&&(cookieuid2.length()==0)&&(cookiepassword.length()==0) ){ 
-			response.sendRedirect("/bke1/login.jsp?ac=rv&u="+qbid+"&vid="+vid); 
-		}
-		*/
-		//isLogged2QB
-		
+	  
 		boolean isAuthenticated;
 	  isAuthenticated = lookup.isAuthenticated(login,password);
 	  System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ isAuthenticated  "+isAuthenticated); 	     
