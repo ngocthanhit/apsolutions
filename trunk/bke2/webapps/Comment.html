@@ -47,12 +47,12 @@
 	
 	
 	
-	var voucherTableId = "bdy8ms9iq";
 	var invoiceTableId = "bes8a4tgq";
 	var lineItemTableId = "bes8a4tgr";
 	
-	var allocationTableId = "bes8a4tgr";
-	var agentTableId = "bdyvk9utf";
+	var allocationTableId = lineItemTableId;
+	
+	
 	var invoiceCommCID = "33";
 	var lineItemCommCID ="27";
 
@@ -74,30 +74,33 @@ function getParam1( name )
 
 	//alert(aa1);
 	         commentHiddenVar.value=document.getElementById('comments').value;
-	//alert(commentHiddenVar.name+' >> '+commentHiddenVar.value);
+	//alert(commentHiddenVar.name+' 111>> '+commentHiddenVar.value);
 
-	
-	var commentButtonVar =  eval("self.opener.document."+formName+"."+aa1+"b");
-
-	//alert(commentButtonVar.name+' >> '+commentButtonVar.value);
+  //			  		alert('aa1 is >> '+aa1+' formName '+formName);
+ 	//	var sss = "self.opener.document."+formName+"."+aa1+"b"; 	  		
+		var sss = "self.opener.document."+formName+"."+aa1; 	  		
+	var commentButtonVar =  eval(sss);
+	//alert('commentButtonVar name is '+sss);
+	//alert(commentButtonVar.name+' 22>> '+commentButtonVar.value);
 
   var objValue = document.getElementById('comments').value;
- // alert('objValue '+objValue);
+  //alert('objValue 33 '+objValue);
  		if(objValue.length > 0){
  	//alert('3 ');
  	var currentlineItemCount=null;
  	
  			  		//alert('aa1 is >> '+aa1);
  		
- 						if((aa1=="invoiceComm")){
+ 					if((aa1=="invoiceComm")){
  		
- 								//alert("voucherComm");
+ 								//alert("invoiceComm");
  								var invoiceId = eval("self.opener.document."+formName+".invoiceId.value"); 
-        				//alert('voucher ID '+voucherId+' objvalue '+objValue);
+        				//alert('invoiceId '+invoiceId+' objvalue '+objValue+' invoiceCommCID '+invoiceCommCID+' invoiceTableId '+invoiceTableId);
         				//editValue(objValue,vCommCID,voucherTableId,voucherId);
         		   	editValue(objValue,invoiceCommCID,invoiceTableId,invoiceId);
-        	 }else if( (aa1.indexOf('lineItemComm',0)!=-1) ){
- 								//alert("invoiceComm");
+        		   	//alert('after editValue');
+        	}else if( (aa1.indexOf('lineItemComm',0)!=-1) ){
+ 								//alert("lineItemComm");
  								var currentlineItemCount = getParam1('lineCt');
  								
  								//alert("currentlineItemCount"+currentlineItemCount);
@@ -125,10 +128,11 @@ function getParam1( name )
         		   	
         		   	//alert('After Editing Invoice');
         		}
- 	commentButtonVar.src='images/notes1.png';
+ 		commentButtonVar.src='bke2/images/notes1.png';
 		}else {
- 	commentButtonVar.src='images/notes.png';
+ 	commentButtonVar.src='bke2/images/notes.png';
 	  }
+	  //alert('before close');
 	window.close();
   }
   

@@ -59,21 +59,30 @@ function setCookie(name, value, days){ //set cookie value
 var resolutionArray = new Array(6);
 resolutionArray[0] ="XGA Dual";
 resolutionArray[1] ="SXGA Dual";
-resolutionArray[2] ="Widescreen";
-resolutionArray[3] ="Large";
+resolutionArray[2] ="Large";
+resolutionArray[3] ="Widescreen(1280X800)";
+resolutionArray[4] ="Widescreen(1440X900)";
+resolutionArray[5] ="Widescreen(1680X1050)";
+resolutionArray[6] ="Widescreen(1920X1200)";
 
 var imageHArray = new Array(6);
 imageHArray[0] ="1024";
 imageHArray[1] ="1280";
-imageHArray[2] ="840";
-imageHArray[3] ="800";
+imageHArray[2] ="800";
+imageHArray[3] ="1280";
+imageHArray[4] ="1440";
+imageHArray[5] ="1680";
+imageHArray[6] ="1920";
 
 
 var imageVArray = new Array(6);
 imageVArray[0] ="768";
 imageVArray[1] ="1024";
-imageVArray[2] ="1050";
-imageVArray[3] ="1200";
+imageVArray[2] ="1200";
+imageVArray[3] ="800";
+imageVArray[4] ="900";
+imageVArray[5] ="1050";
+imageVArray[6] ="1200";
 
 
 	function setVar(){
@@ -217,6 +226,8 @@ function pausecomp(millis)
 	<INPUT TYPE="hidden" name="lac" id="lac" value=""></INPUT>
 	<INPUT TYPE="hidden" NAME="imageH"  ID="imageH" value="<%=cookieimageH%>"  size="5" maxlength="5" ></INPUT>
 	<INPUT TYPE="hidden" NAME="imageV"  ID="imageV" value="<%=cookieimageV%>"  size="5" maxlength="5" ></INPUT>
+						<input type="hidden" name="st" id="st" value="<%=st%>">
+						<input type="hidden" name="cid" id="cid" value="<%=cid%>">
 	<INPUT TYPE="hidden" NAME="applicationName"  ID="applicationName" value="<%=applicationName1%>"  size="5" maxlength="5" ></INPUT>
 
 

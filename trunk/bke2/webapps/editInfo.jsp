@@ -4,7 +4,7 @@
   
  <%
  
-   System.out.println("Inside editInfo.jsp of docorganiz5");
+   System.out.println("Inside editInfo.jsp of bke2");
  
    String cookieuid1="";
    String cookieuid2=""; 
@@ -18,7 +18,7 @@
    String vendorId = request.getParameter("vId");
   
   
-	System.out.println("Before Hashmap");	
+	System.out.println("Before EDIT Hashmap");	
 	System.out.println("field : " + field);	
 	System.out.println("columnId : " + columnId);	
 	System.out.println("tableId : " + tableId);	
@@ -47,7 +47,7 @@
 				Vector vector = null;	
 				infoHash.put(columnId, field);
 					try{
-						System.out.println(" infoHash"+infoHash);
+						System.out.println("edit infoHash"+infoHash);
 						message = lookup.editRecord(tableId, infoHash,tablePK);
 					}catch(Exception e){
 						System.out.println("Exception "+e.getMessage());

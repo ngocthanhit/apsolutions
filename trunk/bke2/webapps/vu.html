@@ -938,7 +938,8 @@ var voucherVar;
 
 		//alert('invoiceCount is '+invoiceCount+'  >>>>>'+document.getElementById('invoice_no'+invoiceCount).value);
 		setInvoiceNumberVal(document.getElementById('invoiceNumber').value );
-
+    //alert(' ImageURL '+document.getElementById('invoiceImageURL').value);
+    
 		//document.getElementById('addImage'+invoiceCount).focus();
 
     }
@@ -1370,16 +1371,13 @@ function validate(svr){
 
 
 function initialize(){
-    //alert('1');
-    
-    
 	  <%if(ac.equals("ad")){%>	
 				document.getElementById('franchiseName').innerHTML="";
 	  		document.getElementById('franchiseId').innerHTML="";
 	  <%}%>		
 	  		
 		setCurrentDate();
-		popImage(1);	
+	  popImage(1);	
 		insertLineItemRow();
 		
 		setDefaultInvoiceDate(document.getElementById('invoiceDate'));
@@ -1446,7 +1444,14 @@ function getNextVoucherNumber(currentVoucherNumber){
 
 
 function edLoad(){
+  var availableWidth =screen.availWidth;
+    var availableHeight =screen.availHeight;
+        availableWidth = ( (1*availableWidth/2) + (0.0980*(availableWidth/2)) );
 
+    //availableWidth = availableWidth/2;
+    //alert('window.screen.availWidth is >>'+availableWidth);
+    window.resizeTo(availableWidth,screen.height);
+    window.moveTo(availableWidth,availableHeight); 
 //Initializing the read values
 
 //	  setToStatus('<%=fromStatus%>');
@@ -1500,8 +1505,7 @@ document.getElementById('residualAmt').innerHTML=TryCash(document.getElementById
 */
 
 		popImage(1);
-		
-		popGetImage('1');	
+			
 }
 
 function setInvoiceImage(svrr){
@@ -1536,7 +1540,8 @@ function setInvoiceImage(svrr){
 	function tocash(X) { return toCash(X*100) }
 
 	function filterNum(str) {
-		re = /^\$|,/g;
+	  //alert('filter num str '+str);
+		re = "/^\$|,/g";
 		var temp = str.replace(re, "");
 		temp = temp.replace("$", "");
 		temp = temp.replace(",", "");
@@ -1571,12 +1576,14 @@ function tallyPayAmt()
 			if( document.getElementById('lineStatus'+i).value=='APP' ){
 				tempLineAmt = tempLineAmt+filterNum(document.getElementById('lineItemAmt'+i).value)*1;
 			}
+//alert('before allLineAmt payAmt call ');
 			allLineAmt = allLineAmt+filterNum(document.getElementById('lineItemAmt'+i).value)*1;
 
 		}
 
+//alert('before payAmt call ');
+payAmtTemp=filterNum(document.getElementById('payAmtH').value);
 
-payAmtTemp=filterNum(document.getElementById('payAmt').value);
 
 ////payAmtTemp=tempLineAmt;
 
@@ -1584,7 +1591,7 @@ lineTotalTemp=allLineAmt;
 
 //Set Pay Amt
 //document.getElementById('payAmtH').value=payAmtTemp;
-//document.getElementById('payAmt').value=TryCash(payAmtTemp.toString());	
+document.getElementById('payAmt').innerHTML=TryCash(document.getElementById('payAmtH').value);	
 
 //Set Line Total
 
@@ -1816,14 +1823,6 @@ alert(' dep_code '+ document.getElementById('dep_code'+aa1).value)
 		}
 	document.getElementById('fromAwindo').value='false'
 	}
-	/*
-	if(document.getElementById('fromComwindo').value=='true'){
-	alert('');
-	if(document.getElementById('voucherComment').value.length>2) alert('back from comment '+document.getElementById('voucherCom').value.length);
-	document.getElementById('voucherComment').style.backgroundColor='green';
-	document.getElementById('fromComwindo').value='false'
-	}
-	*/
 
 }
 
@@ -1930,7 +1929,6 @@ var nextIndex;
 		}
 //alert('next VID is '+iGList[nextIndex]);
 document.getElementById('vid1').value=iGList[nextIndex];
-//response.sendRedirect("/bke1/added.jsp?ac="+ac+"&u="+qbid+"&vid="+iGList[nextIndex]);
  
 	document.voucherInvoiceAllocation.submit();
 	return true;
@@ -3326,14 +3324,7 @@ function duplicate (){
     <td width="5%">
     	<span id='franchiseId' style='align : middle;'>  <%=franchiseId%>  </span>
 	  		<input value="<%=franchiseId%>" type=hidden name="franchiseIdh" id="franchiseIdh" >
-    </td> 
-<!--
-    <td width="3%">    	
-    		<IMG id="voucherCommb" style="align: right;" height=24 alt="" onclick="commentWindow('Comment.html','voucherComm');"  onselect="commentWindow('Comment.html','voucherComm');"  <%if ( true ){%>  src="/bke1/images/notes1.png"  <%}else{%> src="/bke1/images/notes.png" <%}%> width=20 border=1>    		
-        <input value="<%=billNotes%>"  type="hidden" name="voucherCommh" id="voucherCommh" ></input>    	
-    		<input type="hidden" name="voucherComm" id="voucherComm" ></input>
-		</td>
--->		
+    </td>
  </tr>
 </table>
 
@@ -3368,9 +3359,9 @@ function duplicate (){
     	<!--    	
     	    	
     	<input  value="<%=invoiceDate%>" type="text" name="invoiceDate" id="invoiceDate"   onfocus="invoiceDateFocus(this);"  onblur="invoiceDateBlur(this);"  class="inps" maxlength="15" size="15">
-    	-->
-    	<img src="images/dateImg.gif" id="invoiceDateImg" style="cursor: pointer; border: 1px solid red;" title="Invoice Date selector"  onmouseover="this.style.background='red';" onmouseout="this.style.background=''" />
+    <img src="images/dateImg.gif" id="invoiceDateImg" style="cursor: pointer; border: 1px solid red;" title="Invoice Date selector"  onmouseover="this.style.background='red';" onmouseout="this.style.background=''" />
     	
+    		-->
     	</td>
 		</td>
   </tr>
@@ -3402,10 +3393,10 @@ function duplicate (){
     	<span ><%=invoiceDueDate%></span>
     	<!--      	    	
     	<input  value="<%=invoiceDueDate%>" name="invoiceDueDate" id="invoiceDueDate" onfocus="invoiceDueDateFocus(this);" onblur="invoiceDueDateBlur(this);"  class="inps" maxlength="15" size="15">
-    	-->
     	<img src="images/dateImg.gif" id="invoiceDueDateImg" style="cursor: pointer; border: 1px solid red;" title="Invoice Date selector"  onmouseover="this.style.background='red';" onmouseout="this.style.background=''" />
     	
-		</td>
+		-->
+    	</td>
   </tr>
   
   <tr valign="top">  	
@@ -3699,103 +3690,7 @@ String accountNumber=(String) hashmap4Item.get(itKey.next());
  						
 </form>
 
-<script type="text/javascript">
-	/*
 
- <td><input type="text" name="date" id="f_date_c" readonly="1" /></td>
- <td><img src="img.gif" id="f_trigger_c" style="cursor: pointer; border: 1px solid red;" title="Date selector"
-      onmouseover="this.style.background='red';" onmouseout="this.style.background=''" /></td>
-</table>
-</form>
-
-
-    Calendar.setup({
-        inputField     :    "invoiceDate",     // id of the input field
-        ifFormat       :    "%m/%d/%Y",      // format of the input field
-        button         :    "invoiceDateImg",  // trigger for the calendar (button ID)
-        align          :    "Tl",           // alignment (defaults to "Bl")
-        singleClick    :    true
-    });
-   
-   
-  */  
-</script>
-
-
-
-<script type="text/javascript">
-
-      function catcalcInvoiceDate(cal) {
-//vendorTermVal=document.getElementById("vendorTermVal").value;
-//alert('vendorTermVal'+vendorTermVal);
-        var date = cal.date;
-        var time = date.getTime()
-        var field = document.getElementById("invoiceDate");
-        
-        if (field == cal.params.inputField) {
-            field = document.getElementById("invoiceDueDate");
-            time+=(Date.DAY*vendorTermVal);
-        }
-        
-        var date2 = new Date(time);
-        field.value = date2.print("%m/%d/%Y");
-    }
-/*	  
-    Calendar.setup({
-        inputField     :    "invoiceDate",
-        ifFormat       :     "%m/%d/%Y",
-        showsTime      :    false,
-        singleClick    :    true,
-        timeFormat     :    "",     
- 				onUpdate       :    catcalcInvoiceDate
-    });
-*/
-
-    Calendar.setup({
-        inputField     :    "invoiceDate",     // id of the input field
-        ifFormat       :    "%m/%d/%Y",      // format of the input field
-        button         :    "invoiceDateImg",  // trigger for the calendar (button ID)
-        align          :    "Tl",           // alignment (defaults to "Bl")
-        singleClick    :    true,
-  			onUpdate       :    catcalcInvoiceDate
- 
-    });
-     
-</script>
-
-<script type="text/javascript">
-	
-      function catcalcInvoiceDueDate(cal) {
-        var date = cal.date;
-        var time = date.getTime()
-        var field = document.getElementById("invoiceDueDate");
-        
-        var date2 = new Date(time);
-        
-        field.value = date2.print("%m/%d/%Y");
-    }
- 
- /* 
-    Calendar.setup({
-        inputField     :    "invoiceDueDate",
-        ifFormat       :     "%m/%d/%Y",
-        showsTime      :    false,
-        timeFormat     :    "",   
-        singleClick    :    true,  
- 				onUpdate       :    catcalcInvoiceDueDate
-    }); 
- */   
-    Calendar.setup({
-        inputField     :    "invoiceDueDate",
-        ifFormat       :     "%m/%d/%Y",
-        button         :    "invoiceDueDateImg",  // trigger for the calendar (button ID)
-        align          :    "Tl",           // alignment (defaults to "Bl")
-        singleClick    :    true,  
- 				onUpdate       :    catcalcInvoiceDueDate
-    }); 
-    
-    
-</script>
 
 			<table width="100%" border="0" cellspacing="0" cellpadding="0" >
         <tr>

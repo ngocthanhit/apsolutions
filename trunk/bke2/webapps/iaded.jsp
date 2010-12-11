@@ -28,13 +28,8 @@ com.intuit.quickbase.util.*,com.bke2.util.*,com.bke2.domain.*" %>
 
 //org.apache.commons.fileupload.disk.DiskFileItemFactory,
 
-
-
-ServletContext Ser_context = this.getServletContext();  
-	
-	String toDir = Ser_context.getInitParameter( "imageFileLocation" );
-	
-
+//String toDir = "C:\\jakarta-tomcat-5.0.30\\webapps\\bke2\\" ;
+String toDir = "/usr/local/apache-tomcat-5.5.23/webapps/bke2/" ;
 
 DiskFileUpload upload = null;
 String successfullFile = "";
@@ -65,9 +60,7 @@ String skipArray ="";
   	int cookieTime = 60*60*24;
 
 	String invoiceId = "";
-	ServletContext context = this.getServletContext();  
-	String tableId = context.getInitParameter( "invoiceTableId" ); 
-	
+	String tableId = "bes8a4tgq";
 	String columnId ="40";
 	
 	boolean isMultipart = FileUpload.isMultipartContent(request);
@@ -112,9 +105,9 @@ String skipArray ="";
  		    if(cookie.getName().equals("lastImageLocation"))
  		    	lastImageLocation = cookie.getValue();
 
-	//System.out.println(" lastImageLocation cookie "+lastImageLocation);
 
-
+								
+	/*				
 				if(cookie.getName().equals("imageH")){
 					imageH = cookie.getValue();
 					if(imageH.length()>0){
@@ -129,7 +122,7 @@ String skipArray ="";
 					//System.out.println("FROM IMAGE >>>>imageH Cookie exists "+imageH);
 				}
 
-			        if(cookie.getName().equals("imageV")){
+			   if(cookie.getName().equals("imageV")){
 					imageV = cookie.getValue();				
 					if(imageV.length()>0){
 						imageVi =Double.parseDouble(imageV);
@@ -141,11 +134,83 @@ String skipArray ="";
 							}
 					
 				}
+	*/			
+				
+				
 					
 			   }
 		}	   
 	}	    	
 
+
+
+
+String imageParam =(String)session.getAttribute("imageParam");
+
+if( imageParam == null ){
+		System.out.println(">>>>>>>>>>>>>>>>>imageParam is NULL ");
+	}else{	
+	
+		String[] fields = imageParam.split(",");
+		imageH = fields[0];
+		imageV = fields[1];
+	
+	}
+	
+	System.out.println("H value from Login"+imageH);
+	System.out.println("V value from Login"+imageV);
+	imageHi =Double.parseDouble(imageH);
+	imageVi =Double.parseDouble(imageV);
+	
+	
+	if(imageParam.equals("1920,1200")){
+	  imageHi = imageHi*0.4190;
+		imageHx = imageHi; 
+	  imageVi = imageVi*0.8715;
+		imageVy = imageVi; 
+	}
+	
+//240x150
+
+	if(imageParam.equals("1680,1050")){
+	  imageHi = imageHi*0.4190;
+		imageHx = imageHi; 
+	  imageVi = imageVi*0.8715;
+		imageVy = imageVi; 
+	}
+	
+	// 1440,900
+	if(imageParam.equals("1440,900")){
+	  imageHi = imageHi*0.4090;
+		imageHx = imageHi; 
+	  imageVi = imageVi*0.8380;
+		imageVy = imageVi; 
+	}
+	
+	// 1280,800
+	if(imageParam.equals("1280,800")){
+	   System.out.println("1280,800");
+	  imageHi = imageHi*0.4021; //4021
+		imageHx = imageHi; 
+	  imageVi = imageVi*0.7638; //7638
+		imageVy = imageVi; 
+	}
+	
+	
+	
+	/*
+				if(imageH.length()>0){
+						imageHi =Double.parseDouble(imageH);
+						imageHi = imageHi + imageHi*0.0000;
+						imageHx = imageHi ; 
+				}
+				if(imageV.length()>0){
+						imageVi =Double.parseDouble(imageV);
+						imageVi = imageVi + imageVi*0.0000;
+						imageVy = imageVi ; 
+				}
+			
+	*/		
 	String login = cookieuid1+"@"+cookieuid2;
 	String password = cookiepassword;	 
 	String strURL = "https://docorganiz.quickbase.com/db/";
@@ -170,6 +235,9 @@ String skipArray ="";
 			finalURL=url;
 	
 			if(isMultipart){
+
+			System.out.println("skipArray from iaded is "+skipArray);
+			//session.setAttribute( "sessionSkipArray", skipArray );
 
 			try{
 				upload = new DiskFileUpload();
@@ -239,10 +307,15 @@ String skipArray ="";
 			}//Multipart
 		
 		} //else
+	
 		
 	if(skipArray==null){
 		skipArray = ",";
-    	}		
+   }else{
+   	System.out.println("SkipArray Has values >>"+skipArray);
+   	
+		session.setAttribute( "sessionSkipArray", skipArray );
+   	}		
 	
 	
 %>

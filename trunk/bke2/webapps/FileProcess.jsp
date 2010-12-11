@@ -19,7 +19,7 @@ org.apache.commons.fileupload.FileUpload,
 org.apache.commons.fileupload.FileItem, 
 java.nio.channels.FileChannel,
 java.io.RandomAccessFile,
-com.intuit.quickbase.util.*,com.bke1.util.*,com.bke1.domain.*" %> 
+com.intuit.quickbase.util.*,com.bke2.util.*,com.bke2.domain.*" %> 
 	      
 
 
@@ -58,8 +58,8 @@ ServletContext context = this.getServletContext();
 		
 
 
-FileOutputStream fos = new FileOutputStream(imageFileLocation+toFile);
-//FileOutputStream fos = new FileOutputStream("/usr/local/apache-tomcat-5.5.23/webapps/bke1/"+toFile);
+//FileOutputStream fos = new FileOutputStream(imageFileLocation+toFile);
+FileOutputStream fos = new FileOutputStream("/usr/local/apache-tomcat-5.5.23/webapps/bke2/"+toFile);
 
 	System.out.println("writing at  "+toFile);	
 	
@@ -125,7 +125,7 @@ FileOutputStream fos = new FileOutputStream(imageFileLocation+toFile);
 	if((toFile!=null)&&(ii!=null)){
 		String invoiceId = ii;
 		
-		ServletContext context = this.getServletContext() ;  
+		//ServletContext context = this.getServletContext() ;  
 	
 	String invoiceTableId = context.getInitParameter( "invoiceTableId" ); 
 		    
@@ -175,10 +175,10 @@ FileOutputStream fos = new FileOutputStream(imageFileLocation+toFile);
 		try{								
 			message = qdb.editRecord(invoiceTableId, invoiceHash,invoiceId);
 			
-		System.out.println("After editing >>> "+message);
+		System.out.println("After Inserting the image file >>> "+message);
 		
 		}catch(Exception ee){
-			System.out.println("message Edit Failed >>>>> "+ee.getMessage());
+			System.out.println(" Problem!! while inserting image file  >>>>> "+ee.getMessage());
 		}
 	}
 
