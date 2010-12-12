@@ -16,13 +16,7 @@ public class Lookup
 {
 
  
-		//System.out.println("invoiceTableId11 >>"+invoiceTableId11);
-//10@bookkeepingexpress.com
-
-        //String systemLogin = "sashiatwork@gmail.com";
-        String systemLogin = "sashiatwork@gmail.com";
-        String systemPassword = "SRquic12";
-        private int timeOutLimit = 864000000;
+       private int timeOutLimit = 864000000;
     String strURL = "https://docorganiz.quickbase.com/db/";
 
     String bke1ApplicationId = "bes8a4tgg";
@@ -60,7 +54,8 @@ public class Lookup
   public void reConnect(){
            try
             {
-                qdbLookup = new QuickBaseClient(systemLogin, systemPassword, strURL);
+                //qdbLookup = new QuickBaseClient(systemLogin, systemPassword, strURL);
+                qdbLookup = new QuickBaseClient(getUser(), getPassword(), strURL);
                 qdbLookup.setTimeout(timeOutLimit);
             }catch(Exception ee)
                {
@@ -72,34 +67,21 @@ public class Lookup
     {
             boolean isLoggedIn = false;
             String s="";
-        /*
-            String s;
-            s = qdb.getNumRecords(clientTableId);
-                     isLoggedIn = true;
-
-         */
 
              try
             {
-                //s = qdb21.getNumRecords(clientTableId);
-                           org.w3c.dom.Document ss =qdbLookup.getSchema(bke1ApplicationId);
+                   org.w3c.dom.Document ss =qdbLookup.getSchema(bke1ApplicationId);
                    s = qdbLookup.getNumRecords(clientTableId);
-                           //System.out.println("AUTHENTICATE AT LOGINTEST()  >>> "+s);
-                         isLoggedIn = true;
+                   isLoggedIn = true;
 
-                //System.out.println("AUTHENTICATE 1");
             }
             catch(QuickBaseException quickbaseexception)
             {
                     isLoggedIn = false;
-                             lookupMessage=quickbaseexception.getMessage();
-                              //System.out.println("AUTHENTICATE 3");
-                //System.out.println(quickbaseexception.getMessage());
-                //if(quickbaseexception.getMessage().startsWith("Invalid email address or password.")){
-                    //System.out.println("INVALID EMAIL ");
-                //    isLoggedIn = false;
-                 }catch(Exception ee)
-           {
+										lookupMessage=quickbaseexception.getMessage();
+                    
+            }catch(Exception ee)
+            {
                 isLoggedIn = false;
                          lookupMessage=ee.getMessage();
                         //System.out.println("AUTHENTICATE 4");
@@ -187,8 +169,7 @@ public class Lookup
 
              try
             {
-                //s = qdb21.getNumRecords(clientTableId);
-                           org.w3c.dom.Document ss =qdbLocal.getSchema(bke1ApplicationId);
+            	              org.w3c.dom.Document ss =qdbLocal.getSchema(bke1ApplicationId);
 
                            System.out.println("AUTHENTICATE  getSchema>>> ");
                          isLoggedIn = true;
@@ -400,112 +381,6 @@ public class Lookup
 
 
 
-    public void setAllClientBackup()
-    {
-
-   // System.out.println("In Set Client 1");
-
-        HashMap hashmap = new HashMap();
-        String s = "{3.XCT.'$'}";
-       // String s1 = "3,6,13,12";
-        String s1 = "12";
-        String s2 = "";
-        String s3 = clientTableId;
-        String s4 = "sortorder-AD";
-        String s5 = "";
-        String s6 = "";
-        String s7 = "";
-        String clientId = "";
-        Object obj = null;
-        Object obj1 = null;
-
-
-        String as[] = new String[2];
-        try
-        {
-//    System.out.println("In Set Client 2");
-                     if(!isLoggedIn()){
-                        System.out.println(" OOPS! qdbLookup is LOGGED OUT \n trying to reconnect");
-                             reConnect();
-                        System.out.println(" adbLookup is connected ");
-                     }else{
-                        System.out.println(" GOOD qdbLookup is LOGGED IN  \n trying to reconnect");
-
-                    }
-
-            Vector vector = qdbLookup.doQuery(clientTableId, "{3.XCT.'$'}", "6.3.13.12", "3", s4);
-            clientSize = vector.size();
-
-            s5 = "";
-
-            s6 = "";
-
-            //s6 = "var clientNameArray = new Array("+vector.size()+");";
-
-          //  System.out.println("vector.size()"+vector.size());
-            HashMap hashmap1 = null;
-
-            for(int i = 0; i <= vector.size() - 1; i++)
-            {
-
-                  clientSequenceId = i;
-  //  System.out.println("In Set Client 31");
-
-                hashmap1 = (HashMap)vector.elementAt(i);
-
-                Iterator iterator = hashmap1.values().iterator();
-
-                            while (iterator.hasNext()) {
-
-
-                                            //Name
-                             s5=s5+"\n clientNameArray["+i+"] = \""+(String)iterator.next()+"\";";
-
-                                        // Get value                                                            FranchiseName                                    FranchiseName                                FranchiseId
-                             clientId =     (String)iterator.next();
-                             s6=s6+"\n clientHiddenArray["+i+"] = \""+clientId+"&"+(String)iterator.next();
-                             s6=s6+"&"+(String)iterator.next()+"\";";
-                        //     setVendorsByClient(clientId);
-
-                    //         s6=s6+"\n clientNameArray["+i+"] = \""+(String)iterator.next()+"\";";
-                    //         System.out.println("s5>>> "+s5+"\n s6>>> "+s6);
-                //System.out.println(">>> "+iterator.next());
-                //    System.out.println(">>> "+iterator.next());
-                          }
-
-    //System.out.println("In Set Client 35");
-
-
-            }
-
-        }
-        catch(QuickBaseException quickbaseexception)
-        {
-            System.out.println("Exception 1 Client "+quickbaseexception.getMessage());
-
-        }
-        catch(Exception exception2)
-        {
-
-            System.out.println("Exception 2 Client "+exception2.getMessage());
-                exception2.printStackTrace();
-
-        }
-        
-        System.out.println(" clientArray[1] >> "+s6 );
-
-        as[0] = s5;
-       // as[1] = s6;
-
-    clientArray = as;
-
-        //System.out.println(" clientArray[0] >> "+as[0] );
-        //System.out.println(" clientArray[1] >> "+as[1] );
-
-    }
-
-
-
 
     public void setAllClient()
     {
@@ -513,7 +388,8 @@ public class Lookup
    // System.out.println("In Set Client 1");
 
         HashMap hashmap = new HashMap();
-        String s = "{3.XCT.'$'}";
+        //String s = "{3.XCT.'$'}";
+        String query1 = "{54.EX.'1'}";
        // String s1 = "3,6,13,12";
         String s1 = "12";
         String s2 = "";
@@ -528,26 +404,16 @@ public class Lookup
 
 String franchiseName="";
 String franchiseNumber="";
+String worflowId="";
 
         String as[] = new String[2];
         try
         {
-//    System.out.println("In Set Client 2");
-                     /*
-                     if(!isLoggedIn()){
-                        System.out.println(" OOPS! qdbLookup is LOGGED OUT \n trying to reconnect");
-                             reConnect();
-                        System.out.println(" adbLookup is connected ");
-                     }else{
-                        System.out.println(" GOOD qdbLookup is LOGGED IN  \n trying to reconnect");
-
-                    }
-                    */
 
 
                       QuickBaseClient qdb12 = new QuickBaseClient(getUser(), getPassword(), strURL);
 
-            Vector vector = qdb12.doQuery(clientTableId, "{3.XCT.'$'}", "6.3.13.12", "3", s4);
+            Vector vector = qdb12.doQuery(clientTableId, query1, "6.3.13.12.127", "3", s4);
             clientSize = vector.size();
 
             s5 = "";
@@ -573,21 +439,24 @@ String franchiseNumber="";
                             while (iterator.hasNext()) {
 
 
-                                            //Name
+                                           //Name
                              s5=s5+"\n clientNameArray["+i+"] = \""+(String)iterator.next()+"\";";
 
                                         // Get value                                                            FranchiseName                                    FranchiseName                                FranchiseId
+                 worflowId =     (String)iterator.next();                                                          
                  clientId =     (String)iterator.next();
                  franchiseName = (String)iterator.next();
                  franchiseNumber = (String)iterator.next();
                  
-  s6=s6+"\n clientHiddenArray["+i+"] = \""+clientId.trim()+"&"+franchiseName.trim()+"&"+franchiseNumber.trim()+"\";";
+  s6=s6+"\n clientHiddenArray["+i+"] = \""+clientId.trim()+"&"+franchiseName.trim()+"&"+franchiseNumber.trim()+"&"+worflowId.trim()+"\";";
+   
                       //     setVendorsByClient(clientId);
 
                     //         s6=s6+"\n clientNameArray["+i+"] = \""+(String)iterator.next()+"\";";
-                    //         System.out.println("s5>>> "+s5+"\n s6>>> "+s6);
-                //System.out.println(">>> "+iterator.next());
+                //             System.out.println(" s6>>> "+s6);
+                //System.out.println(">>> 1"+iterator.next()+">>> 2"+iterator.next()+">>> 3"+iterator.next()+">>> 4"+iterator.next());
                 //    System.out.println(">>> "+iterator.next());
+                  
                           }
 
     //System.out.println("In Set Client 35");
@@ -615,7 +484,7 @@ String franchiseNumber="";
     clientArray = as;
 
         //System.out.println(" clientArray[0] >> "+as[0] );
-       // System.out.println(" clientArray[1] >> "+as[1] );
+       System.out.println(" clientArray[1] >> "+as[1] );
 
     }
 
@@ -700,7 +569,7 @@ String franchiseNumber="";
     {
         HashMap hashmap = new HashMap();
         String query = "{3.XCT.'$'}";
-        String selectList = "6.7.8.13";
+        String selectList = "6.7.8.13.16";
         String sortBy = "6.7";
         String sortOrder = "sortorder-AD";
         String s5 = "";
@@ -708,6 +577,7 @@ String franchiseNumber="";
         String toStatus = "";
         String billStatus = "";
         String isEditable = "";
+        String workflowId = "";
         try
         {
         //System.out.println("In Set Vendor 2");
@@ -729,12 +599,17 @@ String franchiseNumber="";
                   iterator = hashmap1.values().iterator();
 
                               isEditable  =     (String)iterator.next();
+                              workflowId  =     (String)iterator.next();
                               fromStatus  =     (String)iterator.next();
                               billStatus   =     (String)iterator.next();
                							  toStatus =     (String)iterator.next();
 
-                             s5=s5+"\n lineClassificationArray["+i+"] = \""+fromStatus+","+toStatus+","+billStatus+","+isEditable+"\";";
+                             s5=s5+"\n lineClassificationArray["+i+"] = \""+fromStatus+","+toStatus+","+billStatus+","+isEditable+","+workflowId+"\";";
 
+
+  //  s5=s5+"\n lineClassificationArray["+i+"] = \""+(String)iterator.next()+","+(String)iterator.next()+","+(String)iterator.next()+","+(String)iterator.next()+","+(String)iterator.next()+"\";";
+   //s5=s5+"\n lineClassificationArray["+i+"] = \""+(String)iterator.next()+","+(String)iterator.next()+","+(String)iterator.next()+","+(String)iterator.next()+"\";";
+    
                                //System.out.println("fromStatus >>> "+fromStatus+" toStatus >>> "+toStatus+" billStatus >>> "+billStatus);
 
             }
@@ -911,13 +786,16 @@ String franchiseNumber="";
     {
         HashMap hashmap = new HashMap();
         String query = "{3.XCT.'$'}";
-        String selectList = "6.7.8.3";
+        String selectList = "6.7.8.3.11";
+        //String selectList = "6.7.8.3";
         String sortBy = "6";
         String sortOrder = "sortorder-AD";
         String s5 = "";
-        String fromStatus = "";
         String toStatus = "";
-        String id = "";
+        String activateChoice = "";
+        String workflowId = "";
+        String id = "";        
+        String fromStatus = "";
         try
         {
         //System.out.println("In Set Vendor 2");
@@ -944,9 +822,20 @@ String franchiseNumber="";
                               fromStatus=     (String)iterator.next();
                               */
                              //s5=s5+"\n allStatusArray["+i+"] = \""+fromStatus+","+toStatus+","+id+"\";";
+								
+								toStatus = (String)iterator.next();
+								activateChoice =  (String)iterator.next();
+								workflowId =  (String)iterator.next();
+								id =  (String)iterator.next();
+								fromStatus = (String)iterator.next();
+								
+								
+		s5=s5+"\n allStatusArray["+i+"] = \""+toStatus+","+activateChoice+","+id+","+fromStatus+","+workflowId+"\";";
 
-                                s5=s5+"\n allStatusArray["+i+"] = \""+(String)iterator.next()+","+(String)iterator.next()+","+(String)iterator.next()+","+(String)iterator.next()+"\";";
-
+											
+    //s5=s5+"\n allStatusArray["+i+"] = \""+(String)iterator.next()+","+(String)iterator.next()+","+(String)iterator.next()+","+(String)iterator.next()+","+(String)iterator.next()+"\";";
+    //s5=s5+"\n allStatusArray["+i+"] = \""+(String)iterator.next()+","+(String)iterator.next()+","+(String)iterator.next()+","+(String)iterator.next()+"\";";
+    
                                //System.out.println("fromStatus >>> "+fromStatus+" toStatus >>> "+toStatus+" id >>> "+id);
 
             }
@@ -971,21 +860,98 @@ String franchiseNumber="";
     }
 
 
+
+    public String getInitialStatusArray()
+    {
+        HashMap hashmap = new HashMap();
+        String query = "{3.XCT.'$'}AND{9.EX.'1'}";
+        String selectList = "6.7.8.3.11";
+        //String selectList = "6.7.8.3";
+        String sortBy = "6";
+        String sortOrder = "sortorder-AD";
+        String s5 = "";
+        String toStatus = "";
+        String activateChoice = "";
+        String workflowId = "";
+        String id = "";        
+        String fromStatus = "";
+        try
+        {
+        //System.out.println("In Set Vendor 2");
+
+                        if(!isLoggedIn())             reConnect();
+
+            Vector vector = qdbLookup.doQuery(statusChoiceTableId, query, selectList, sortBy, sortOrder);
+
+
+                  HashMap hashmap1 = null;
+                            Iterator iterator = null;
+
+                //         System.out.println("Client Id >>> "+clientId);
+
+            for(int i = 0; i <= vector.size() - 1; i++)
+            {
+                    hashmap1 = (HashMap)vector.elementAt(i);
+
+                  iterator = hashmap1.values().iterator();
+
+                                    /*
+                              toStatus  =     (String)iterator.next();
+                              id =     (String)iterator.next();
+                              fromStatus=     (String)iterator.next();
+                              */
+                             //s5=s5+"\n allStatusArray["+i+"] = \""+fromStatus+","+toStatus+","+id+"\";";
+								
+								toStatus = (String)iterator.next();
+								activateChoice =  (String)iterator.next();
+								workflowId =  (String)iterator.next();
+								id =  (String)iterator.next();
+								fromStatus = (String)iterator.next();
+								
+								
+		s5=s5+"\n initialStatusArray["+i+"] = \""+toStatus+","+activateChoice+","+id+","+fromStatus+","+workflowId+"\";";
+
+											
+    //s5=s5+"\n allStatusArray["+i+"] = \""+(String)iterator.next()+","+(String)iterator.next()+","+(String)iterator.next()+","+(String)iterator.next()+","+(String)iterator.next()+"\";";
+    //s5=s5+"\n allStatusArray["+i+"] = \""+(String)iterator.next()+","+(String)iterator.next()+","+(String)iterator.next()+","+(String)iterator.next()+"\";";
+    
+                               //System.out.println("fromStatus >>> "+fromStatus+" toStatus >>> "+toStatus+" id >>> "+id);
+
+            }
+
+        }
+        catch(QuickBaseException quickbaseexception)
+        {
+            System.out.println("Exception 1 allStatusArray "+quickbaseexception.getMessage());
+        }
+        catch(Exception exception2)
+        {
+            System.out.println("Exception 2 allStatusArray "+exception2.getMessage());
+
+                exception2.printStackTrace();
+        }
+
+
+        //vendorArray[clientSequenceId]=s5;
+        //s5=s5+getChartOfAccountsByClient(clientId)+s6+s7;
+      //System.out.println(" S5 >> \n "+s5 );
+        return s5;
+    }
+
     public static void main(String args[]) throws Exception
     {
-        //AllVendor allvendor = new AllVendor("sashiatwork@gmail.com", "SRquic12");
            Lookup lookup = new Lookup();
 
 
-            System.out.println("isAuthenticated ?  "+lookup.isAuthenticated(lookup.systemLogin, "SRquic12"));
+        
+            		lookup.setAllClient();
 
-            //lookup.isAuthenticated("peterprep@docorganiz.com", "Preparer9$");
-
-            //lookup.setAllClient();
-
+								System.out.println("getStatus "+lookup.getClientArray().length);
+            		/*
             		System.out.println("getStatus "+lookup.getLineClassificationArray());
-                //System.out.println("getStatus "+lookup.getStatusArray());
-
+                System.out.println("getStatus "+lookup.getStatusArray());
+                System.out.println("getStatus "+lookup.getInitialStatusArray());
+								*/	
 
                 /*
                 System.out.println("isAuthenticated ?  "+lookup.isAuthenticated("peterprep@docorganiz.com", "Preparer9$"));
