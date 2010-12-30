@@ -1,14 +1,8 @@
 <%
  
-ServletContext getContext = this.getServletContext();  
+   String invoiceTableId = "bd77scjia";
+   String itemTableId = "bd77scjib";
 	
-	String invoiceTableId = getContext.getInitParameter( "invoiceTableId" ); 
-	
-	String itemTableId = getContext.getInitParameter( "itemTableId" );
-	
-	String allocationTableId = itemTableId;
-	
-	String applicationName1 = context.getInitParameter( "applicationName" );
 //Invoice Column IDs
    
 String  clientId_ColID = "82";
@@ -32,8 +26,7 @@ String  lineStatusId_ColID = "47";
 String  lineStatusTrail_ColID = "24"; //Status String
 
 
-
-
+   String u_Ind = request.getParameter("u"); //code added for browser compatibility
    String ref = request.getParameter("ref");
 
    String qid1 = request.getParameter("qid");
@@ -49,7 +42,6 @@ String  lineStatusTrail_ColID = "24"; //Status String
 	
    String ordStr = request.getParameter("ord");
 
-   String nextVid = request.getParameter("nextVid");
     
 	String sortByOrder1="";
 	if(ordStr!=null)
@@ -59,9 +51,9 @@ String  lineStatusTrail_ColID = "24"; //Status String
 	 	sortByOrder1="sortorder-DA";
 	 	}	
 	
-		System.out.println(" cid >>"+cid+" st >> "+st+" ordStr>>"+ordStr);
+		System.out.println(" cid+st+ordStr >>"+cid+st+ordStr);
 		
-
+	 //String returnAppName = "bd77scjia?a=q&qid="+qid1+"&nv=1&v0="+v0;
 	
 	 String returnAppName = "";
 	
@@ -72,10 +64,10 @@ String  lineStatusTrail_ColID = "24"; //Status String
 		System.out.println("qid1+nv+v0 >>>"+qid1+nv+v0);
 	if(qid1!=null&&nv!=null){
 		System.out.println("qid1+nv+v0 >>>"+qid1+nv+v0);
-		returnAppName = invoiceTableId+"?a=q&qid="+qid1+"&nv="+nv+"&v0="+v0;
+		returnAppName = "bd77scjia?a=q&qid="+qid1+"&nv="+nv+"&v0="+v0;
 	}else if(qid1!=null){
 		//System.out.println("qid1+nv+v0 >>>"+qid1+nv+v0);
-		returnAppName = invoiceTableId+"?a=q&qid="+qid1;
+		returnAppName = "bd77scjia?a=q&qid="+qid1;
 		
 		if(v0!=null)
 		returnAppName = returnAppName+"&v0="+v0;
@@ -96,7 +88,7 @@ String  lineStatusTrail_ColID = "24"; //Status String
 			if(!lookup.isAuthenticated(login,password)){
 				msg1=lookup.getLoginMessage();
 				System.out.println(" Auth failure "+msg1);
-				response.sendRedirect("login.jsp?ac=rv&u="+u+"&vid="+vid+"&msg="+msg1);
+				response.sendRedirect("/bke1/login.jsp?ac=rv&u="+u+"&vid="+vid+"&msg="+msg1);
  				return;
  			}else{
  	 	lookup.refresh();
@@ -138,208 +130,16 @@ String nextvid = "";
 
 boolean notFound = true;
 
-	
-	
-				System.out.println(" == NULL so loading the reportIdArray nxt i>>> "+nxt);
-
-	 			//resultArrayVector1 =lookup.getEditInfo("bes8a4tgq",  "{'90'.EX.'"+cid+"'}AND{'27'.EX.'"+st+"'}", queryStr1, sortByAttributes1, sortByOrder1);
-				resultArrayVector1 =lookup.getEditInfo("bes8a4tgq",  "{'90'.EX.'"+cid+"'}AND{'27'.EX.'"+st+"'}", "3", "3", "3");
-				// Get HashMap from Vector
-				HashMap hMap1 = null;
-				Iterator iKey1 = null;
-				String reportIdArray[] = new String[resultArrayVector1.size()];
-    		
-    		int totSize =  resultArrayVector1.size();
-		       
-		    
-    		
-    		System.out.println(" == totSize"+totSize);
-		    
-		    /*
-    		System.out.println(" == cid"+cid);
-    		System.out.println(" == st"+st);
-		    System.out.println(" == invoiceTableId"+invoiceTableId);
-		    
-				System.out.println(" == queryStr1"+queryStr1);
-				System.out.println(" == sortByAttributes1"+sortByAttributes1);
-		    */
-		       
-		       
-		        for(int i = 0; i <=  (totSize - 1); i++)
-            {
-                hMap1 = (HashMap)resultArrayVector1.elementAt(i);
-        			  iKey1 = hMap1.values().iterator();
-        			  //reportIdArray[i]=(String)iKey1.next();       			          			  
-               	
-               	//reportIdArrayStr=reportIdArrayStr+"\n reportIdArray["+i+"] = \""+(String)iKey1.next()+"\";";               	
-               	//reportIdArrayStr = "";
-               	
-               	if(i==0)
-        			     reportIdArrayStr=(String)iKey1.next();               	
-        			  else    			          			  
-               		 reportIdArrayStr=reportIdArrayStr+","+(String)iKey1.next();
-               	
-            }
-			
-
-	
-	// Invoice Edit													
-	String queryAttributeList="84.3.83.86.91.18.20.23.24.26.29.25.27.30.31.58.33.106.107.100.145";
-
-	String sortAttributes="3";
-	String sortOrder="sortorder-AD";
-	Iterator itKey = null;
-	Iterator itKey1 = null;
-	Vector resultBillVector =lookup.getEditInfo(invoiceTableId,  "{'3'.EX."+vid+"}", queryAttributeList, sortAttributes, sortOrder);
-
-		// Get HashMap from Vector
-		HashMap hashmap4Bill = null;
-		
-            for(int ii = 0; ii <= resultBillVector.size() - 1; ii++)
-            {
-                hashmap4Bill = (HashMap)resultBillVector.elementAt(ii);
-						}
-
- 		// Iterate over the keys in the map
-  if(hashmap4Bill!=null){  
-  	itKey = hashmap4Bill.keySet().iterator();
-	}
-//	itKey1 = hashmap4Bill.keySet().iterator();
-
-     Object keyString =null;
-     Object valueString =null;
-
-if(itKey!=null){
-  /*
-    while (itKey1.hasNext()) {
-        // Get key
-        keyString = itKey1.next();
-        valueString = hashmap4Bill.get(keyString);
-        System.out.println(keyString.toString() +"\t" +valueString.toString());
-    }
- */
-    
-//1
-String clientName = (String) hashmap4Bill.get(itKey.next());
-//2
-String fromStatus =(String) hashmap4Bill.get(itKey.next());
-
-//3
-String clientId =(String) hashmap4Bill.get(itKey.next());
-
-//4
-String franchiseId =(String) hashmap4Bill.get(itKey.next());
-
-//5
-String invoiceAmt =(String) hashmap4Bill.get(itKey.next());
-
-//6
-String billNotes =(String) hashmap4Bill.get(itKey.next());
-
-//7
-String billId =(String) hashmap4Bill.get(itKey.next());
-
-//8
-String paymentAmtStr =(String) hashmap4Bill.get(itKey.next());
-String paymentAmt="0.0";
-if(paymentAmtStr.length()>0){
-	paymentAmt=paymentAmtStr;
-}
-
-//9
-String invoiceNumber =(String) hashmap4Bill.get(itKey.next());
-
-//10
-String invoiceDueDateStr =(String) hashmap4Bill.get(itKey.next());
-
-//Convert Date format
-String invoiceDueDate = new SimpleDateFormat  (  "MM/dd/yyyy"  ).format(new Date(Long.parseLong(invoiceDueDateStr) + 86400000l));
-
-//11
-String vendorName =(String) hashmap4Bill.get(itKey.next());
-
-
-//12
-String imageURL =(String) hashmap4Bill.get(itKey.next());
-
- 
-//13
-String franchiseName =(String) hashmap4Bill.get(itKey.next());
-
-
-//14
-String workflowId =(String) hashmap4Bill.get(itKey.next());
-
-//15
-String reworkAmtStr =(String) hashmap4Bill.get(itKey.next());
-
-double reworkAmt=0.0;
-if(reworkAmtStr.length()>0){
-			reworkAmt=Double.parseDouble(reworkAmtStr);
-}
-
-//16
-String vendorId =(String) hashmap4Bill.get(itKey.next());
-
- 
-String activateFlag =(String) hashmap4Bill.get(itKey.next());
-
-
-//17
-String unclassAmtStr =(String) hashmap4Bill.get(itKey.next());
-
-double unclassAmt=0.0;
-if(unclassAmtStr.length()>0){
-			unclassAmt=Double.parseDouble(unclassAmtStr);
-}
-
-
-String payAmtStr =(String) hashmap4Bill.get(itKey.next());
-
-
-
-//18
-String invoiceDateStr =(String) hashmap4Bill.get(itKey.next());
-String invoiceDate = new SimpleDateFormat  (  "MM/dd/yyyy"  ).format(new Date(Long.parseLong(invoiceDateStr) + 86400000l));
-
-//19
-String disapprovedAmtStr =(String) hashmap4Bill.get(itKey.next());
-
-
-double disapprovedAmt=0.0;
-
-if(disapprovedAmtStr.length()>0){
-			disapprovedAmt=Double.parseDouble(disapprovedAmtStr);
-}
-   
-double residualAmtFloat=reworkAmt+unclassAmt+disapprovedAmt;
-String residualAmt = ""+residualAmtFloat;
-
- /* ***************************  
-
-  // Get Report Id Array
-  String queryStr1="3";
-	String sortByAttributes1="3";
-	    
-	Vector resultArrayVector1 = null;
-String nextvid = "";
-
-boolean notFound = true;
-
 	if(nxt.equals("0") ){
-//cid =  "7";
-//st ="Hold";
-	 			//resultArrayVector1 =lookup.getEditInfo(invoiceTableId,  "{'90'.EX."+cid+"}AND{'27'.EX."+st+"}", queryStr1, sortByAttributes1, sortByOrder1);
-				resultArrayVector1 =lookup.getEditInfo("bes8a4tgq",  "{'90'.EX.'7'}AND{'27'.EX.'Hold'}", "3", "3", "3");
-				//resultArrayVector1 =lookup.getEditInfo(invoiceTableId,  "{'90'.EX."+cid+"}", queryStr1, sortByAttributes1, sortByOrder1);
+
+				System.out.println(" == NULL so loading the reportIdArray >>> "+nxt);
+
+	 			resultArrayVector1 =lookup.getEditInfo(invoiceTableId,  "{'90'.EX."+cid+"}AND{'27'.EX."+st+"}", queryStr1, sortByAttributes1, sortByOrder1);
 				// Get HashMap from Vector
 				HashMap hMap1 = null;
 				Iterator iKey1 = null;
 				String reportIdArray[] = new String[resultArrayVector1.size()];
     		int totSize =  resultArrayVector1.size();
-    		
-    		System.out.println(" invoiceTableId "+invoiceTableId+" == NULL so loading the reportIdArray >>> "+nxt+"\n Number of similar record count is "+totSize);
-    		
 		        for(int i = 0; i <=  (totSize - 1); i++)
             {
                 hMap1 = (HashMap)resultArrayVector1.elementAt(i);
@@ -368,7 +168,7 @@ boolean notFound = true;
 	String sortAttributes="3";
 	String sortOrder="sortorder-AD";
 	Iterator itKey = null;
-	//Iterator itKey1 = null;
+	Iterator itKey1 = null;
 	Vector resultBillVector =lookup.getEditInfo(invoiceTableId,  "{'3'.EX."+vid+"}", queryAttributeList, sortAttributes, sortOrder);
 
 		// Get HashMap from Vector
@@ -383,14 +183,22 @@ boolean notFound = true;
   if(hashmap4Bill!=null){  
   	itKey = hashmap4Bill.keySet().iterator();
 	}
-	
-	//itKey1 = hashmap4Bill.keySet().iterator();
+	itKey1 = hashmap4Bill.keySet().iterator();
 
      Object keyString =null;
      Object valueString =null;
 
 if(itKey!=null){
 
+/*  
+    while (itKey1.hasNext()) {
+        // Get key
+        keyString = itKey1.next();
+        valueString = hashmap4Bill.get(keyString);
+        System.out.println(keyString.toString() +"\t" +valueString.toString());
+    }
+ */
+    
     
 //1
 String clientName = (String) hashmap4Bill.get(itKey.next());
@@ -483,7 +291,7 @@ if(disapprovedAmtStr.length()>0){
    
 double residualAmtFloat=reworkAmt+unclassAmt+disapprovedAmt;
 String residualAmt = ""+residualAmtFloat;
-*/
+
 	%>
 
 <html>
@@ -498,8 +306,11 @@ String residualAmt = ""+residualAmtFloat;
 	<meta http-equiv="Content-Type" content="text/html">
 	<title>Review Panel</title>
 
+	 <!-- code added for browser compatibility starts here-->
 	<link rel="stylesheet" href="css/demos.css" media="screen" type="text/css">
-
+	<link rel="stylesheet" href="css/pliot.css" media="screen" type="text/css">
+    <!-- code added for browser compatibility ends here-->
+    
 	<style type="text/css">
 	span.rqrd{ color:red; font-weight:bold; margin-right:5px}
 	</style>
@@ -541,13 +352,13 @@ var allStatusArray = new Array();
 var lineClassificationArray = new Array();
 	
 
-var applicationName ='<%=applicationName1%>';
+var applicationName = "bd77scjh5";
 
 	<%=(String)clientArray[0]%>
 	<%=(String)clientArray[1]%>
 
 	<%=statusArray%>
-  <%=lineClassificationArray%>
+<%=lineClassificationArray%>
 
 
 	var imageWindow;
@@ -628,6 +439,49 @@ function setCd3(svr){
 		 obj33.actb_mouse = true;
 	}
 
+/*
+	function setTerms(svr){
+	//alert(svr.name+' termsArray:  '+vendorTermArray.length);
+	     var obj31 = actb(svr,vendorTermArray);
+		 obj31.actb_lim = 5;
+		 obj31.actb_firstText = true;
+		 obj31.actb_startcheck = 1;
+		 obj31.actb_mouse = true;
+
+	  }
+*/
+
+//var fromStatusLabelIdArray = new Array(fromStatusArray,fromStatusIdArray);
+/*
+
+function fillFromStatus()
+	{
+	if(svn != null){
+	       for (i in fromStatusLabelIdArray) {
+		   		  for (j in fromStatusLabelIdArray[i]) {
+				  	  	 //alert('Found '+fromStatusLabelIdArray[0][j]);
+        			   	  if (fromStatusLabelIdArray[0][j] == svn.value){
+            		   	  	 //alert('Found '+svn.value+'found value of Div'+fromStatusLabelIdArray[1][j]);
+							 //aa.value=fromStatusLabelIdArray[1][j];
+							 aa.innerHTML=fromStatusLabelIdArray[1][j];
+							 bb.value=fromStatusLabelIdArray[1][j];
+							 }
+				 }
+			}
+	  	}
+	}
+
+	function setFromStatus(svr){
+	//alert(svr.name+' termsArray:  '+fromStatusArray.length);
+	     var obj32 = actb(svr,fromStatusArray);
+		 obj31.actb_lim = 5;
+		 obj31.actb_firstText = true;
+		 obj31.actb_startcheck = 1;
+		 obj31.actb_mouse = true;
+
+	  }
+
+*/
 
 
 
@@ -709,10 +563,43 @@ function invoiceDueDateBlur(obj22,a1){
 	
 function invoiceDateBlur(obj22,a1){
 	  obj22.style.backgroundColor='white';
-	  
+	  /*
+	//alert('invoiceDateBlur 1');
+		onVoucherArea=false;
+		document.getElementById('currentInvoiceCount').value=a1;
+		obj22.style.backgroundColor='white';
+		validate(obj22);
+//alert('currentInvoiceCount'+document.getElementById('currentInvoiceCount').value);
+
+		var invoiceIdVal = document.getElementById('invoiceId'+a1).value;
+//alert(' voucherId >>>>>>>>'+document.getElementById('voucherId').value);
+
+//alert('isinvoice complete >>  '+ ' >>> '+isInvoiceComplete(1));
+		if( (invoiceIdVal=='III') && (isInvoiceComplete(a1) )  ){
+//alert(' voucherId '+document.getElementById('voucherId').value);
+			addValue('invoice',a1,0);
+//alert(' after addValue'); 			
+		}else if( (invoiceIdVal!='III')&&(isInvoiceComplete(a1))  ){
+			//alert('Editing stuff ');
+			editValue(obj22.value,'<%=invoice_dateCID%>','<%= invoiceTableId%>',invoiceIdVal);
+		}
+		nextObj('description'+a1+'l1');
+		inVoucherArea=false;
+		inInvoiceArea=false;
+		*/
 }
 
 
+function groupIdOnBlur(obj33){
+		//alert('GROUPID ON BLUR');
+		obj33.style.backgroundColor='white';
+		validate(obj33);
+		//pausecomp(1000);
+		editUserInfo();
+		editValue(obj33.value,'<%=voucher_noCID%>','<%= voucherTableId%>',document.getElementById('voucherId').value);
+		nextObj('invoice_no1');
+
+}
 
 function insertAllocationTable(invInc){
 //alert('current insertAllocTable invInc  '+invInc);
@@ -831,7 +718,7 @@ function insertLineItemRow()
 				var x6=x.insertCell(6)
     		x6.width="3%";
     		x6.align="middle";																						
-     		x6.innerHTML="<IMG id='lineItemComm"+nextCtr+"b' style='align: right; ' height=24 alt='' onclick=commentWindow('Comment.html','lineItemComm"+nextCtr+"');  onselect='commentWindow('Comment.html','lineItemComm"+nextCtr+"');' src='images/notes.png' width=20 border=1><input   type='hidden' name='lineItemComm"+nextCtr+"h' id='lineItemComm"+nextCtr+"h' ></input><input type='hidden' name='lineItemComm"+nextCtr+"' id='lineItemComm"+nextCtr+"' ></input>";
+     		x6.innerHTML="<IMG id='lineItemComm"+nextCtr+"b' style='align: right; ' height=24 alt='' onclick=commentWindow('Comment.html','lineItemComm"+nextCtr+"');  onselect='commentWindow('Comment.html','lineItemComm"+nextCtr+"');' src='/bke1/images/notes.png' width=20 border=1><input   type='hidden' name='lineItemComm"+nextCtr+"h' id='lineItemComm"+nextCtr+"h' ></input><input type='hidden' name='lineItemComm"+nextCtr+"' id='lineItemComm"+nextCtr+"' ></input>";
 //alert('>>>>>>>> 8');
 
 
@@ -888,14 +775,14 @@ function insertLineItemRow()
 
 				var x5=x.insertCell(6)
     		x5.width="5%";																						
-     		x5.innerHTML="<IMG id='allocationComm"+aId+"l"+toBinsertedAt+"b' style='align: right; ' height=24 alt='' onclick=commentWindow('Comment.html','allocationComm"+aId+"l"+toBinsertedAt+"');  onselect='commentWindow('Comment.html','allocationComm"+aId+"l"+toBinsertedAt+"');' src='images/notes.png' width=20 border=1><input   type='hidden' name='allocationComm"+aId+"l"+toBinsertedAt+"h' id='allocationComm"+aId+"l"+toBinsertedAt+"h' ></input><input type='hidden' name='allocationComm"+aId+"l"+toBinsertedAt+"' id='allocationComm"+aId+"l"+toBinsertedAt+"' ></input>";
+     		x5.innerHTML="<IMG id='allocationComm"+aId+"l"+toBinsertedAt+"b' style='align: right; ' height=24 alt='' onclick=commentWindow('Comment.html','allocationComm"+aId+"l"+toBinsertedAt+"');  onselect='commentWindow('Comment.html','allocationComm"+aId+"l"+toBinsertedAt+"');' src='/bke1/images/notes.png' width=20 border=1><input   type='hidden' name='allocationComm"+aId+"l"+toBinsertedAt+"h' id='allocationComm"+aId+"l"+toBinsertedAt+"h' ></input><input type='hidden' name='allocationComm"+aId+"l"+toBinsertedAt+"' id='allocationComm"+aId+"l"+toBinsertedAt+"' ></input>";
 
 
 
 				var x6=x.insertCell(7)
     		x6.width="5%";																										
     		
- 				var hiddenX6Str="<IMG id='addAgent"+aId+"l"+toBinsertedAt+"'   name='addAgent'addAllocation"+aId+"l"+toBinsertedAt+"' style='align: right; ' height=24 alt='' onclick= src='images/popup.png' width=20 border=1>";
+ 				var hiddenX6Str="<IMG id='addAgent"+aId+"l"+toBinsertedAt+"'   name='addAgent'addAllocation"+aId+"l"+toBinsertedAt+"' style='align: right; ' height=24 alt='' onclick= src='/bke1/images/popup.png' width=20 border=1>";
  				hiddenX6Str=hiddenX6Str+" <input   type=hidden name='allocationComm"+aId+"l"+toBinsertedAt+"' id='allocationComm"+aId+"l"+toBinsertedAt+"' ><input type=hidden name='allocationComm"+aId+"l"+toBinsertedAt+"' id='allocationComm"+aId+"l"+toBinsertedAt+"' > <input  type=hidden name='agentId"+aId+"l"+toBinsertedAt+"'  id='agentId"+aId+"l"+toBinsertedAt+"' > <input  type=hidden name='empId"+aId+"l"+toBinsertedAt+"'  id='empId"+aId+"l"+toBinsertedAt+"' > <input  type=hidden name='empName"+aId+"l"+toBinsertedAt+"'  id='empName"+aId+"l"+toBinsertedAt+"'>  <input  type=hidden name='labCat"+aId+"l"+toBinsertedAt+"'  id='labCat"+aId+"l"+toBinsertedAt+"'>  <input type=hidden name='labDesc"+aId+"l"+toBinsertedAt+"'  id='labDesc"+aId+"l"+toBinsertedAt+"'>  <input type=hidden name='hours"+aId+"l"+toBinsertedAt+"'  id='hours"+aId+"l"+toBinsertedAt+"'>	  <input  type=hidden name='agent_amount"+aId+"l"+toBinsertedAt+"'  id='agent_amount"+aId+"l"+toBinsertedAt+"'> <input  type=hidden name='agentComm"+aId+"l"+toBinsertedAt+"'  id='agentComm"+aId+"l"+toBinsertedAt+"'>";
 				
 				x6.innerHTML=hiddenX6Str;
@@ -918,6 +805,12 @@ function insertLineItemRow()
  }
 
 
+
+//	var nameIdArray = new Array(vendorIdArray,vendorNameArray);
+		//alert('ablove fill other of VIA vendorIdArray '+vendorIdArray);
+		//alert('ablove fill other of VIA vendorNameArray '+vendorNameArray);
+		//alert('ablove fill other of VIA nameIdArray '+nameIdArray);
+		
 	function fillOtherClientValue(svn)
 	{
 	var found='false'
@@ -926,7 +819,23 @@ function insertLineItemRow()
 	       for (i in nameIdArray) {
 	       				
 		   		  for (j in nameIdArray[i]) {
-		   		  	
+		   		  	//alert('Associated Name '+nameIdArray[1][j]+' Associated UB for this vendor'+vendorUBArray[j])
+							 					
+		   		  	  	   	//alert('svn.name both '+svn.name);
+		   		  	  	   /*	
+                	  if (svn.name == 'vendor_id'){
+                	   	//alert('svn.name Id check '+svn.name);
+        			   	  if (nameIdArray[0][j] == svn.value){
+            		   	  	 document.getElementById('vendorName').value=nameIdArray[1][j];
+            		   	  	 document.getElementById('vendorUB').value=vendorUBArray[j];
+            		   	  	 document.getElementById('terms').innerHTML=vendorTermArray[j];
+            		   	  	 document.getElementById('termsh').value=vendorTermArray[j];
+            		   	  	 //alert(''+svn.value);
+            		   	  	 //alert('Associated Name '+nameIdArray[1][j]+' Associated UB for this vendor'+vendorUBArray[j])
+							 					 found='true'
+            		   	  	 svn.style.backgroundColor='white';}
+        		        }else 
+        		        */	
         		        
         		       if (svn.name == 'clientName'){
                 	   //alert('svn.name  name check '+svn.name);
@@ -1090,7 +999,7 @@ var voucherVar;
 	{
 	//	alert('invoiceCount '+invoiceCount);
 
-		var url1 = 'iaded.jsp?uac=<%=ac%>';
+		var url1 = '/bke1/iaded.jsp?uac=<%=ac%>';
 
 
 
@@ -1134,7 +1043,7 @@ var voucherVar;
 		/*** Checking previouse Image and submitting **/
 		//imageSubmitCaller(invoiceCount);
 
-		var url1 = 'iaded.jsp?ve='+ve1+'&in='+in1+'&uac=<%=ac%>';
+		var url1 = '/bke1/iaded.jsp?ve='+ve1+'&in='+in1+'&uac=<%=ac%>';
 
 		//alert('invoiceImageURL  '+document.getElementById('invoiceImageURL').value);
 
@@ -1151,8 +1060,6 @@ var voucherVar;
 		//alert('invoiceCount is '+invoiceCount+'  >>>>>'+document.getElementById('invoice_no'+invoiceCount).value);
 		setInvoiceNumberVal(document.getElementById('invoiceNumber').value );
 
-//alert(' ImageURL '+document.getElementById('invoiceImageURL').value);
-    
 		//document.getElementById('addImage'+invoiceCount).focus();
 
     }
@@ -1475,7 +1382,6 @@ function validate(svr){
 	  		document.getElementById('franchiseName').innerHTML=clientHiddenVar.split("&")[1];
 	  		document.getElementById('franchiseId').innerHTML=clientHiddenVar.split("&")[2];
 	  		document.getElementById('franchiseIdh').value=clientHiddenVar.split("&")[2];
-	  		document.getElementById('workflowId').value=clientHiddenVar.split("&")[3];
   		}  	
      }
 	  		  	
@@ -1606,6 +1512,9 @@ return sString;
 
 
 function initialize(){
+    //alert('1');
+    
+    
 	  <%if(ac.equals("ad")){%>	
 				document.getElementById('franchiseName').innerHTML="";
 	  		document.getElementById('franchiseId').innerHTML="";
@@ -1614,7 +1523,7 @@ function initialize(){
 		setCurrentDate();
 		popImage(1);	
 		insertLineItemRow();
-		//popGetImage(1);
+		popGetImage(1);
 		setDefaultInvoiceDate(document.getElementById('invoiceDate'));
 		//setDefaultInvoiceDate(document.getElementById('invoiceDueDate1'));
 	  //document.getElementById('invoiceDueDate1').value='04/16/2009';
@@ -1625,15 +1534,11 @@ function initialize(){
 			//document.getElementById('lineStatus1').value='UNC';
 		}
 		<%}%>
-		//popGetImage('1');
-		
-				document.getElementById('addImage1').click();
-						
+		popGetImage('1');
 	  document.getElementById('clientName').focus();
-    //imageWindow.document.uploadForm.Object1.src=document.getElementById('invoiceImageURL').value;
 }
 
-       
+
 
 
 
@@ -1734,19 +1639,12 @@ function checkAllLineStatus(){
 }
 
 function edLoad(){
-	    var availableWidth =screen.availWidth;
-    var availableHeight =screen.availHeight;
-        availableWidth = ( (1*availableWidth/2) + (0.0980*(availableWidth/2)) );
-
-    //availableWidth = availableWidth/2;
-    //alert('window.screen.availWidth is >>'+availableWidth);
-    window.resizeTo(availableWidth,screen.height);
-    window.moveTo(availableWidth,availableHeight); 
+	  
 	  if('<%=fromStatus%>'=='Ready'){
 	  	document.getElementById('payAmt').disabled=false;
 	  	document.getElementById('appAll').style.visibility='visible';
 	  }else{	  
-	  	document.getElementById('appAll').style.visibility='hidden';
+	  	document.getElementById('appAll').style.visibility='visible';
 	  	document.getElementById('payAmt').disabled=true;
 	  }
 	  
@@ -1772,7 +1670,7 @@ function edLoad(){
 document.getElementById('status').value='<%=fromStatus%>';			  
 	
 		popImage(1);	
-   //popGetImage('1');
+popGetImage('1');
 }
 
 function setInvoiceImage(svrr){
@@ -2089,6 +1987,14 @@ alert(' dep_code '+ document.getElementById('dep_code'+aa1).value)
 		}
 	document.getElementById('fromAwindo').value='false'
 	}
+	/*
+	if(document.getElementById('fromComwindo').value=='true'){
+	alert('');
+	if(document.getElementById('voucherComment').value.length>2) alert('back from comment '+document.getElementById('voucherCom').value.length);
+	document.getElementById('voucherComment').style.backgroundColor='green';
+	document.getElementById('fromComwindo').value='false'
+	}
+	*/
 
 }
 
@@ -2195,6 +2101,7 @@ var nextIndex;
 		}
 //alert('next VID is '+iGList[nextIndex]);
 document.getElementById('vid1').value=iGList[nextIndex];
+//response.sendRedirect("/bke1/added.jsp?ac="+ac+"&u="+qbid+"&vid="+iGList[nextIndex]);
  
 	document.voucherInvoiceAllocation.submit();
 	return true;
@@ -2233,61 +2140,16 @@ function saveAndReturn(ss11){
 }
 
 
+
 function next1(){
-var tempStr = "<%=reportIdArrayStr%>";
-
-
-//alert('nxtStr  '+nxtStr);
-
-document.getElementById('reportIdArrayStr').value="<%=reportIdArrayStr%>";
-var reportIdArrayTemp = tempStr.split(",");
-document.getElementById('mv').value='sn';
-//document.getElementById('nxt').value=eval(<%=nxt%>+1);
-
-
-
-
-//alert('tempStr '+tempStr+' reportIdArrayTemp '+reportIdArrayTemp)
-var x=0; 	
-  for (i in reportIdArrayTemp) {
-        			   	  if (  (reportIdArrayTemp[i] == '<%=vid%>' ) ){
-        			   	 // alert('equal value of i is'+i);
- 	      			   	  	  x = i*1+1;
- 	      			   	  	  //alert('reportIdArrayTemp'+reportIdArrayTemp+' tempStr[i+1] '+reportIdArrayTemp[x]+' next index x is '+x+' current index i is '+i);
-        			   	  		document.getElementById('nxt').value = ""+x;
-        			   	  		document.getElementById('vid1').value = reportIdArrayTemp[x];
-        			   	  	document.getElementById('vid').value = reportIdArrayTemp[x];
-										document.getElementById('nextVid').value = reportIdArrayTemp[x];
-																	
-												break;
-            		   	}else{
-            		   			continue;
-            		   	}
-	}
-	
-	//alert('x value'+x+'  variable nxt value is '+<%=nxt%>);
-	
-	if(x==reportIdArrayTemp.length){
-			window.location = "https://docorganiz.quickbase.com/db/<%=returnAppName%>";
-			imageWindow.close();
-	}else{	
-	document.voucherInvoiceAllocation.submit();
-	}
-
-}
-
-
-function next1111(){
 var tempStr = "<%=reportIdArrayStr%>";
 document.getElementById('reportIdArrayStr').value="<%=reportIdArrayStr%>";
 var reportIdArrayTemp = tempStr.split(",");
 document.getElementById('mv').value='sn';
 document.getElementById('nxt').value=eval(<%=nxt%>+1);
 
-alert('tempStr '+tempStr+' reportIdArrayTemp '+reportIdArrayTemp)
+//alert('tempStr '+tempStr+' reportIdArrayTemp '+reportIdArrayTemp)
 var x=0;
-  
-  
   for (i in reportIdArrayTemp) {
         			   	  if (  (reportIdArrayTemp[i] == '<%=vid%>' ) ){
  	      			   	  	  x = i*1+1;
@@ -2301,15 +2163,11 @@ var x=0;
             		   	}
 	}
 	
-	
 	if(x>=reportIdArrayTemp.length){
-	
 			window.location = "https://docorganiz.quickbase.com/db/<%=returnAppName%>";
 			imageWindow.close();
-	}else if(!(tempStr == 'null') ){
-		//alert('Has Values');
-		//alert(''+document.getElementById('nxt').value);
-		document.voucherInvoiceAllocation.submit();
+	}else{
+			document.voucherInvoiceAllocation.submit();
 	}	
 
 }
@@ -2414,6 +2272,48 @@ var currentInvoiceCount = document.getElementById('currentInvoiceCount').value;
 
 	}
 	
+function imageSubmitCaller343(invoiceCount){
+		document.getElementById('inim').value=invoiceCount;
+
+		var previousinim = document.getElementById('previousinim').value;
+		if( (previousinim!=null) &&(previousinim.length>0) ){
+			//alert('previously Clicked on Invoice count  '+previousinim);
+
+			if (previousinim!=invoiceCount){
+			 //alert('First Click');
+
+				//var imageVar=imageWindow.document.uploadForm.Object1.src;
+				//alert('From Dir1 '+imageWindow.document.uploadForm.fromDir1.value.length)
+				if(imageWindow.document.uploadForm.fromDir1.value.length>1){
+					//alert('Has New Local image attached NEED TO SUBMIT')
+					imageWindow.document.uploadForm.submitButton.click();
+
+				}else{
+//					alert('Does NOT Have New Local image attached NEED NOT SUBMIT')
+				}
+
+
+			}else{
+//				//alert('Clicking on same Invoice '+invoiceCount);
+				if(imageWindow.document.uploadForm.fromDir1.value.length>1){
+//					alert('Has New Local image attached NEED TO SUBMIT')
+					imageWindow.document.uploadForm.submitButton.click();
+				}else{
+//					alert('Does NOT Have New Local image attached NEED NOT SUBMIT')
+				}
+			}
+
+		}else{
+
+				if(imageWindow.document.uploadForm.fromDir1.value.length>1){
+				//				alert('Has New Local image attached so Iam submitting')
+								imageWindow.document.uploadForm.submitButton.click();
+				}
+
+		}
+
+	}
+
 
 var currentInvoiceCount;
 
@@ -2494,7 +2394,7 @@ function returnQ(){
 }
 
 function logout(sv1, sv2){
-	window.location = "login.jsp?ac=rv&u="+document.getElementById('u').value+"&vid="+sv2;
+	window.location = "/bke1/login.jsp?ac=rv&u="+document.getElementById('u').value+"&vid="+sv2;
 	 imageWindow.close();
 	agentWindow.close();
 }
@@ -2664,6 +2564,17 @@ function refreshInfo(){
 	document.voucherInvoiceAllocation.submit();
 	return true;
 
+}
+
+function editUserInfo(){
+
+			//alert('groupIdPK'+document.getElementById('groupIdPK').value)
+	var groupIdPK = document.getElementById('groupIdPK').value;
+	var voucherNumber = document.getElementById('voucher_no').value;
+	if((voucherNumber.length>0)&&(groupIdPK.length>0)){
+	//alert('inside if statement');
+			editValue(voucherNumber,'13','<%=userInfoTableId%>',groupIdPK);
+	}
 }
 
 
@@ -2983,15 +2894,13 @@ function invoiceDueDateBlur(svr11,a1){
 
 function getToStatus(fromStatus,activateFlag1){
 	
-	var workflowId = document.getElementById('workflowId').value;
-	       			   	  //alert('fromStatus > '+fromStatus+' activateFlag1 >>'+activateFlag1+' workflowId >>'+workflowId);
-	
+	//alert('fromStatus > '+fromStatus+' activateFlag1 >>'+activateFlag1);
 	
 	var j=0;
   for (i in allStatusArray) {
-        			   	  	//alert('Current Record >'allStatusArray[i]);
+        			   	  	//	alert('Current Record >'allStatusArray[i]);
 	
-	       			   	  if (  (allStatusArray[i].split(",")[3] == fromStatus) && (allStatusArray[i].split(",")[4] == workflowId) && (allStatusArray[i].split(",")[1] == activateFlag1) ){
+        			   	  if (  (allStatusArray[i].split(",")[3] == fromStatus) && (allStatusArray[i].split(",")[1] == activateFlag1) ){
         			   	  		//alert('Selected To Status >'allStatusArray[i].split(",")[0]);
 												toStatusArray[j] = allStatusArray[i].split(",")[0];
 												j++;
@@ -3002,19 +2911,12 @@ function getToStatus(fromStatus,activateFlag1){
 
 
 function setToLineStatus(count1){
-var workflowId = document.getElementById('workflowId').value;
-		       			   	  
-		       			   	
+
 	var j=0;
 	var toLineStatusArray = new Array();
   //alert(document.getElementById('fromLineStatus'+count1).value); 
-  
-    
-		       			  // 	  alert('lineClassificationArray > '+lineClassificationArray);
-		       			   //	  alert(' workflowId >>'+workflowId);
-
   for (i in lineClassificationArray) {
-        			   	  if ( (lineClassificationArray[i].split(",")[2] == '<%=fromStatus%>') && (lineClassificationArray[i].split(",")[4] == workflowId )  && (lineClassificationArray[i].split(",")[0] ==  document.getElementById('fromLineStatus'+count1).value) ) {
+        			   	  if ( (lineClassificationArray[i].split(",")[2] == '<%=fromStatus%>') && (lineClassificationArray[i].split(",")[0] ==  document.getElementById('fromLineStatus'+count1).value) ) {
 													toLineStatusArray[j] = lineClassificationArray[i].split(",")[1];
 													j++;
             		   	}
@@ -3230,6 +3132,124 @@ function lineStatusBlur(sv1,count){
 	
 
 /******************************/
+
+function voucherNameOnBlur(svr11){
+	svr11.style.backgroundColor='white';
+	validate(svr11);
+
+	inVoucherArea=false;
+
+	var voucherId = document.getElementById('voucherId').value;
+
+	var vendorId = document.getElementById('vendorId').value;
+
+	//alert('add voucher function voucherId length = '+voucherId.length+'  voucherId>>> '+voucherId);
+
+	if(voucherId.length==0){
+			if(isVoucherComplete()&&(!voucherAdded)){
+
+//A				editUserInfo();
+//A				addValue('voucher',0,0);
+				//pausecomp(1000);
+				//voucherAdded=true;
+				nextObj('process_status');
+			}
+	}else {
+
+	//if( voucherId.length>0){
+		if(isVoucherComplete()){
+			//alert('In Edit voucher');
+			editValue(vendorId,'<%=vendor_idCID%>','<%= voucherTableId%>',voucherId);
+			nextObj('invoiceNumber');
+			//break;
+			//alert('Done Edit voucher');
+		}
+	}
+
+}
+
+
+
+
+function groupDateBlur(obj){
+alert('inside groupdate on blur');
+        obj.style.backgroundColor='white';
+alert('inside groupdate on blur>>>>>1');
+        validate(obj);
+alert('inside groupdate on blur');       
+        var voucherId = document.getElementById('voucherId').value;
+alert('inside groupdate on blur>>>>>2');        
+        //alert('voucher ID '+voucherId+' objvalue '+obj.value);
+        if(voucherId.length>0){
+alert('inside groupdate on blur>>>>3');        
+							alert('has voucherID>>>>4');
+                        editValue(obj.value,'<%=voucher_dateCID%>','<%= voucherTableId%>',voucherId);
+        }
+}
+
+
+function approverOnBlur(svr11){
+//alert('inside approveronblur');
+	svr11.style.backgroundColor='white';
+	validate(svr11);
+
+	inVoucherArea=true;
+
+	var voucherId = document.getElementById('voucherId').value;
+
+	var vendorId = document.getElementById('vendorId').value;
+
+//alert('add voucher function voucherId length = '+voucherId.length+'  voucherId>>> '+voucherId);
+
+	if(voucherId.length==0){
+	
+	//		alert("inside if statement "+ isVoucherComplete()+"   voucherAdded " + voucherAdded )
+			if(isVoucherComplete()&&(!voucherAdded)){
+				
+		//		alert('before added value for voucher');
+
+				editUserInfo();
+				addValue('voucher',0,0);
+			//	alert('added value for voucher');
+				//pausecomp(1000);
+				voucherAdded=true;
+				nextObj('invoice_no1');
+			}
+	}else {
+
+	//if( voucherId.length>0){
+		if(isVoucherComplete()){
+			//alert('In Edit voucher');
+			editValue(svr11.value,'<%=approverCID%>','<%= voucherTableId%>',voucherId);
+			nextObj('invoice_no1');
+			//break;
+			//alert('Done Edit voucher');
+		}
+	}
+
+}
+
+
+
+
+
+
+function statusBlurOnEdit(obj){ 
+	//alert('inside on blur on edit');
+	setStatus(obj);
+	//alert('inside on blur on edit 1')
+	obj.style.backgroundColor='white';
+	validate(obj);
+
+	var voucherId = document.getElementById('voucherId').value;
+	//alert('voucher ID '+voucherId+' objvalue '+obj.value);
+	if(voucherId.length>0){
+	//alert('inside status blur 1');
+			editValue(obj.value,'<%= process_status_trailCID%>','<%= voucherTableId%>',voucherId); 
+	//alert('inside status blur 2');
+	}
+}
+
 
 
 function cd1OnBlur(obj1212,a1,b1){
@@ -3458,7 +3478,7 @@ function duplicate (){
 </script>
 
 </head>
-<body onload="javascript:<%if(ac.equals("ad")){%>initialize();<%}else{%> edLoad(); <%}%>">
+<body style="background: #FFFBEF; margin: 0px; " onload="javascript:<%if(ac.equals("ad")){%>initialize();<%}else{%> edLoad(); <%}%>">
 
 
 <form method="post" action="#" name="voucherInvoiceAllocation">
@@ -3468,195 +3488,188 @@ function duplicate (){
 <input type=hidden name=login id=ac value=<%=login%>>
 <input type=hidden name=password id=ac value=<%=password%>>
 
+<!-- code add for browser compatibility start here-->
+	<div id="logo_bar">	  
+		<div id="logo_imageLeft"></div>
+		 <div id="logo_image" style="float: right;"></div>
+	</div>
+
+     <div id="nav_bar">
+		<label style="cursor:pointer; float:right;  position:relative; padding:5px;" name='return' id='return' class='tbutton'  onKeyDown="buttonAlert(this)"  onClick=logout('<%=ac%>','<%=vid%>') >Logout</label>
+		<label style=" float:right;  position:relative;  padding:5px;"> | </label>
+		<label style="cursor:pointer; float:right; position:relative;  padding:5px;" class="tbutton" name="refreshBtn" id="refreshBtn" ONCLICK="refreshInfo();">Refresh</label>
+		<label style=" float:right;  position:relative;  padding:5px;"> | </label>
+		<label style=" float:right; position:relative;  padding:5px;" class="user_Lab" name="user_Lab" id="user_Lab" >SignIn Us: <%=u_Ind%></label>
+	</div>
+	
 <!--- Begining of Pre Voucher Buttons --->
 <table class="vouch" width="100%" bgcolor="#ffffff" border="0">
-
-  <tr valign="top">
- 		<td height="60" align="center">
- 				<a href="#"><img src="https://docorganiz.quickbase.com/up/bcscwdzuq/g/rg/eh/va/BKE%20EDocs%201-1%20Logo%20%2003-21-09.jpg" alt="DocOrganiz.com" hspace="10" border="0"></a>
- 		</td>
- 		
-<!--
- 	  <td width="10%" align="right">
- 			<button  class="tbutton" name="refreshBtn" id="refreshBtn" ONCLICK="refreshInfo();">Refresh</button>
- 		</td>
--->
- 	<input type="hidden" id="errorMessageHidden" name="errorMessageHidden"></input> 
-
+  <tr valign="top"> 		
+ 	<!--<input type="hidden" id="errorMessageHidden" name="errorMessageHidden"></input> 
  	<td width="80%" align="center" style="color:red" ><span id="errorMessage"></span></td> 	
-
- 	<td width="10%" align="right">
- 		<button  class="tbutton" name="refreshBtn" id="refreshBtn" ONCLICK="refreshInfo();">Refresh</button>
- 		<button name='return' id='return' class='tbutton'  onKeyDown=buttonAlert(this)  onClick=logout('<%=ac%>','<%=vid%>') >Logout</button>
- 	</td>
-
- 	</tr>
+ 	--></tr>
 </table>
 <!--- End of Pre Voucher Buttons --->
 
-<!--- Begining of Group Info --->
+<!--- start of design of the table like the add page --->
 
-
-
-<table class="groupTbl" cellpadding="2" width="100%" bgcolor="#ffffff" border="1">
- <input  value="<%=workflowId%>" type=hidden name=workflowId id=workflowId >
-  
-<input type=hidden name=voucher_date id=voucher_date >
-<input type=hidden name=status_date id=status_date >
-  <tr >
-    <td width="6%" nowrap><span class=rqrd>*</span>Client Name:</td>
-    <td width="14%">    	
-    	<span ><%=clientName%></span>
-    	<!--
-    	<TextArea rows="2" cols="20"  maxlength="20" size="20" name="clientName" id="clientName" class="inps" onfocus="clientNameFocus(this);" onblur="clientNameBlur(this);" ><%=clientName%></textArea>
-    	-->
-    	<input  value="<%=clientId%>" type=hidden name=clientId id=clientId >
-    	<input  value="<%=activateFlag%>" type=hidden name=activateFlag id=activateFlag >
-	</td>
-	  <td width="9%" nowrap><span class=rqrd>*</span>Franchise Name:</td>
-    <td width="10%">    	
-		 <span id='franchiseName' style='align : middle;'> <%=franchiseName%></span> 
-		</td>
-	<td width="1%" align="left" nowrap><span class=rqrd>*</span>Id:</td>
-    <td width="5%">
-    	<span id='franchiseId' style='align : middle;'>  <%=franchiseId%>  </span>
-	  		<input value="<%=franchiseId%>" type=hidden name="franchiseIdh" id="franchiseIdh" >
-    </td> 
- </tr>
-</table>
-
-
-<!--- Begining of Invoice Info --->
-
-<table class="InvoiceTbl" cellpadding="2" width="100%" bgcolor="#ffffff" border="1">
-	
-  <tr valign="top">  	
-		<input type=hidden  name='invoiceId' id='invoiceId'  value="<%=billId%>"  >
-	  <td width="5%" nowrap><span class=rqrd>*</span>Vendor:</td>
-    <td width="20%">    	
-    	    	
-    	<span ><%=vendorName%></span>
-    	<!--
-  <TextArea  rows="2" cols="20"  maxlength="20" size="20" name="vendor" id="vendor" class="inps" onfocus="vendorFocus(this);" onblur="vendorBlur(this);"   ><%=vendorName%></textArea>
-    	
-    	<input name="vendor" id="vendor" onfocus="vendorFocus(this);" onblur="vendorBlur(this);"  class="inps" maxlength="45" size="45">
-    	-->
-		<input  value="<%=vendorId%>"  type=hidden  name='vendorId' id='vendorId'>
-		</td>  	
-	  <td width="10%" nowrap><span class=rqrd>*</span>Invoice #:</td>
-    <td width="10%">
-    	<span ><%=invoiceNumber%></span>
-    	
-    	<input type=hidden value="<%=invoiceNumber%>" name="invoiceNumber" id="invoiceNumber" onfocus="invoiceNumberFocus(this);" onblur="invoiceNumberBlur(this);"  class="inps" maxlength="24" size="24"></td>
-			
-		</td>  	
-	  <td width="10%" nowrap><span class=rqrd>*</span>Inv Date:</td>
-    <td width="15%">
-    	<span ><%=invoiceDate%></span>
-    	<!--    	
-    	    	
-    	<input  value="<%=invoiceDate%>" type="text" name="invoiceDate" id="invoiceDate"   onfocus="invoiceDateFocus(this);"  onblur="invoiceDateBlur(this);"  class="inps" maxlength="15" size="15">
+<div id="con_table">
+      <div id="top_blue_div">         
+		         <table  name=InvoiceButtonTbl  id=InvoiceButtonTbl width="100%">
+		          <tr valign="middle">	  	   
+				  <td valign="middle" bordercolor="red" align="center" width="100%">
+				  <button name='return' class='tbutton' onKeyDown=buttonAlert(this)  onClick=saveAndReturn('sr')>SAVE & RETURN</button>	
+                   <button name='return' class='tbutton' onKeyDown=buttonAlert(this)  onClick=saveAndNext()>SAVE & NEXT</button>
+                   <button name='return' class='tbutton' onKeyDown=buttonAlert(this)  onClick=nextBill()>NEXT</button>
+                   <button name='return' class='tbutton'  onKeyDown=buttonAlert(this) onClick=returnQ()>RETURN</button>
+			     </td>
+		       </tr>		   
+		 </table>        
+       </div>
+       
+    <!-- start of the client identification -->
+    <div id="client_ide_div">
+          <input  value="<%=activateFlag%>" type=hidden name=activateFlag id=activateFlag >	 
+          <input type=hidden name=voucher_date id=voucher_date >
+          <input type=hidden name=status_date id=status_date >
+        <div id="heading_for_all_form">Client Identification</div>
+          <div id="UI_div">
+             <table border="0" style="margin: 1%;">
+              <tr>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%">Client ID#</td>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%">Franchise Name</td>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%">ID#</td>
+              </tr>
+              <tr>
+                 <td><span ><%=clientName%></span>
+                 <input  value="<%=clientId%>" type=hidden name=clientId id=clientId >
+    	         <input  value="<%=activateFlag%>" type=hidden name=activateFlag id=activateFlag >
+                 </td>
+                 <td style="font-size: 80%"><span id='franchiseName' style='align : middle;'><%=franchiseName%></span></td>
+                 <td style="font-size: 80%"><span id='franchiseId' style='align : middle;'><%=franchiseId%></span>
+	  		<input value="<%=franchiseId%>" type=hidden name="franchiseIdh" id="franchiseIdh" ></td>
+              </tr>
+             </table>
+          </div>
+	</div>
+    <!-- end of the client identification -->   
     
-    	<img src="images/dateImg.gif" id="invoiceDateImg" style="cursor: pointer; border: 1px solid red;" title="Invoice Date selector"  onmouseover="this.style.background='red';" onmouseout="this.style.background=''" />
-    		-->
-    	</td>
-		</td>
-  </tr>
+    <!--- Begining of Vendor Submitting Bill --->
+	<div id="client_ide_div">
+	        <div id="heading_for_all_form">Vendor Submitting Bill</div>
+	          <div id="UI_div">
+	             <table border="0" style="margin: 1%;">
+	              <tr>
+	                  <input type=hidden  name='invoiceId' id='invoiceId'  value="<%=billId%>"  >
+	                 <td style="font-size: 80%; font-weight: bold;" width="20%">Vendor ID#</td>                 
+	              </tr>
+	              <tr >
+	                 <td style="font-size: 80%"><span ><%=vendorName%></span>    	
+		            <input  value="<%=vendorId%>"  type=hidden  name='vendorId' id='vendorId'>	                 
+	                 </td>	                 
+	              </tr>
+	             </table>
+	          </div>
+		</div>
+     <!--- End of Pre Vendor Submitting Bill --->   
+     
+     <!--- Begining of Invoice Information --->
+    <div id="client_ide_div">
+        <div id="heading_for_all_form">Invoice Information</div>
+          <div id="UI_div">
+             <table border="0" style="margin: 1%;">
+              <tr>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%">Invoice #</td>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%">Inv Date</td>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%">Inv Due</td>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%">Inv Amt</td>
+              </tr>
+              <tr>
+                 <td style="font-size: 80%"> <span ><%=invoiceNumber%></span>    	
+    	          <input type=hidden value="<%=invoiceNumber%>" name="invoiceNumber" id="invoiceNumber" onfocus="invoiceNumberFocus(this);" onblur="invoiceNumberBlur(this);"  class="inps" maxlength="24" size="24"></td>
+                 <td style="font-size: 80%"><span ><%=invoiceDate%></span>    	
+    	              <img src="/bke2/images/dateImg.gif" id="invoiceDateImg" style="cursor: pointer; border: 1px solid red;" title="Invoice Date selector"  onmouseover="this.style.background='red';" onmouseout="this.style.background=''" />
+    	         </td>
+                 <td style="font-size: 80%"><span ><%=invoiceDueDate%></span>    	
+    	           <img src="/bke2/images/dateImg.gif" id="invoiceDueDateImg" style="cursor: pointer; border: 1px solid red;" title="Invoice Date selector"  onmouseover="this.style.background='red';" onmouseout="this.style.background=''" />
+    	         </td>
+                 <td style="font-size: 80%"><span >$<%=invoiceAmt%></span>    	  	
+    	           <input type=hidden  value="<%=invoiceAmt%>" name="invoiceAmt" id="invoiceAmt" onfocus="invoiceAmtFocus(this);" onblur="invoiceAmtBlur(this);"  class="inps" maxlength="15" size="15"></td>			 
+                 </td>
+              </tr>
+             </table>
+          </div>
+	</div>
+  <!--- End of Invoice Information ---> 
   
-  <tr valign="top">  	
-	  <td width="10%" nowrap><span class=rqrd>*</span>Inv Amt:</td>
-    <td width="15%">
-    	<span >$<%=invoiceAmt%></span>
-    	  	
-    	<input type=hidden  value="<%=invoiceAmt%>" name="invoiceAmt" id="invoiceAmt" onfocus="invoiceAmtFocus(this);" onblur="invoiceAmtBlur(this);"  class="inps" maxlength="15" size="15"></td>
-			
-		</td>  	
-				<!--	
-	  <td width="10%" nowrap><span class=rqrd>*</span>Pay Amt #:</td>
-    <td width="15%">    	
-    	<span id=payAmt> </span>
-			<input type=hidden  name='payAmtH' id='payAmtH'>
-		</td>  	
-		-->
-		
-		<td width="10%" nowrap><span class=rqrd>*</span>Line Total:</td>
-    <td width="15%">    	
-    	<span id=lineTotal> </span>
-			<input type=hidden  name='lineTotalH' id='lineTotalH'>
-		</td>  	
-  	
-	  <td width="10%" nowrap><span class=rqrd>*</span>Inv Due:</td>
-    <td width="15%">
-    	<span ><%=invoiceDueDate%></span>
-    	<!--      	    	
-    	<input  value="<%=invoiceDueDate%>" name="invoiceDueDate" id="invoiceDueDate" onfocus="invoiceDueDateFocus(this);" onblur="invoiceDueDateBlur(this);"  class="inps" maxlength="15" size="15">
-    	
-    	<img src="images/dateImg.gif" id="invoiceDueDateImg" style="cursor: pointer; border: 1px solid red;" title="Invoice Date selector"  onmouseover="this.style.background='red';" onmouseout="this.style.background=''" />
-    	-->
-		</td>
-  </tr>
-  
-  <tr valign="top">  	
-	  
-	 <!-- 
-	  <td width="10%" nowrap><span class=rqrd>*</span>Status:</td>
-    <td width="15%">
-    	<input name="status"  id="status" onfocus="statusFocus(this);" onblur="statusBlur(this);"  class="inps" maxlength="15" size="15">    	
-    </td> 
-	  <td width="10%" nowrap><span class=rqrd>*</span>Residual Amt:</td>
-    <td width="20%">
-    	<span id=residualAmt> </span>   	
-    	<input type=hidden name='residualAmtH' id='residualAmtH'>
-    </td>
-   --> 
-    
-	  <td width="10%" nowrap><span class=rqrd>*</span>Pay Amt:</td>
-    <td width="15%">    	
-    	
-    	<input name="payAmt" id="payAmt" value="$<%=payAmtStr%>" onfocus="payAmtFocus(this);" onblur="payAmtBlur(this);"  class="inps" maxlength="15" size="15"></td>
-    	
-		</td>  	
-		 
-	  <td width="10%" nowrap><span class=rqrd>*</span>Remaining Amt:</td>
-    <td width="20%">
-    	<span id=remainingAmt> </span>   	
-    	<input type=hidden name='remainingAmtH' id='remainingAmtH'>
-    </td>
-    
-		<td width="3%" nowrap>
-	  		<IMG id="invoiceCommb" style="align: right;" height=24 alt="" onclick="commentWindow('Comment.html','invoiceComm');"  onselect="commentWindow('Comment.html','invoiceComm');"  <%if ( billNotes.length() >5  ){%>  src="/bke2/images/notes1.png"  <%}else{%> src="images/notes.png" <%}%> width=20 border=1>
+  <!--- Begining of Amount Details --->
+    <div id="client_ide_div">
+        <div id="heading_for_all_form">Amount Details</div>
+          <div id="UI_div">
+             <table border="0" style="margin: 1%;">
+              <tr>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%">Pay Amt</td>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%">Line Total</td>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%">Remaining Amt</td>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%"></td>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%"></td>
+              </tr>
+              <tr>
+                 <td style="font-size: 80%"><input name="payAmt" id="payAmt" value="$<%=payAmtStr%>" onfocus="payAmtFocus(this);" onblur="payAmtBlur(this);"  class="inps" maxlength="15" size="15">
+                  </td>
+                 <td style="font-size: 80%"><span id=lineTotal> </span>
+			       <input type=hidden  name='lineTotalH' id='lineTotalH'></td>
+    	         <td style="font-size: 80%"><span id=remainingAmt> </span>   	
+    	<input type=hidden name='remainingAmtH' id='remainingAmtH'></td> 
+				 <td style="font-size: 80%">
+				 <IMG id="invoiceCommb" style="align: right;" height=24 alt="" onclick="commentWindow('Comment.html','invoiceComm');"  onselect="commentWindow('Comment.html','invoiceComm');"  <%if ( billNotes.length() >5  ){%>  src="/bke2/images/notes1.png"  <%}else{%> src="/bke1/images/notes.png" <%}%> width=20 border=1>
 	  		<input value="<%=billNotes%>"  type="hidden" name="invoiceCommh" id="invoiceCommh" ></input>    	
     		<input type="hidden" name="invoiceComm" id="invoiceComm" ></input>
-		</td>
-    
-    <td width="3%" align=right>    	
-    <input   value='<%=imageURL%>'  type='hidden' name='invoiceImageURL' id='invoiceImageURL'>
-		<IMG style="Z-INDEX: 100; align: right; POSITION: 100" height=24 alt="" name="addImage1"  id="addImage1" onClick="popGetImage('1');"  <%if ( imageURL.length() >5 ){%> src="/bke2/images/image1.png"  <%}else{%> src="images/image.png" <%}%>  width=20 border=1>	  
-	  </td>
-  
-  </tr>
-</table>    	
-    
+				 </td>
+                 <td style="font-size: 80%"><input   value='<%=imageURL%>'  type='hidden' name='invoiceImageURL' id='invoiceImageURL'>
+		           <IMG style="Z-INDEX: 100; align: right; POSITION: 100" height=24 alt="" name="addImage1"  id="addImage1" onClick="popGetImage('1');"  <%if ( imageURL.length() >5 ){%> src="/bke1/images/image1.png"  <%}else{%> src="/bke2/images/image.png" <%}%>  width=20 border=1>
+		         </td>
+              </tr>
+             </table>
+          </div>
+	</div>     
+ <!--- End of Amount Details --->
 
-<!--- End of Invoice Info --->
-
-
-
-<!--- Begining of Line Item Info --->
-
-<table  id="LineItemTbl"  cellpadding="2" width="100%" class="vouch"  bgcolor="#ffffff" border="1">
-  <tr valign="top">  	
-		<td width="5%" nowrap align=middle>Ln # </td>
-    <td width="10%" nowrap  align=middle>Amount </td>
-    <td width="10%" nowrap align=middle>Number</td>
-    <td width="15%" nowrap align=middle>Account Name</td>
-    <td width="15%" nowrap align=middle>Memo(Description)</td>
-    <td width="3%"  align=middle>Line Status</td>
-    <td width="3%" nowrap align=middle>Notes</td>
-  </tr>
-
-
-<%
+  <!--- Start of Status Information --->
+                 <div id="client_ide_div">
+        <div id="heading_for_all_form">Status Information</div>
+          <div id="UI_div">
+             <table border="0" style="margin: 1%;">
+              <tr>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%">Status</td>                 
+              </tr>
+              <tr>
+                 <td style="font-size: 80%"><input name="status"  id="status" value="<%=fromStatus%>" onfocus="statusFocus(this);" onblur="statusBlur(this);"  class="inps" maxlength="15" size="15"></td>              
+                 
+              </tr>
+             </table>
+          </div>
+	</div>
+<!--- End of Status Information --->
+<!--- Start of Line Items --->
+            <div id="client_ide_div">
+        <div id="heading_for_all_form">Line Items</div>
+          <div id="UI_div">
+				             <table  id="LineItemTbl"  cellpadding="0" style="border-color:#EEEEEE; border-width: 1px; border-style: solid;">
+				
+				
+				
+				  <tr valign="top" bgcolor="#EEEEEE" bordercolor="#CECEF6">  	
+					<td  width="5%" nowrap align=middle>Ln # </td>
+				    <td  width="10%" nowrap  align=middle>Amount </td>
+				    <td  width="10%" nowrap align=middle>Number</td>
+				    <td  width="15%" nowrap align=middle>Account Name</td>
+				    <td width="15%" nowrap align=middle>Memo(Description)</td>
+				    <td  width="3%"  align=middle>Line Status</td>
+				    <td  width="3%" nowrap align=middle>Notes</td>
+				  </tr>
+				  
+				  <%
 
 
 
@@ -3670,21 +3683,6 @@ int lineItemCounter=0;
 	 sortOrder="sortorder-AD";
 	Vector resultItemVector =lookup.getEditInfo(itemTableId,  "{'6'.EX."+billId+"}", queryAttributeList, sortAttributes, sortOrder);
 
-String fromLineStatus="";
-String itemAmount="";
-String accountId="";
-String lineNumber="";
-String lineDescription="";
-String accountName="";
-String lineNotes="";
-String lineItemId="";
-String isDeactivated="";
-String accountNumber="";
-
-
-
-
-
 		// Get HashMap from Vector
 		HashMap hashmap4Item = null;
 		        for(int ii = 0; ii <= resultItemVector.size() - 1; ii++)
@@ -3694,52 +3692,48 @@ String accountNumber="";
                 hashmap4Item = (HashMap)resultItemVector.elementAt(ii);
                 
                 itKey = hashmap4Item.keySet().iterator();
-                //itKey1 = itKey;
+                itKey1 = hashmap4Item.keySet().iterator();
                 
                 
                 /*
                 
-Line StatusAPP
-Amount10.00
-Account ID#
-Ln #1
-Description
-Account Name Lookup
+Line Status     APP
+Amount  139.00
+Account ID#     19
+Ln #    1
+Description     Ad Insertions
 Notes
-Line Item ID#2
-Deactivate Line Item0
-            */    
-                 
-  /*            
+Line Item ID#   25
+                
+                
+                
                 while (itKey1.hasNext()) {
         							// Get key
         							keyString = itKey1.next();
         							valueString = hashmap4Item.get(keyString);
         							System.out.println(keyString.toString() +"\t" +valueString.toString());
     						}
+    						
+                */
+
+String fromLineStatus=(String) hashmap4Item.get(itKey.next());
+
+String itemAmount=(String) hashmap4Item.get(itKey.next());
+String accountId=(String) hashmap4Item.get(itKey.next());
+
+String lineNumber=(String) hashmap4Item.get(itKey.next());
+
+String lineDescription=(String) hashmap4Item.get(itKey.next());
+
+String accountName=(String) hashmap4Item.get(itKey.next());
+
+String lineNotes=(String) hashmap4Item.get(itKey.next());
+
+String lineItemId=(String) hashmap4Item.get(itKey.next());
+
+String isDeactivated=(String) hashmap4Item.get(itKey.next());
                 
-*/
-
-fromLineStatus=(String) hashmap4Item.get(itKey.next());
-
-itemAmount=(String) hashmap4Item.get(itKey.next());
-accountId=(String) hashmap4Item.get(itKey.next());
-
-lineNumber=(String) hashmap4Item.get(itKey.next());
-
-lineDescription=(String) hashmap4Item.get(itKey.next());
-
-accountName=(String) hashmap4Item.get(itKey.next());
-
-lineNotes=(String) hashmap4Item.get(itKey.next());
-
-lineItemId=(String) hashmap4Item.get(itKey.next());
-
-isDeactivated=(String) hashmap4Item.get(itKey.next());
-                
-accountNumber=(String) hashmap4Item.get(itKey.next());
-
-
+String accountNumber=(String) hashmap4Item.get(itKey.next());
                 
 %>
 
@@ -3785,7 +3779,7 @@ accountNumber=(String) hashmap4Item.get(itKey.next());
     </td>
     <td width="3%" nowrap align=middle>
     	
-	  		<IMG id="lineItemComm<%=lineItemCounter%>b" style="align: right;" height=24 alt="" onclick="commentWindow('Comment.html?lineCt=<%=lineItemCounter%>','lineItemComm<%=lineItemCounter%>');"  onselect="commentWindow('Comment.html','lineItemComm<%=lineItemCounter%>');"   <%if ( lineNotes.length() >0 ){%> src="/bke2/images/notes1.png" <%}else{%>  src="images/notes.png"  <%}%>  width=20 border=1>
+	  		<IMG id="lineItemComm<%=lineItemCounter%>b" style="align: right;" height=24 alt="" onclick="commentWindow('Comment.html?lineCt=<%=lineItemCounter%>','lineItemComm<%=lineItemCounter%>');"  onselect="commentWindow('Comment.html','lineItemComm<%=lineItemCounter%>');"   <%if ( lineNotes.length() >0 ){%> src="/bke2/images/notes1.png" <%}else{%>  src="/bke2/images/notes.png"  <%}%>  width=20 border=1>
 	  		<input value="<%=lineNotes%>"  type="hidden" name="lineItemComm<%=lineItemCounter%>h" id="lineItemComm<%=lineItemCounter%>h" ></input>    	
     		<input type="hidden" name="lineItemComm<%=lineItemCounter%>" id="lineItemComm<%=lineItemCounter%>" ></input>
 
@@ -3798,52 +3792,80 @@ accountNumber=(String) hashmap4Item.get(itKey.next());
 } // End of Item For Loop
 
 
-   		System.out.println(" @@@@@@@@@@@@@@@@@@@@ END OF FOR LOOP in ITEM");
+   		System.out.println(" @@@@@@@@@@@@@@@@@@@@ END OF FOR LOOP in ITEM rv");
 %>
+				  
+	                     <!-- Invoice tbl tr-->
+				  <tr>
+				  	<td align="left" colspan="7">  		   				
+				 			<button name='AppAll' id='AppAll' class='tbutton'  onClick='setAppAll();'>APP All</button>
+				 			<!--<button  name='duplicate1' id='duplicate1' class='tbutton'  onClick='duplicate();'>Duplicate</button>
+				 			--></td> 	
+				 				
+				 		</tr>	
+ 					   
+					
+				  </table>
+          </div>
+	</div>
 
+<!--- End of Line Items --->
+
+   <!-- Start bottom white div -->
+    <div id="bottom_white_div">
+         
+		         <table  name=InvoiceButtonTbl  id=InvoiceButtonTbl width="100%">
+		          <tr valign="middle">	  	   
+				  <td valign="middle" bordercolor="red" align="center" width="100%">
+				   <button name='return' class='tbutton' onKeyDown=buttonAlert(this)  onClick=saveAndReturn('sr')>SAVE & RETURN</button>	
+                   <button name='return' class='tbutton' onKeyDown=buttonAlert(this)  onClick=saveAndNext()>SAVE & NEXT</button>
+                   <button name='return' class='tbutton' onKeyDown=buttonAlert(this)  onClick=nextBill()>NEXT</button>
+                   <button name='return' class='tbutton'  onKeyDown=buttonAlert(this) onClick=returnQ()>RETURN</button>
+			     </td>
+		       </tr>		   
+		 </table>           
+         
+    </div>
+  <!-- End of bottom white div -->
+
+<!-- end div of the con_table -->
+  </div>
+
+<!-- code add for browser compatibility end here-->
+
+<!--- end of design of the table like the add page --->
+
+<!--- Begining of Group Info --->
+
+
+
+<table class="groupTbl" cellpadding="2" width="100%" bgcolor="#ffffff" border="1">
   
-   
+<input type=hidden name=voucher_date id=voucher_date >
+<input type=hidden name=status_date id=status_date >
+  
+</table>
 
-	<!-- Invoice tbl tr-->
- <!--
-  <tr>
-  	<td align="left" colspan="8">  		   				
- 			<button name='addAllocation' id='addAllocation' class='tbutton'  onClick='insertLineItemRow();'>Line Item</button>
- 			<button name='duplicate' id='duplicate' class='tbutton'  onClick='duplicate();'>Duplicate</button>
- 			</td> 	
- 		</tr>
- -->
+
+<!--- Begining of Invoice Info --->
+
+  	
+    
+
+<!--- End of Invoice Info --->
+
+
+
+<!--- Begining of Line Item Info --->
+
+
  
- 			<td align="right" colspan="5"></td>
-  		<td align="right" colspan="2" >  		   				
- 				<button name='AppAll' id='AppAll' class='tbutton'  onClick='setAppAll();'>APP All</button>
- 			</td>		
-  </table>
- </td>
-</tr> 
  			    
   
 
 
   <!--Begining of Invoice Button Row -->
-<table  name=InvoiceButtonTbl  id=InvoiceButtonTbl width="100%" bgcolor="#ffffff" border="1"  >
-  <tr vAlign=top>
-  	
-  	<td width="10%" nowrap><span class=rqrd>*</span>Status:</td>
-    <td width="15%">
-    	<input name="status"  id="status" value="<%=fromStatus%>" onfocus="statusFocus(this);" onblur="statusBlur(this);"  class="inps" maxlength="15" size="15">    	
-    </td>
-    
-  	
-		<td align="middle" style="color:red"  width="100%" ><b>*</b> required fields
-<button name='return' class='tbutton' onKeyDown=buttonAlert(this)  onClick=saveAndReturn('sr')>Save & Return</button>	
-<button name='return' class='tbutton' onKeyDown=buttonAlert(this)  onClick=saveAndNext()>Save & Next</button>
-<button name='return' class='tbutton' onKeyDown=buttonAlert(this)  onClick=nextBill()>Next</button>
-<button name='return' class='tbutton'  onKeyDown=buttonAlert(this) onClick=returnQ()>Return</button>
-	  </td>
-   </tr>
-   
- </table>      	
+      	
 
  	<input type=hidden name=invCtr id=invCtr value=<%=(invoiceCtr-1)%> >
  	<input type=hidden name=invRowCtr id=invRowCtr  value=<%=invRowCtr%> >
@@ -3854,10 +3876,9 @@ accountNumber=(String) hashmap4Item.get(itKey.next());
 <%}
 
 
-   		System.out.println(" @@@@@@@@@@@@@@@@@@@@ END OF IF for BILL");
+   		System.out.println(" @@@@@@@@@@@@@@@@@@@@ END OF IF for BILL rv");
 %> 			
 
-</table>
 
 <!-- HERE -->
 
@@ -3876,7 +3897,6 @@ accountNumber=(String) hashmap4Item.get(itKey.next());
 						<input type="hidden" name="cid" id="cid" value="<%=cid%>">
 						<input type="hidden" name="vid" id="vid" value="<%=vid%>">
  						<input type="hidden" name="qid" id="qid" value="<%=qid1%>">
- 						<input type="hidden" name="nextVid" id="nextVid" value="<%=nextVid%>">
  						<input type="hidden" name="reportIdArrayStr" id="reportIdArrayStr" value="<%=reportIdArrayStr%>">
  						
 						<input type="hidden" name="mv" id="mv" >
@@ -3903,21 +3923,14 @@ accountNumber=(String) hashmap4Item.get(itKey.next());
  						<input type=hidden name=labCat id=labCat value='<%%>' >
  						<input type=hidden name=labDesc id=labDesc value='<%%>' >
  						<input type=hidden name=linestatusBlurFlag id=linestatusBlurFlag value='0' >
- 						<input type=hidden name=applicationName id=applicationName value=<%=applicationName1%>>
- 						<input type=hidden name=invoiceTableId id=invoiceTableId value=<%=invoiceTableId%>> 						
  						
  						
 </form>
-
-			<table width="100%" border="0" cellspacing="0" cellpadding="0" >
-        <tr>
-          <td valign="top">
-            <div align="center">
-            	<a>Copyright 2010 by DocOrganiz Corporation. All Rights Reserved.</a>            
-            </div>
-          </td>
-        </tr>
-      </table>
+         <!-- code added for browser compatibility starts here-->
+			<div id="footer_des" style="width: 100%; height: 15px; bottom: 0px; position: relative; padding-top: 15px; padding-bottom: 15px; border-top: 1px solid #dbdbdb; font-family:Sans-Serif; font-size: 10px; color:#666666; text-align: center;">
+Copyright 2010 by DocOrganiz Corporation. All Rights Reserved.
+</div>
+<!-- code added for browser compatibility ends here-->
       <input type=hidden name=u id=u value='<%=(String)u%>' >
 </body>
 </html>

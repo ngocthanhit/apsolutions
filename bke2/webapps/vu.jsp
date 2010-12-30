@@ -99,7 +99,7 @@
  
  	if((login.length()<4)||(password==null)||(password.length()<2)){
  		System.out.println("Please logon with your credentials 1");
- 		response.sendRedirect("login.jsp?ac="+ac+"&u="+qbid+"&vid="+vid+"&msg=Please logon with your credentials 1");
+ 		response.sendRedirect("/bke2/login.jsp?ac="+ac+"&u="+qbid+"&vid="+vid+"&msg=Please logon with your credentials 1");
 	 	return;	
 	}
  
@@ -109,7 +109,7 @@
 	
 	if((qbid.length()>0)&&(!qbid.equalsIgnoreCase(login))){	
  		System.out.println("Please logon with your credentials 21");
-		response.sendRedirect("login.jsp?ac="+ac+"&u="+qbid+"&vid="+vid+"&msg=Please logon with your credentials 2");
+		response.sendRedirect("/bke2/login.jsp?ac="+ac+"&u="+qbid+"&vid="+vid+"&msg=Please logon with your credentials 2");
  		return;	
 	}
 	
@@ -117,17 +117,12 @@
 	
    	System.out.println("AFTER DL");
 
-ServletContext context4 = this.getServletContext();  
-	
-				//String invoiceTableId = context4.getInitParameter( "invoiceTableId" ); 
-	
-		
-	
-				String voucherTableId = context4.getInitParameter( "voucherTableId" );  
-				String allocationTableId = context4.getInitParameter( "allocationTableId" );  
-				String agentTableId = context4.getInitParameter( "agentTableId" );  
-				String userInfoTableId = context4.getInitParameter( "userInfoTableId" );
-				String applicationName = context4.getInitParameter( "applicationName" ); 
+String applicationName = "bd77scjh5";
+
+        String voucherTableId = "bdy8ms9iq";
+        String allocationTableId = "bd77scjib";
+				String agentTableId = "bdyvk9utf";
+				String userInfoTableId = "bdyvk9utt";	
   
 
       
@@ -250,7 +245,7 @@ ServletContext context4 = this.getServletContext();
  		if(!qbid.equalsIgnoreCase(login)){
  			System.out.println("login"+login+"\t  qbid"+qbid+"\t vid "+vid);
  			System.out.println("Please logon with the same credentials that you used in Quick Base Application");
- 			response.sendRedirect("login.jsp?ac="+ac+"&u="+qbid+"&vid="+vid+"&msg=Please logon with the same credentials that you used in Quick Base Application");
+ 			response.sendRedirect("/bke2/login.jsp?ac="+ac+"&u="+qbid+"&vid="+vid+"&msg=Please logon with the same credentials that you used in Quick Base Application");
 	 		return;	
 		}
 		
@@ -264,7 +259,7 @@ ServletContext context4 = this.getServletContext();
 			 
 	
 		//if( (cookieuid1.length()==0)&&(cookieuid2.length()==0)&&(cookiepassword.length()==0) ){ 
-			response.sendRedirect("vu.jsp?ac="+ac+"&u="+qbid+"&vid="+vid1); 
+			response.sendRedirect("/bke2/vu.jsp?ac="+ac+"&u="+qbid+"&vid="+vid1); 
 		//}
 		
   }
@@ -278,7 +273,7 @@ ServletContext context4 = this.getServletContext();
 	if( request.getParameter("mv")!=null){
 
 		if( request.getParameter("mv").equals("sn") ){
-			response.sendRedirect("vu.jsp?ac=vu");
+			response.sendRedirect("/bke2/vu.jsp?ac=vu");
 		}else if( request.getParameter("mv").equals("sr") ){
 				response.sendRedirect("https://docorganiz.quickbase.com/db/"+applicationName);
 		}
