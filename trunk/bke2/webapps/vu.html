@@ -3,10 +3,17 @@
    
    ServletContext context = this.getServletContext();  
 	
-	String invoiceTableId = context.getInitParameter( "invoiceTableId" ); 
-	String itemTableId = context.getInitParameter( "itemTableId" );
-	String applicationName1 = context.getInitParameter( "applicationName" );
+	//String invoiceTableId = context.getInitParameter( "invoiceTableId" ); 
+	//String itemTableId = context.getInitParameter( "itemTableId" );
+	//String applicationName1 = context.getInitParameter( "applicationName" );
 
+    //code added for browser compatibility starts here
+    
+     String applicationName1 ="bes8a4tgg";
+     String invoiceTableId = "bd77scjia";
+   String itemTableId = "bd77scjib";
+    
+    //code added for browser compatibility ends here
 	
 //Invoice Column IDs
    
@@ -33,6 +40,7 @@ String  lineStatusTrail_ColID = "24"; //Status String
    String ref = request.getParameter("ref");
 	
    //String u = request.getParameter("u");
+   String u_Ind = request.getParameter("u"); //code added for browser compatibility
    String msg1 = "";
    if(lookup!=null)
    {
@@ -40,7 +48,7 @@ String  lineStatusTrail_ColID = "24"; //Status String
 			if(!lookup.isAuthenticated(login,password)){
 				msg1=lookup.getLoginMessage();
 				System.out.println(" Auth failure "+msg1);
-				response.sendRedirect("login.jsp?ac=vu&u="+u+"&vid="+vid+"&msg="+msg1);
+				response.sendRedirect("/bke2/login.jsp?ac=vu&u="+u+"&vid="+vid+"&msg="+msg1);
  				return;
  			}else{
  	 	lookup.refresh();
@@ -184,7 +192,6 @@ if(disapprovedAmtStr.length()>0){
    
 double residualAmtFloat=reworkAmt+unclassAmt+disapprovedAmt;
 String residualAmt = ""+residualAmtFloat;
-
 	%>
 
 <html>
@@ -199,8 +206,14 @@ String residualAmt = ""+residualAmtFloat;
 	<meta http-equiv="Content-Type" content="text/html">
 	<title>View Panel</title>
 
-	<link rel="stylesheet" href="css/demos.css" media="screen" type="text/css">
+	
 
+     <!-- code added for browser compatibility start here-->
+    
+    <link rel="stylesheet" href="css/demos.css" media="screen" type="text/css">
+    <link rel="stylesheet" type="text/css" href="css/pliot.css" />
+  <!-- code added for browser compatibility ends here-->
+  
 	<style type="text/css">
 	span.rqrd{ color:red; font-weight:bold; margin-right:5px}
 	</style>
@@ -3264,218 +3277,195 @@ function duplicate (){
 </script>
 
 </head>
-<body onload="javascript:<%if(ac.equals("ad")){%>initialize();<%}else{%> edLoad(); <%}%>">
+<body style="background: #FFFBEF; margin: 0px; " onload="javascript:<%if(ac.equals("ad")){%>initialize();<%}else{%> edLoad(); <%}%>">
 
 
 <form method="post" action="#" name="voucherInvoiceAllocation">
 	
-	
-<input type=hidden name=ac id=ac value=<%=ac%>>
+	<input type=hidden name=ac id=ac value=<%=ac%>>
 <input type=hidden name=login id=ac value=<%=login%>>
 <input type=hidden name=password id=ac value=<%=password%>>
 
+<!-- code added for browser compatibility starts here-->
+	<div id="logo_bar">	  
+		<div id="logo_imageLeft"></div>
+		 <div id="logo_image" style="float: right;"></div>
+	</div>
+
+     <div id="nav_bar">
+		<label style="cursor:pointer; float:right;  position:relative; padding:5px;" name='return' id='return' class='tbutton'  onKeyDown="buttonAlert(this)"  onClick=logout('<%=ac%>','<%=vid%>') >Logout</label>
+		<label style=" float:right;  position:relative;  padding:5px;"> | </label>
+		<label style="cursor:pointer; float:right; position:relative;  padding:5px;" class="tbutton" name="refreshBtn" id="refreshBtn" ONCLICK="refreshInfo();">Refresh</label>
+		<label style=" float:right;  position:relative;  padding:5px;"> | </label>
+		<label style=" float:right; position:relative;  padding:5px;" class="user_Lab" name="user_Lab" id="user_Lab" >SignIn Us: <%=u_Ind%></label>
+	</div>
+	
 <!--- Begining of Pre Voucher Buttons --->
 <table class="vouch" width="100%" bgcolor="#ffffff" border="0">
-
-  <tr valign="top">
- 		<td height="60" align="center">
- 				<a href="#"><img src="https://docorganiz.quickbase.com/up/bcscwdzuq/g/rg/eh/va/BKE%20EDocs%201-1%20Logo%20%2003-21-09.jpg" alt="DocOrganiz.com" hspace="10" border="0"></a>
- 		</td>
- 		
-<!--
- 	  <td width="10%" align="right">
- 			<button  class="tbutton" name="refreshBtn" id="refreshBtn" ONCLICK="refreshInfo();">Refresh</button>
- 		</td>
--->
- 	<input type="hidden" id="errorMessageHidden" name="errorMessageHidden"></input> 
-
+  <tr valign="top"> 		
+ 	<!--<input type="hidden" id="errorMessageHidden" name="errorMessageHidden"></input> 
  	<td width="80%" align="center" style="color:red" ><span id="errorMessage"></span></td> 	
-
- 	<td width="10%" align="right">
- 		<button  class="tbutton" name="refreshBtn" id="refreshBtn" ONCLICK="refreshInfo();">Refresh</button>
- 		<button name='return' id='return' class='tbutton'  onKeyDown=buttonAlert(this)  onClick=logout('<%=logoutac%>','<%=vid%>') >Logout</button>
- 	</td>
-
- 	</tr>
+ 	--></tr>
 </table>
 <!--- End of Pre Voucher Buttons --->
 
-<!--- Begining of Group Info --->
+<!--- start of design of the table like the add page --->
 
-
-<table class="groupTbl" cellpadding="2" width="100%" bgcolor="#ffffff" border="1">
-  
-<input type=hidden name=voucher_date id=voucher_date >
-<input type=hidden name=status_date id=status_date >
-  <tr >
-    <td width="6%" nowrap><span class=rqrd>*</span>Client Name:</td>
-    <td width="14%">    	
-    	<span ><%=clientName%></span>
-    	<!--
-    	<TextArea rows="2" cols="20"  maxlength="20" size="20" name="clientName" id="clientName" class="inps" onfocus="clientNameFocus(this);" onblur="clientNameBlur(this);" ><%=clientName%></textArea>
-    	-->
-    	<input  value="<%=clientId%>" type=hidden name=clientId id=clientId >
-	</td>
-	  <td width="9%" nowrap><span class=rqrd>*</span>Franchise Name:</td>
-    <td width="10%">    	
-		 <span id='franchiseName' style='align : middle;'> <%=franchiseName%></span> 
-		</td>
-	<td width="1%" align="left" nowrap><span class=rqrd>*</span>Id:</td>
-    <td width="5%">
-    	<span id='franchiseId' style='align : middle;'>  <%=franchiseId%>  </span>
-	  		<input value="<%=franchiseId%>" type=hidden name="franchiseIdh" id="franchiseIdh" >
-    </td>
- </tr>
-</table>
-
-
-<!--- Begining of Invoice Info --->
-
-<table class="InvoiceTbl" cellpadding="2" width="100%" bgcolor="#ffffff" border="1">
-	
-  <tr valign="top">  	
-		<input type=hidden  name='invoiceId' id='invoiceId'  value="<%=billId%>"  >
-	  <td width="5%" nowrap><span class=rqrd>*</span>Vendor:</td>
-    <td width="20%">    	
-    	    	
-    	<span ><%=vendorName%></span>
-    	<!--
-  <TextArea  rows="2" cols="20"  maxlength="20" size="20" name="vendor" id="vendor" class="inps" onfocus="vendorFocus(this);" onblur="vendorBlur(this);"   ><%=vendorName%></textArea>
-    	
-    	<input name="vendor" id="vendor" onfocus="vendorFocus(this);" onblur="vendorBlur(this);"  class="inps" maxlength="45" size="45">
-    	-->
-		<input  value="<%=vendorId%>"  type=hidden  name='vendorId' id='vendorId'>
-		</td>  	
-	  <td width="10%" nowrap><span class=rqrd>*</span>Invoice #:</td>
-    <td width="10%">
-    	<span ><%=invoiceNumber%></span>
-    	
-    	<input  type=hidden value="<%=invoiceNumber%>" name="invoiceNumber" id="invoiceNumber" onfocus="invoiceNumberFocus(this);" onblur="invoiceNumberBlur(this);"  class="inps" maxlength="24" size="24"></td>
-			
-		</td>  	
-	  <td width="10%" nowrap><span class=rqrd>*</span>Inv Date:</td>
-    <td width="15%">
-    	<span ><%=invoiceDate%></span>
-    	<!--    	
-    	    	
-    	<input  value="<%=invoiceDate%>" type="text" name="invoiceDate" id="invoiceDate"   onfocus="invoiceDateFocus(this);"  onblur="invoiceDateBlur(this);"  class="inps" maxlength="15" size="15">
-    <img src="images/dateImg.gif" id="invoiceDateImg" style="cursor: pointer; border: 1px solid red;" title="Invoice Date selector"  onmouseover="this.style.background='red';" onmouseout="this.style.background=''" />
-    	
-    		-->
-    	</td>
-		</td>
-  </tr>
-  
-  <tr valign="top">  	
-	  <td width="10%" nowrap><span class=rqrd>*</span>Inv Amt:</td>
-    <td width="15%">
-    	<span >$<%=invoiceAmt%></span>
-    	     	
-    	<input  type=hidden value="<%=invoiceAmt%>" name="invoiceAmt" id="invoiceAmt" onfocus="invoiceAmtFocus(this);" onblur="invoiceAmtBlur(this);"  class="inps" maxlength="15" size="15"></td>
-			
-		</td>  	
-				<!--	
-	  <td width="10%" nowrap><span class=rqrd>*</span>Pay Amt #:</td>
-    <td width="15%">    	
-    	<span id=payAmt> </span>
-			<input type=hidden  name='payAmtH' id='payAmtH'>
-		</td>  	
-		-->
-		
-		<td width="10%" nowrap><span class=rqrd>*</span>Line Total:</td>
-    <td width="15%">    	
-    	<span id=lineTotal> </span>
-			<input type=hidden  name='lineTotalH' id='lineTotalH'>
-		</td>  	
-
-	  <td width="10%" nowrap><span class=rqrd>*</span>Inv Due:</td>
-    <td width="15%">
-    	<span ><%=invoiceDueDate%></span>
-    	<!--      	    	
-    	<input  value="<%=invoiceDueDate%>" name="invoiceDueDate" id="invoiceDueDate" onfocus="invoiceDueDateFocus(this);" onblur="invoiceDueDateBlur(this);"  class="inps" maxlength="15" size="15">
-    	<img src="images/dateImg.gif" id="invoiceDueDateImg" style="cursor: pointer; border: 1px solid red;" title="Invoice Date selector"  onmouseover="this.style.background='red';" onmouseout="this.style.background=''" />
-    	
-		-->
-    	</td>
-  </tr>
-  
-  <tr valign="top">  	
-	 <!--  
-	  <td width="10%" nowrap><span class=rqrd>*</span>Status:</td>
-    <td width="15%">
-    	<span ><%=fromStatus%></span>
-    		
-    </td>  	
+<div id="con_table">
+      <div id="top_blue_div">         
+		         <table  name=InvoiceButtonTbl  id=InvoiceButtonTbl width="100%">
+		          <tr valign="middle">	  	   
+				  <td valign="middle" bordercolor="red" align="center" width="100%">
+				   <button name='return' class='tbutton'  onKeyDown=buttonAlert(this) onClick=returnQ()>RETURN</button>				
+					
+			     </td>
+		       </tr>	   
+		 </table>        
+       </div>
+       
+    <!-- start of the client identification -->
+    <div id="client_ide_div">
+          	 
+          <input type=hidden name=voucher_date id=voucher_date >
+          <input type=hidden name=status_date id=status_date >
+        <div id="heading_for_all_form">Client Identification</div>
+          <div id="UI_div">
+             <table border="0" style="margin: 1%;">
+              <tr>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%">Client ID#</td>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%">Franchise Name</td>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%">ID#</td>
+              </tr>
+              <tr>
+                 <td style="font-size: 80%;"><span ><%=clientName%></span>
+                 <input  value="<%=clientId%>" type=hidden name=clientId id=clientId >
+    	         
+                 </td>
+                 <td style="font-size: 80%"><span id='franchiseName' style='align : middle;'><%=franchiseName%></span></td>
+                 <td style="font-size: 80%"><span id='franchiseId' style='align : middle;'><%=franchiseId%></span>
+	  		<input value="<%=franchiseId%>" type=hidden name="franchiseIdh" id="franchiseIdh" ></td>
+              </tr>
+             </table>
+          </div>
+	</div>
+    <!-- end of the client identification -->   
     
-	  <td width="10%" nowrap><span class=rqrd>*</span>Residual Amt:</td>
-    <td width="20%">    	
-    	
-    	<span id=residualAmt></span>   	
-    	<input value="<%=residualAmt%>"  type=hidden name='residualAmtH' id='residualAmtH'>
-    	
-    </td>
-   
-	 
-	  <td width="10%" nowrap><span class=rqrd>*</span>Status:</td>
-    <td width="15%">
-    	<input name="status"  id="status" onfocus="statusFocus(this);" onblur="statusBlur(this);"  class="inps" maxlength="15" size="15">    	
-    </td> 
-	  <td width="10%" nowrap><span class=rqrd>*</span>Residual Amt:</td>
-    <td width="20%">
-    	<span id=residualAmt> </span>   	
-    	<input type=hidden name='residualAmtH' id='residualAmtH'>
-    </td>
-   --> 
-    
-	  <td width="10%" nowrap><span class=rqrd>*</span>Pay Amt:</td>
-    <td width="15%">
-    	<span id="payAmt"></span> 
-    	<input type=hidden name="payAmtH" id="payAmtH" ></td>
-		</td>  	
-		 
-	  <td width="10%" nowrap><span class=rqrd>*</span>Remaining Amt:</td>
-    <td width="20%">
-    	<span id=remainingAmt> </span>   	
-    	<input type=hidden name='remainingAmtH' id='remainingAmtH'>
-    </td>
-    
-		<td width="3%" nowrap>
-			
-	  		<IMG id="invoiceCommb" style="align: right;" height=24 alt="" onclick="commentWindow('cvu.html','invoiceComm');"  onselect="commentWindow('cvu.html','invoiceComm');"   <%if ( billNotes.length() >0 ){%> src="/bke2/images/notes1.png" <%}else{%>  src="images/notes.png"  <%}%>  width=20 border=1>
+    <!--- Begining of Vendor Submitting Bill --->
+	<div id="client_ide_div">
+	        <div id="heading_for_all_form">Vendor Submitting Bill</div>
+	          <div id="UI_div">
+	             <table border="0" style="margin: 1%;">
+	              <tr>
+	                  <input type=hidden  name='invoiceId' id='invoiceId'  value="<%=billId%>"  >
+	                 <td style="font-size: 80%; font-weight: bold;" width="20%">Vendor ID#</td>                 
+	              </tr>
+	              <tr >
+	                 <td style="font-size: 80%"><span ><%=vendorName%></span>    	
+		            <input  value="<%=vendorId%>"  type=hidden  name='vendorId' id='vendorId'>	                 
+	                 </td>	                 
+	              </tr>
+	             </table>
+	          </div>
+		</div>
+     <!--- End of Pre Vendor Submitting Bill --->   
+     
+     <!--- Begining of Invoice Information --->
+    <div id="client_ide_div">
+        <div id="heading_for_all_form">Invoice Information</div>
+          <div id="UI_div">
+             <table border="0" style="margin: 1%;">
+              <tr>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%">Invoice #</td>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%">Inv Date</td>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%">Inv Due</td>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%">Inv Amt</td>
+              </tr>
+              <tr>
+                 <td style="font-size: 80%"> <span ><%=invoiceNumber%></span>    	
+    	          <input type=hidden value="<%=invoiceNumber%>" name="invoiceNumber" id="invoiceNumber" onfocus="invoiceNumberFocus(this);" onblur="invoiceNumberBlur(this);"  class="inps" maxlength="24" size="24"></td>
+                 <td style="font-size: 80%"><span ><%=invoiceDate%></span>    	
+    	              <img src="/bke2/images/dateImg.gif" id="invoiceDateImg" style="cursor: pointer; border: 1px solid red;" title="Invoice Date selector"  onmouseover="this.style.background='red';" onmouseout="this.style.background=''" />
+    	         </td>
+                 <td style="font-size: 80%"><span ><%=invoiceDueDate%></span>    	
+    	           <img src="/bke2/images/dateImg.gif" id="invoiceDueDateImg" style="cursor: pointer; border: 1px solid red;" title="Invoice Date selector"  onmouseover="this.style.background='red';" onmouseout="this.style.background=''" />
+    	         </td>
+                 <td style="font-size: 80%"><span >$<%=invoiceAmt%></span>    	  	
+    	           <input type=hidden  value="<%=invoiceAmt%>" name="invoiceAmt" id="invoiceAmt" onfocus="invoiceAmtFocus(this);" onblur="invoiceAmtBlur(this);"  class="inps" maxlength="15" size="15"></td>			 
+                 </td>
+              </tr>
+             </table>
+          </div>
+	</div>
+  <!--- End of Invoice Information ---> 
+  
+  <!--- Begining of Amount Details --->
+    <div id="client_ide_div">
+        <div id="heading_for_all_form">Amount Details</div>
+          <div id="UI_div">
+             <table border="0" style="margin: 1%;">
+              <tr>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%">Pay Amt</td>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%">Line Total</td>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%">Remaining Amt</td>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%"></td>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%"></td>
+              </tr>
+              <tr>
+                 <td style="font-size: 80%">
+                  </td>
+                 <td style="font-size: 80%"><span id=lineTotal> </span>
+			       <input type=hidden  name='lineTotalH' id='lineTotalH'></td>
+    	         <td style="font-size: 80%"><span id=remainingAmt> </span>   	
+    	<input type=hidden name='remainingAmtH' id='remainingAmtH'></td> 
+				 <td style="font-size: 80%">
+				 <IMG id="invoiceCommb" style="align: right;" height=24 alt="" onclick="commentWindow('Comment.html','invoiceComm');"  onselect="commentWindow('Comment.html','invoiceComm');"  <%if ( billNotes.length() >5  ){%>  src="/bke2/images/notes1.png"  <%}else{%> src="/bke2/images/notes.png" <%}%> width=20 border=1>
 	  		<input value="<%=billNotes%>"  type="hidden" name="invoiceCommh" id="invoiceCommh" ></input>    	
     		<input type="hidden" name="invoiceComm" id="invoiceComm" ></input>
-    		
-	  		
-		</td>
-    
-    <td width="3%" align=right>    	
-    <input   value='<%=imageURL%>'  type='hidden' name='invoiceImageURL' id='invoiceImageURL'>
-		<IMG style="Z-INDEX: 100; align: right; POSITION: 100" height=24 alt="" name="addImage1"  id="addImage1" onClick="popGetImage('1');"  <%if ( imageURL.length() >5 ){%> src="/bke2/images/image1.png"  <%}else{%> src="images/image.png" <%}%>   width=20 border=1>	  
-	  </td>
-  
-  </tr>
-</table>    	
-    
+				 </td>
+                 <td style="font-size: 80%"><input   value='<%=imageURL%>'  type='hidden' name='invoiceImageURL' id='invoiceImageURL'>
+		           <IMG style="Z-INDEX: 100; align: right; POSITION: 100" height=24 alt="" name="addImage1"  id="addImage1" onClick="popGetImage('1');"  <%if ( imageURL.length() >5 ){%> src="/bke2/images/image1.png"  <%}else{%> src="/bke2/images/image.png" <%}%>  width=20 border=1>
+		         </td>
+              </tr>
+             </table>
+          </div>
+	</div>     
+ <!--- End of Amount Details --->
 
-<!--- End of Invoice Info --->
-
-
-
-<!--- Begining of Line Item Info --->
-
-<table  id="LineItemTbl"  cellpadding="2" width="100%" class="vouch"  bgcolor="#ffffff" border="1">
-  <tr valign="top">  	
-		<td width="5%" nowrap align=middle>Ln # </td>
-    <td width="10%" nowrap  align=middle>Amount </td>
-    <td width="10%" nowrap align=middle>Number</td>
-    <td width="15%" nowrap align=middle>Account Name</td>
-    <td width="15%" nowrap align=middle>Memo(Description)</td>
-    <td width="3%"  align=middle>Line Status</td>
-    <td width="3%" nowrap align=middle>Notes</td>
-  </tr>
-
-
-<%
+  <!--- Start of Status Information --->
+                 <div id="client_ide_div">
+        <div id="heading_for_all_form">Status Information</div>
+          <div id="UI_div">
+             <table border="0" style="margin: 1%;">
+              <tr>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%">Status</td>                 
+              </tr>
+              <tr>
+                 <td style="font-size: 80%"><input name="status"  id="status" value="<%=fromStatus%>" onfocus="statusFocus(this);" onblur="statusBlur(this);"  class="inps" maxlength="15" size="15"></td>              
+                 
+              </tr>
+             </table>
+          </div>
+	</div>
+<!--- End of Status Information --->
+<!--- Start of Line Items --->
+            <div id="client_ide_div">
+        <div id="heading_for_all_form">Line Items</div>
+          <div id="UI_div">
+				             <table  id="LineItemTbl"  cellpadding="0" style="border-color:#EEEEEE; border-width: 1px; border-style: solid;">
+				
+				
+				
+				  <tr valign="top" bgcolor="#EEEEEE" bordercolor="#CECEF6" style="font-size: 80%">  	
+					<td  width="5%" nowrap align=middle>Ln # </td>
+				    <td  width="10%" nowrap  align=middle>Amount </td>
+				    <td  width="10%" nowrap align=middle>Number</td>
+				    <td  width="15%" nowrap align=middle>Account Name</td>
+				    <td width="15%" nowrap align=middle>Memo(Description)</td>
+				    <td  width="3%"  align=middle>Line Status</td>
+				    <td  width="3%" nowrap align=middle>Notes</td>
+				  </tr>
+				  
+				  <%
 
 
 
@@ -3484,7 +3474,7 @@ int	invoiceCtr = 1;
 int	invRowCtr  = 1;
 int lineItemCounter=0;
     
-   queryAttributeList="14.3.22.28.15.23.27.29.30";
+   queryAttributeList="14.3.22.28.15.23.27.29.30.70";
 	 sortAttributes="14";
 	 sortOrder="sortorder-AD";
 	Vector resultItemVector =lookup.getEditInfo(itemTableId,  "{'6'.EX."+billId+"}", queryAttributeList, sortAttributes, sortOrder);
@@ -3522,7 +3512,7 @@ Line Item ID#   25
     						
                 */
 
-String lineStatus=(String) hashmap4Item.get(itKey.next());
+String fromLineStatus=(String) hashmap4Item.get(itKey.next());
 
 String itemAmount=(String) hashmap4Item.get(itKey.next());
 String accountId=(String) hashmap4Item.get(itKey.next());
@@ -3537,12 +3527,14 @@ String lineNotes=(String) hashmap4Item.get(itKey.next());
 
 String lineItemId=(String) hashmap4Item.get(itKey.next());
 
+String isDeactivated=(String) hashmap4Item.get(itKey.next());
+                
 String accountNumber=(String) hashmap4Item.get(itKey.next());
                 
 %>
 
 
-<tr valign="middle">  	
+<tr valign="middle" style="font-size: 80%;">  	
 		<input type=hidden  name='lineItemId<%=lineItemCounter%>' id='lineItemId1<%=lineItemCounter%>' value='<%=lineItemId%>' >
       <td width="5%" nowrap align=middle> 
     	<input value='<%=lineNumber%>'  type='hidden' id='lineNumber<%=lineItemCounter%>'  name='lineNumber<%=lineItemCounter%>'  >
@@ -3551,22 +3543,22 @@ String accountNumber=(String) hashmap4Item.get(itKey.next());
     
     <td width="10%" nowrap  align=middle>
     	<span >$<%=itemAmount%></span>
-    	<input  value='<%=itemAmount%>'  type=hidden name="lineItemAmt<%=lineItemCounter%>"  id="lineItemAmt<%=lineItemCounter%>" class="inps" >
+    	      	  
+    	<input  type=hidden value='$<%=itemAmount%>' name="lineItemAmt<%=lineItemCounter%>"  id="lineItemAmt<%=lineItemCounter%>" class="inps" onfocus=lineItemAmtFocus(this,'<%=lineItemCounter%>');  onblur=lineItemAmtBlur(this,'<%=lineItemCounter%>');  maxlength="15" size="15">
+    	
     </td>
     
     <td width="10%" nowrap align=middle>
     	<input value='<%=accountId%>'  type='hidden' id='accountId<%=lineItemCounter%>'  name='accountId<%=lineItemCounter%>'  >
     	<span ><%=accountNumber%></span>
-    		    	  
+    	    	  
     	<input value='<%=accountNumber%>'   type=hidden  name="accountNumber<%=lineItemCounter%>"  id="accountNumber<%=lineItemCounter%>" class="inps" onfocus="accountNumberFocus(this,<%=lineItemCounter%>);"  onblur="accountNumberBlur(this,<%=lineItemCounter%>);" size="8">
-    
-    	<!--      	  
-    	<input value='<%=accountNumber%>' type="text" name="accountNumber<%=lineItemCounter%>"  id="accountNumber<%=lineItemCounter%>" class="inps" onfocus="accountNumberFocus(this,<%=lineItemCounter%>);"  onblur="accountNumberBlur(this,<%=lineItemCounter%>);" size="8">
-    	-->
+    	
     </td>
     
     <td width="15%" nowrap align=middle>
     	<span ><%=accountName%></span>
+    	
     	<!--      	  
     		<TextArea name="accountName<%=lineItemCounter%>"  id="accountName<%=lineItemCounter%>" class="inps" onfocus="accountNameFocus(this,<%=lineItemCounter%>);"  onblur="accountNameBlur(this,<%=lineItemCounter%>);"  rows="2" cols="20"><%=accountName%></TextArea>
     	-->
@@ -3578,18 +3570,16 @@ String accountNumber=(String) hashmap4Item.get(itKey.next());
     		-->
     </td>
     <td width="3%"  align=middle>
-    	<span ><%=lineStatus%></span>
-    	      	  
-    		<input type=hidden value='<%=lineStatus%>'  name="lineStatus<%=lineItemCounter%>"  id="lineStatus<%=lineItemCounter%>" onfocus=lineStatusFocus(this,'<%=lineItemCounter%>');  onblur=lineStatusBlur(this,'<%=lineItemCounter%>'); class="inps"   maxlength="12" size="10">
-    		
+    		<input type=hidden value='<%=fromLineStatus%>'  name="fromLineStatus<%=lineItemCounter%>"  id="fromLineStatus<%=lineItemCounter%>" >
+    		<input value='<%=fromLineStatus%>'  name="lineStatus<%=lineItemCounter%>"  id="lineStatus<%=lineItemCounter%>" onfocus=lineStatusFocus(this,'<%=lineItemCounter%>');  onChange="document.getElementById('linestatusBlurFlag').value=='1';"   onblur=lineStatusBlur(this,'<%=lineItemCounter%>'); class="inps"   maxlength="12" size="10">
     </td>
     <td width="3%" nowrap align=middle>
     	
-    
-	  		<IMG id="lineItemComm<%=lineItemCounter%>b" style="align: right;" height=24 alt="" onclick="commentWindow('cvu.html?lineCt=<%=lineItemCounter%>','lineItemComm<%=lineItemCounter%>');"  onselect="commentWindow('cvu.html','lineItemComm<%=lineItemCounter%>');"   <%if ( lineNotes.length() >0 ){%> src="/bke2/images/notes1.png" <%}else{%>  src="images/notes.png"  <%}%>  width=20 border=1>
+	  		<IMG id="lineItemComm<%=lineItemCounter%>b" style="align: right;" height=24 alt="" onclick="commentWindow('Comment.html?lineCt=<%=lineItemCounter%>','lineItemComm<%=lineItemCounter%>');"  onselect="commentWindow('Comment.html','lineItemComm<%=lineItemCounter%>');"   <%if ( lineNotes.length() >0 ){%> src="/bke2/images/notes1.png" <%}else{%>  src="/bke2/images/notes.png"  <%}%>  width=20 border=1>
 	  		<input value="<%=lineNotes%>"  type="hidden" name="lineItemComm<%=lineItemCounter%>h" id="lineItemComm<%=lineItemCounter%>h" ></input>    	
     		<input type="hidden" name="lineItemComm<%=lineItemCounter%>" id="lineItemComm<%=lineItemCounter%>" ></input>
-    		
+
+    	
     </td>
 </tr>
 
@@ -3598,47 +3588,80 @@ String accountNumber=(String) hashmap4Item.get(itKey.next());
 } // End of Item For Loop
 
 
-   		System.out.println(" @@@@@@@@@@@@@@@@@@@@ END OF FOR LOOP in ITEM");
+   		System.out.println(" @@@@@@@@@@@@@@@@@@@@ END OF FOR LOOP in ITEM rv");
 %>
+				  
+	                     <!-- Invoice tbl tr-->
+				  <tr>
+				  	<td align="left" colspan="7">  		   				
+				 			<button name='AppAll' id='AppAll' class='tbutton'  onClick='setAppAll();'>APP All</button>
+				 			<!--<button  name='duplicate1' id='duplicate1' class='tbutton'  onClick='duplicate();'>Duplicate</button>
+				 			--></td> 	
+				 				
+				 		</tr>	
+ 					   
+					
+				  </table>
+          </div>
+	</div>
 
+<!--- End of Line Items --->
+
+   <!-- Start bottom white div -->
+    <div id="bottom_white_div">
+         
+		         <table  name=InvoiceButtonTbl  id=InvoiceButtonTbl width="100%">
+		          <tr valign="middle">	  	   
+				  <td valign="middle" bordercolor="red" align="center" width="100%">
+				   <button name='return' class='tbutton' onKeyDown=buttonAlert(this)  onClick=saveAndReturn('sr')>SAVE & RETURN</button>	
+                   <button name='return' class='tbutton' onKeyDown=buttonAlert(this)  onClick=saveAndNext()>SAVE & NEXT</button>
+                   <button name='return' class='tbutton' onKeyDown=buttonAlert(this)  onClick=nextBill()>NEXT</button>
+                   <button name='return' class='tbutton'  onKeyDown=buttonAlert(this) onClick=returnQ()>RETURN</button>
+			     </td>
+		       </tr>		   
+		 </table>           
+         
+    </div>
+  <!-- End of bottom white div -->
+
+<!-- end div of the con_table -->
+  </div>
+
+<!-- code added for browser compatibility end here-->
+
+<!--- end of design of the table like the add page --->
+
+<!--- Begining of Group Info --->
+
+
+
+<table class="groupTbl" cellpadding="2" width="100%" bgcolor="#ffffff" border="1">
   
-   
+<input type=hidden name=voucher_date id=voucher_date >
+<input type=hidden name=status_date id=status_date >
+  
+</table>
 
-	<!-- Invoice tbl tr-->
- <!--
-  <tr>
-  	<td align="left" colspan="8">  		   				
- 			<button name='addAllocation' id='addAllocation' class='tbutton'  onClick='insertLineItemRow();'>Line Item</button>
- 			<button name='duplicate' id='duplicate' class='tbutton'  onClick='duplicate();'>Duplicate</button>
- 			</td> 	
- 		</tr>
- -->		
-  </table>
- </td>
-</tr> 
+
+<!--- Begining of Invoice Info --->
+
+  	
+    
+
+<!--- End of Invoice Info --->
+
+
+
+<!--- Begining of Line Item Info --->
+
+
+ 
  			    
   
 
 
   <!--Begining of Invoice Button Row -->
-<table  name=InvoiceButtonTbl  id=InvoiceButtonTbl width="100%" bgcolor="#ffffff" border="1"  >
-  <tr vAlign=top>
-  	
-  	<td width="10%" nowrap><span class=rqrd>*</span>Status:</td>
-    <td width="15%">
-    	<span id="status"><%=fromStatus%></span>
-     </td>
-    
-    
-		<td align="middle" style="color:red"  width="100%" ><b>*</b> required fields
-			<!--
-					<button name='return' id='return' class='tbutton'  onKeyDown=buttonAlert(this)  >Next Bill</button>
-			-->		
-					<button name='return' class='tbutton'  onKeyDown=buttonAlert(this) onClick=returnQ()>Return</button>
-	  </td>
-   </tr>
-   
- </table>      	
+      	
 
  	<input type=hidden name=invCtr id=invCtr value=<%=(invoiceCtr-1)%> >
  	<input type=hidden name=invRowCtr id=invRowCtr  value=<%=invRowCtr%> >
@@ -3649,10 +3672,9 @@ String accountNumber=(String) hashmap4Item.get(itKey.next());
 <%}
 
 
-   		System.out.println(" @@@@@@@@@@@@@@@@@@@@ END OF IF for BILL");
+   		System.out.println(" @@@@@@@@@@@@@@@@@@@@ END OF IF for BILL rv");
 %> 			
 
-</table>
 
 <!-- HERE -->
 
@@ -3692,15 +3714,11 @@ String accountNumber=(String) hashmap4Item.get(itKey.next());
 
 
 
-			<table width="100%" border="0" cellspacing="0" cellpadding="0" >
-        <tr>
-          <td valign="top">
-            <div align="center">
-            	<a>Copyright 2009 by DocOrganiz Corporation. All Rights Reserved.</a>            
-            </div>
-          </td>
-        </tr>
-      </table>
-      <input type=hidden name=u id=u value='<%=(String)u%>' >
+			 <!-- code added for browser compatibility starts here-->
+			 <input type=hidden name=u id=u value='<%=(String)u%>' >
+      		<div id="footer_des" style="width: 100%; height: 15px; bottom: 0px; position: relative; padding-top: 15px; padding-bottom: 15px; border-top: 1px solid #dbdbdb; font-family:Sans-Serif; font-size: 10px; color:#666666; text-align: center;">
+				Copyright 2010 by DocOrganiz Corporation. All Rights Reserved.
+			</div>
+             <!-- code added for browser compatibility ends here-->
 </body>
 </html>

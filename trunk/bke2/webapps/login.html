@@ -1,8 +1,6 @@
 <%
    
-   ServletContext context = this.getServletContext();  
-	
-	
+   ServletContext context = this.getServletContext();	
 	String applicationName1 = context.getInitParameter( "applicationName" );
 	
 %>
@@ -13,6 +11,13 @@
 <html>
 <head>
   <title>Login Page</title>
+  
+  <!-- code added for browser compatibility starts here-->
+    <link rel="stylesheet" type="text/css" href="css/IndDesign.css" />
+    <script type="text/javascript" src="js/IndJavaScript.js"></script>
+  <!-- code added for browser compatibility end here-->
+  
+  
 	<script type="text/javascript" src="js/actb.js"></script>
 	<script type="text/javascript" src="js/common.js"></script>
 	<script type="text/javascript">
@@ -42,10 +47,12 @@ function setCookie(name, value, days){ //set cookie value
   	window.location = "https://docorganiz.quickbase.com/db/"+applicationName;
 	}
 
-  function returnAC(){
+  //code for browser compatibility changed the function name from returnAC tp returnACNew
+  function returnACNew(){
     //alert('Hello');
 
-	document.getElementById('lac').value='lac';
+	
+	document.loginForm.submit(); //code for browser compatibility
 
 	//pausecomp(500);
 	//	document.loginForm.submit();
@@ -180,46 +187,43 @@ function pausecomp(millis)
 </script>
 </head>
 <body onload='initialize();'>
+ <!-- code added for browser compatibility starts here-->
+       <div id="logo_bar">	  
+	 	<div id="logo_image"></div>
+	</div>
+	
+	<div id="nav_bar"></div>	 
+	<div id="sign_lab">Sign In</div>
+    
+    <div id="content_body" align="center">
+    <div id="ind_error_msg"><%=msg%></div>
+    <div id="Signin_outln_div" align="center">
+  <!-- code added for browser compatibility ends here-->
+  
+   
 <FORM METHOD="POST" name="loginForm" action="login.jsp">
-<TABLE BORDER=1 align=center>
-
-	<TR>
-
-		<td width="80%" colspan=2 align="center" style="color:red" ><span id="msg"><%=msg%></span></td>
-	</TR>
-
-
-	<TR>
-		<TD ALIGN="right">Login:</TD>
-		<TD><INPUT TYPE="text" NAME='login'  ID='login' value='<%=cookieuid1+"@"+cookieuid2%>'  size="45" maxlength="45" ></INPUT></TD>
-	</TR>
-	<TR>
-		<TD ALIGN="right">Password:</TD>
-		<TD><INPUT TYPE="password" NAME="password" value='<%=cookiepassword%>' ></INPUT></TD>
-	</TR>
-	<TR>
-			<TD ALIGN="right">Image Window Resolution:</TD>
-			<TD><INPUT TYPE='text' NAME='image'  ID='image' value="<%=cookieimage%>" onfocus=setVar() onblur=fillResolution(this) size='56' maxlength='56' ></INPUT></TD>
-	</TR>
-	<TR>
-		<TD ALIGN="right">Select Image File Folder</TD>
-		<TD>
-			<INPUT TYPE='text' NAME='lastImageLocation'  ID='lastImageLocation' value="<%=cookielastImageLocation%>"  onChange=document.getElementById('lastImageLocation').value=this.value;  maxlength="100" size="70"></INPUT>
-			<input type=file name=browse style="display: none;">
-			<input type=button onClick="browse.click();lastImageLocation.value=browse.value;removeFileName(document.getElementById('lastImageLocation').value);"  value="Browse..">
-		</TD>
-	</TR>
-
-	<TR>
-		<TD ALIGN="right"></TD>
-		<TD><input id="loginButton" name="loginButton" type="submit" onClick="returnAC();" value="Login">
-
-
-		<button name="return" onClick="returnQ()">Return</button>
-		</TD>
-	</TR>
-
-</TABLE>
+  <!-- code added for browser compatibility starts here-->
+    <div id="Signin_div" align="center">
+		<label>Login:</label>
+		<INPUT TYPE="text" NAME='login'  ID='login' style="width:270px;" value='<%=cookieuid1+"@"+cookieuid2%>'  size="45" maxlength="45" ></INPUT>
+	
+		<label>Password:</label>
+		<INPUT TYPE="password" NAME="password" id="password" style="width:270px;" value='<%=cookiepassword%>' ></INPUT>
+		
+		<label>Image Window Resolution:</label>
+		<INPUT TYPE='text' NAME='image'  ID='image' style="width:270px;" value="<%=cookieimage%>" onfocus=setVar() onblur=fillResolution(this) size='56' maxlength='56' ></INPUT>
+	
+		<label>Select Image File Folder:</label>		
+			<INPUT TYPE='text' NAME='lastImageLocation'  ID='lastImageLocation' style="width:200px; display:none;"  value="<%=cookielastImageLocation%>"  onChange=document.getElementById('lastImageLocation').value=this.value; ></INPUT>
+			
+			<input type=file id="browse_ind" name=browse style="width:270px; display: block;"/>
+			
+			<button id="browse_bnt" class="button_brw" style="display: none;" onClick="browse.click();lastImageLocation.value=browse.value;removeFileName(document.getElementById('lastImageLocation').value);"  value="Browse">Browse</button>
+			<button id="loginButton" class="button" name="loginButton" type="button" onClick="returnAC();" value="Login">Login</button>
+     		<button  id="return_bnt" class="button" name="return" onClick="returnQ()">Return</button>
+		
+     </div>
+   <!-- code added for browser compatibility ends here-->
 	<INPUT TYPE="hidden" name="u" VALUE="<%=request.getParameter("u")%>"></INPUT>
 	<INPUT TYPE="hidden" name="ac" VALUE="<%=request.getParameter("ac")%>"></INPUT>
 	<INPUT TYPE="hidden" name="vid" VALUE="<%=request.getParameter("vid")%>"></INPUT>
@@ -232,5 +236,12 @@ function pausecomp(millis)
 
 
 </FORM>
+	<!-- code added for browser compatibility starts here-->	  
+	</div>
+	</div>
+	   <div id="footer_des">
+	     Copyright 2010 by DocOrganiz Corporation. All Rights Reserved.      
+	   </div>	     
+	  <!-- code added for browser compatibility ends here-->
 </body>
 </html>

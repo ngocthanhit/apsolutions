@@ -34,7 +34,7 @@ String  lineStatusTrail_ColID = "24"; //Status String
 
    String ref = request.getParameter("ref");
 	
-	
+	String u_Ind = request.getParameter("u"); //code added for browser compatibility
    //String u = request.getParameter("u");
    String msg1 = ""; 
    
@@ -89,8 +89,10 @@ String  lineClassificationArray  = lookup.getLineClassificationArray();
 	<meta http-equiv="Content-Type" content="text/html">
 	<title>Add Panel</title>
 
+    <!-- code added for browser compatibility starts here-->
 	<link rel="stylesheet" href="css/demos.css" media="screen" type="text/css">
-
+	<link rel="stylesheet" href="css/pliot.css" media="screen" type="text/css">
+    <!-- code added for browser compatibility ends here-->
 	<style type="text/css">
 	span.rqrd{ color:red; font-weight:bold; margin-right:5px}
 	#wrapper1{ 
@@ -3067,10 +3069,24 @@ function duplicate (){
 
 </head>
 
-<body onload="javascript:<%if(ac.equals("ad")){%>initialize();<%}else{%> edLoad(); <%}%>">
+<body style="background: #FFFBEF; margin: 0px; " onload="javascript:<%if(ac.equals("ad")){%>initialize();<%}else{%> edLoad(); <%}%>">
 
 <form method="post" action="#" name="voucherInvoiceAllocation">
-	<div id="wrapper">
+    <!-- code add for browser compatibility start here-->
+      <div id="logo_bar">	  
+	<div id="logo_imageLeft"></div>
+	 <div id="logo_image" style="float: right;"></div>
+   </div>   
+   
+   <div id="nav_bar">
+		<label style="cursor:pointer; float:right;  position:relative; padding:5px;" name='return' id='return' class='tbutton'  onKeyDown="buttonAlert(this)"  onClick=logout('<%=ac%>','<%=vid%>') >Logout</label>
+		<label style=" float:right;  position:relative;  padding:5px;"> | </label>
+		<label style="cursor:pointer; float:right; position:relative;  padding:5px;" class="tbutton" name="refreshBtn" id="refreshBtn" ONCLICK="refreshInfo();">Refresh</label>
+		<label style=" float:right;  position:relative;  padding:5px;"> | </label>
+		<label style=" float:right; position:relative;  padding:5px;" class="user_Lab" name="user_Lab" id="user_Lab" >SignIn Us: <%=u_Ind%></label>
+	</div>
+   <!-- code add for browser compatibility ends here-->
+	
 	
 <input type=hidden name=ac id=ac value=<%=ac%>>
 <input type=hidden name=login id=ac value=<%=login%>>
@@ -3079,187 +3095,232 @@ function duplicate (){
 
 <!--- Begining of Pre Voucher Buttons --->
 <table class="vouch" width="100%" bgcolor="#ffffff" border="0">
-
-  <tr valign="top">
- 		<td height="60" align="center">
- 				<a href="#"><img src="https://docorganiz.quickbase.com/up/bcscwdzuq/g/rg/eh/va/BKE%20EDocs%201-1%20Logo%20%2003-21-09.jpg" alt="DocOrganiz.com" hspace="10" border="0"></a>
- 		</td>
- 		
- 	<input type="hidden" id="errorMessageHidden" name="errorMessageHidden"></input> 
-
- 	<td width="80%" align="center" style="color:red" ><span id="errorMessage"></span></td> 	
-
- 	<td width="10%" align="right">
- 		<button  class="tbutton" name="refreshBtn" id="refreshBtn" ONCLICK="refreshInfo();">Refresh</button>
- 		<button name='return' id='return' class='tbutton'  onKeyDown=buttonAlert(this)  onClick=logout('<%=ac%>','<%=vid%>') >Logout</button>
- 	</td>
-
+  <tr valign="top"> 		
+ 	<input type="hidden" id="errorMessageHidden" name="errorMessageHidden"></input>
+ 	<td width="80%" align="center" style="color:red" ><span id="errorMessage"></span></td>
  	</tr>
 </table>
 <!--- End of Pre Voucher Buttons --->
 
+<!-- code added for browser compatibility starts here-->
+
+<!--- start of design of the table like the add page --->
+<div id="con_table">
+    <div id="top_blue_div">
+         
+		         <table  name=InvoiceButtonTbl  id=InvoiceButtonTbl width="100%">
+		          <tr valign="middle">	  	   
+				  <td valign="middle" bordercolor="red" align="center" width="100%">
+				   <button style="" name='return' id='nextBillButton'  name='nextBillButton' class='tbutton'  onKeyDown='buttonAlert(this);'  onClick='nextBill();'>NEXT BILL</button>
+		
+					<%if(ac.equals("ad")){%>
+						<button style="" name='return' class='tbutton' onKeyDown=buttonAlert(this)  onClick=saveAndReturn('sr')>SAVE & RETURN</button>
+						<button style="" name='return' class='tbutton' onKeyDown=buttonAlert(this)  onClick=saveAndNext()>SAVE & NEXT</button>
+		
+						<button style="" name='skip' class='tbutton' onKeyDown=buttonAlert(this)  onClick=skip1()>SKIP</button>
+					<%}%>
+					<button style="" name='return' class='tbutton'  onKeyDown=buttonAlert(this) onClick=returnQ()>RETURN</button>
+			     </td>
+		       </tr>		   
+		 </table>           
+         
+    </div>
+    
+     <!-- start of the client identification -->
+    <div id="client_ide_div">
+        <div id="heading_for_all_form">Client Identification</div>
+          <div id="UI_div">
+             <table border="0" style="margin: 1%;">
+              <tr>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%">Client ID#</td>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%">Franchise Name</td>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%">ID#</td>
+              </tr>
+              <tr>
+                 <td>
+                 <TextArea rows="1" cols="20"  maxlength="20" size="20" name="clientName" id="clientName" class="inps" onfocus="clientNameFocus(this);" onblur="clientNameBlur(this);" ><%if(mv.equals("nb")){ %><%=session.getAttribute("clientName")%><%}%></textArea>
+    	         <input type=hidden name=clientId id=clientId <%if(mv.equals("nb")){%> value=<%=session.getAttribute("clientId")%> <%}%> >
+                 </td>
+                 <td style="font-size: 80%"><span id='franchiseName' style='align : middle;'> </span></td>
+                 <td style="font-size: 80%"><span id='franchiseId' style='align : middle;'> </span><input type=hidden name="franchiseIdh" id="franchiseIdh" ></td>
+              </tr>
+             </table>
+          </div>
+	</div>
+    <!-- end of the client identification -->
+     
+     <!--- Begining of Vendor Submitting Bill --->
+	<div id="client_ide_div">
+	        <div id="heading_for_all_form">Vendor Submitting Bill</div>
+	          <div id="UI_div">
+	             <table border="0" style="margin: 1%;">
+	              <tr>
+	                 <td style="font-size: 80%; font-weight: bold;" width="20%">Vendor ID#</td>
+	                 
+	              </tr>
+	              <tr>
+	                 <td>
+	                 <TextArea rows="1" cols="20"  maxlength="20" size="20" name="vendor" id="vendor" class="inps" onfocus="vendorFocus(this);" onblur="vendorBlur(this);"></textArea>
+	                 <input type=hidden  name='vendorId' id='vendorId'>
+	                 <input type=hidden  name='invoiceId' id='invoiceId' value='III'>
+	                 </td>	                 
+	              </tr>
+	             </table>
+	          </div>
+		</div>
+      <!--- End of Pre Vendor Submitting Bill --->    
+      
+      <!--- Begining of Invoice Information --->
+    <div id="client_ide_div">
+        <div id="heading_for_all_form">Invoice Information</div>
+          <div id="UI_div">
+             <table border="0" style="margin: 1%;">
+              <tr>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%">Invoice #</td>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%">Inv Date</td>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%">Inv Due</td>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%">Inv Amt</td>
+              </tr>
+              <tr>
+                 <td style="font-size: 80%"><input name="invoiceNumber" id="invoiceNumber" onfocus="invoiceNumberFocus(this);" onblur="invoiceNumberBlur(this);"  class="inps" maxlength="24" size="24"></td>
+                 <td style="font-size: 80%"><input type="text" name="invoiceDate" id="invoiceDate"   onfocus="invoiceDateFocus(this);"  onblur="invoiceDateBlur(this);"  class="inps" maxlength="15" size="15"><img src="/bke2/images/dateImg.gif" id="invoiceDateImg" style="cursor: pointer; border: 1px solid red;" title="Invoice Date selector"  onmouseover="this.style.background='red';" onmouseout="this.style.background=''" /></td>
+                 <td style="font-size: 80%"><input name="invoiceDueDate" id="invoiceDueDate" onfocus="invoiceDueDateFocus(this);" onblur="invoiceDueDateBlur(this);"  class="inps" maxlength="15" size="15"><img src="/bke2/images/dateImg.gif" id="invoiceDueDateImg" style="cursor: pointer; border: 1px solid red;" title="Invoice Date selector"  onmouseover="this.style.background='red';" onmouseout="this.style.background=''" /></td>
+                 <td style="font-size: 80%"><input name="invoiceAmt" id="invoiceAmt" onfocus="invoiceAmtFocus(this);" onblur="invoiceAmtBlur(this);"  class="inps" maxlength="15" size="15"></td>
+              </tr>
+             </table>
+          </div>
+	</div>
+   <!--- End of Invoice Information --->
+    <!--- Begining of Amount Details --->
+    <div id="client_ide_div">
+        <div id="heading_for_all_form">Amount Details</div>
+          <div id="UI_div">
+             <table border="0" style="margin: 1%;">
+              <tr>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%">Pay Amt</td>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%">Line Total</td>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%">Remaining Amt</td>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%"></td>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%"></td>
+              </tr>
+              <tr>
+                 <td style="font-size: 80%"><input name="payAmt" id="payAmt" onfocus="payAmtFocus(this);" onblur="payAmtBlur(this);"  class="inps" maxlength="15" size="15"></td>
+                 <td style="font-size: 80%"><span id=lineTotal> </span>
+			     <input type=hidden  name='lineTotalH' id='lineTotalH'></td>
+                 <td style="font-size: 80%"><span id=remainingAmt> </span>   	
+    	          <input type=hidden name='remainingAmtH' id='remainingAmtH'></td>
+    	         <td style="font-size: 80%"><IMG id="invoiceCommb" style="align: right;" height=24 alt="" onclick="commentWindow('Comment.html','invoiceComm');"  onselect="commentWindow('Comment.html','invoiceComm');"  src="/bke2/images/notes.png" width=20 border=1>
+				<input type=hidden name='invoiceCommh' id='invoiceCommh'>
+				<input type=hidden name='invoiceComm' id='invoiceComm'></td> 
+				<td style="font-size: 80%">
+				 <input type=hidden name='invoiceImageURL1' id='invoiceImageURL1'>
+		<IMG style="Z-INDEX: 100; align: right; POSITION: 100" height=24 alt="" name="addImage1"  id="addImage1" onClick="popGetImage('1');"  src="/bke2/images/image.png" width=20 border=1>
+				</td>
+                 
+              </tr>
+             </table>
+          </div>
+	</div>
+     
+    <!--- End of Amount Details --->
+    <!--- Start of Status Information --->
+                 <div id="client_ide_div">
+        <div id="heading_for_all_form">Status Information</div>
+          <div id="UI_div">
+             <table border="0" style="margin: 1%;">
+              <tr>
+                 <td style="font-size: 80%; font-weight: bold;" width="20%">Status</td>                 
+              </tr>
+              <tr>
+                 <td style="font-size: 80%"><input name="status"  id="status" onfocus="statusFocus(this);" onblur="statusBlur(this);"  class="inps" maxlength="15" size="15"></td>              
+                 
+              </tr>
+             </table>
+          </div>
+	</div>
+    <!--- End of Status Information --->
+    
+    <!--- Start of Line Items --->
+            <div id="client_ide_div">
+        <div id="heading_for_all_form">Line Items</div>
+          <div id="UI_div">
+				             <table  id="LineItemTbl"  cellpadding="0" style="border-color:#EEEEEE; border-width: 1px; border-style: solid;">
+				
+				<!-- invtbl -->
+				
+				<%
+				
+				int	invoiceCtr = 1;
+				int invRowCtr=2;
+				
+				 %>
+				
+				  <tr valign="top" bgcolor="#EEEEEE" bordercolor="#CECEF6">  	
+					<td  width="5%" nowrap align=middle>Ln # </td>
+				    <td  width="10%" nowrap  align=middle>Amount </td>
+				    <td  width="10%" nowrap align=middle>Number</td>
+				    <td  width="15%" nowrap align=middle>Account Name</td>
+				    <td width="15%" nowrap align=middle>Memo(Description)</td>
+				    <td  width="3%"  align=middle>Line Status</td>
+				    <td  width="3%" nowrap align=middle>Notes</td>
+				  </tr>
+				  
+				   
+					<!-- Invoice tbl tr-->
+				  <tr>
+				  	<td align="left" colspan="7">  		   				
+				 			<button name='addAllocation' id='addAllocation' class='tbutton'  onClick='insertLineItemRow();'>Line Item</button>
+				 			<button  name='duplicate1' id='duplicate1' class='tbutton'  onClick='duplicate();'>Duplicate</button>
+				 			</td> 	
+				 				
+				 		</tr>
+				  </table>
+          </div>
+	</div>
+
+   <!--- End of Line Items --->      
+    
+     <!-- Start bottom white div -->
+    <div id="bottom_white_div">
+         
+		         <table  name=InvoiceButtonTbl  id=InvoiceButtonTbl width="100%">
+		          <tr valign="middle">	  	   
+				  <td valign="middle" bordercolor="red" align="center" width="100%">
+				   <button style="" name='return' id='nextBillButton'  name='nextBillButton' class='tbutton'  onKeyDown='buttonAlert(this);'  onClick='nextBill();'>Next Bill</button>
+		
+					<%if(ac.equals("ad")){%>
+						<button style="" name='return' class='tbutton' onKeyDown=buttonAlert(this)  onClick=saveAndReturn('sr')>SAVE & RETURN</button>
+						<button style="" name='return' class='tbutton' onKeyDown=buttonAlert(this)  onClick=saveAndNext()>SAVE & NEXT</button>
+		
+						<button style="" name='skip' class='tbutton' onKeyDown=buttonAlert(this)  onClick=skip1()>SKIP</button>
+					<%}%>
+					<button style="" name='return' class='tbutton'  onKeyDown=buttonAlert(this) onClick=returnQ()>RETURN</button>
+			     </td>
+		       </tr>		   
+		 </table>           
+         
+    </div>
+  <!-- End of bottom white div -->
+</div>
+<!--- end of design of the table like the add page --->
+<!-- code added for browser compatibility ends here-->
+
 <!--- Begining of Group Info --->
 
-<table class="groupTbl" cellpadding="2" width="100%" bgcolor="#ffffff" border="1">
-  
- <input type=hidden name=activateFlag id=activateFlag >
- <input type=hidden name=statusH id=statusH <%if(mv.equals("nb")){%> value=<%=session.getAttribute("statusH")%> <%}%> >
- <input type=hidden name=workflowId id=workflowId <%if(mv.equals("nb")){%> value=<%=session.getAttribute("workflowId")%> <%}%>  >
- 
-<input type=hidden name=voucher_date id=voucher_date >
-<input type=hidden name=status_date id=status_date >
-  <tr >
-    <td width="6%" nowrap><span class=rqrd>*</span>Client Name:</td>
-    <td width="14%">    	
-    	<TextArea rows="2" cols="20"  maxlength="20" size="20" name="clientName" id="clientName" class="inps" onfocus="clientNameFocus(this);" onblur="clientNameBlur(this);" ><%if(mv.equals("nb")){ %><%=session.getAttribute("clientName")%><%}%></textArea>
-    	<input type=hidden name=clientId id=clientId <%if(mv.equals("nb")){%> value=<%=session.getAttribute("clientId")%> <%}%> >
-  
-	</td>
-	  <td width="9%" nowrap><span class=rqrd>*</span>Franchise Name:</td>
-    <td width="10%">    	
-		 <span id='franchiseName' style='align : middle;'> </span> 
-		</td>
-	<td width="1%" align="left" nowrap ><span class=rqrd>*</span>Id:</td>
-    <td width="5%" colspan=2>
-    	<span id='franchiseId' style='align : middle;'> </span>
-	  		<input type=hidden name="franchiseIdh" id="franchiseIdh" >
-    </td> 
- </tr>
-</table>
+
 
 
 <!--- Begining of Invoice Info --->
 
-<table class="InvoiceTbl" cellpadding="2" width="100%" bgcolor="#ffffff" border="1">
-	
-  <tr valign="top">  	
-		<input type=hidden  name='invoiceId' id='invoiceId' value='III'>
-	  <td width="5%" nowrap><span class=rqrd>*</span>Vendor:</td>
-    <td width="20%">    	
-    	
-  <TextArea rows="2" cols="20"  maxlength="20" size="20" name="vendor" id="vendor" class="inps" onfocus="vendorFocus(this);" onblur="vendorBlur(this);"   ></textArea>
-		<input type=hidden  name='vendorId' id='vendorId'>
-		</td>  	
-	  <td width="10%" nowrap><span class=rqrd>*</span>Invoice #:</td>
-    <td width="10%">    	
-    	<input name="invoiceNumber" id="invoiceNumber" onfocus="invoiceNumberFocus(this);" onblur="invoiceNumberBlur(this);"  class="inps" maxlength="24" size="24"></td>
-		</td>  	
-	  <td width="10%" nowrap><span class=rqrd>*</span>Inv Date:</td>
-    <td width="15%">    	
-    	<input type="text" name="invoiceDate" id="invoiceDate"   onfocus="invoiceDateFocus(this);"  onblur="invoiceDateBlur(this);"  class="inps" maxlength="15" size="15">
-    	
-    	<img src="images/dateImg.gif" id="invoiceDateImg" style="cursor: pointer; border: 1px solid red;" title="Invoice Date selector"  onmouseover="this.style.background='red';" onmouseout="this.style.background=''" />
-    	
-    	</td>
-		</td>
-  </tr>
-  
-  <tr valign="top">  	
-	  <td width="10%" nowrap><span class=rqrd>*</span>Inv Amt:</td>
-    <td width="15%">    	
-    	<input name="invoiceAmt" id="invoiceAmt" onfocus="invoiceAmtFocus(this);" onblur="invoiceAmtBlur(this);"  class="inps" maxlength="15" size="15"></td>
-		</td>  
-		<td width="10%" nowrap><span class=rqrd>*</span>Line Total:</td>
-    <td width="15%">    	
-    	<span id=lineTotal> </span>
-			<input type=hidden  name='lineTotalH' id='lineTotalH'>
-		</td>  	
-		
-	  <td width="10%" nowrap><span class=rqrd>*</span>Inv Due:</td>
-    <td width="15%">    	
-    	<input name="invoiceDueDate" id="invoiceDueDate" onfocus="invoiceDueDateFocus(this);" onblur="invoiceDueDateBlur(this);"  class="inps" maxlength="15" size="15">    	
-    	<img src="images/dateImg.gif" id="invoiceDueDateImg" style="cursor: pointer; border: 1px solid red;" title="Invoice Date selector"  onmouseover="this.style.background='red';" onmouseout="this.style.background=''" />
-    	
-		</td>
-  </tr>
-  
-  <tr valign="top">  	
-    
-	  <td width="10%" nowrap><span class=rqrd>*</span>Pay Amt:</td>
-    <td width="15%">    	
-    	<input name="payAmt" id="payAmt" onfocus="payAmtFocus(this);" onblur="payAmtBlur(this);"  class="inps" maxlength="15" size="15"></td>
-		</td>  	
-		 
-	  <td width="10%" nowrap><span class=rqrd>*</span>Remaining Amt:</td>
-    <td width="20%">
-    	<span id=remainingAmt> </span>   	
-    	<input type=hidden name='remainingAmtH' id='remainingAmtH'>
-    </td>
-    
-		<td width="3%" nowrap>
-	  		<IMG id="invoiceCommb" style="align: right;" height=24 alt="" onclick="commentWindow('Comment.html','invoiceComm');"  onselect="commentWindow('Comment.html','invoiceComm');"  src="images/notes.png" width=20 border=1>
-				<input type=hidden name='invoiceCommh' id='invoiceCommh'>
-				<input type=hidden name='invoiceComm' id='invoiceComm'>
-				
-		</td>
-    
-    <td width="3%" align=right>    	
-    <input type=hidden name='invoiceImageURL1' id='invoiceImageURL1'>
-		<IMG style="Z-INDEX: 100; align: right; POSITION: 100" height=24 alt="" name="addImage1"  id="addImage1" onClick="popGetImage('1');"  src="images/image.png" width=20 border=1>	  
-	  </td>
-  
-  </tr>
-</table>    	
+     	
 
-<table  id="LineItemTbl"  cellpadding="2" width="100%" class="vouch"  bgcolor="#ffffff" border="1">
 
-<!-- invtbl -->
-
-<%
-
-int	invoiceCtr = 1;
-int invRowCtr=2;
-
- %>
-
-  <tr valign="top">  	
-		<td width="5%" nowrap align=middle>Ln # </td>
-    <td width="10%" nowrap  align=middle>Amount </td>
-    <td width="10%" nowrap align=middle>Number</td>
-    <td width="15%" nowrap align=middle>Account Name</td>
-    <td width="15%" nowrap align=middle>Memo(Description)</td>
-    <td width="3%"  align=middle>Line Status</td>
-    <td width="3%" nowrap align=middle>Notes</td>
-  </tr>
-  
-   
-	<!-- Invoice tbl tr-->
-  <tr>
-  	<td align="left" colspan="7">  		   				
- 			<button name='addAllocation' id='addAllocation' class='tbutton'  onClick='insertLineItemRow();'>Line Item</button>
- 			<button name='duplicate1' id='duplicate1' class='tbutton'  onClick='duplicate();'>Duplicate</button>
- 			</td> 	
- 		</tr>
-  </table>
- </td>
-</tr> 
  			    
   
  	<!--endof Invoice Row -->
  
   <!--Begining of Invoice Button Row -->
-<table  name=InvoiceButtonTbl  id=InvoiceButtonTbl width="100%" bgcolor="#ffffff" border="1"  >
-  <tr vAlign=top>
-  	
-  	<td width="10%" nowrap><span class=rqrd>*</span>Status:</td>
-    <td width="15%">
-    	<input name="status"  id="status" onfocus="statusFocus(this);" onblur="statusBlur(this);"  class="inps" maxlength="15" size="15" <%if(mv.equals("nb")){%> value=<%=session.getAttribute("status")%> <%}%>>    	
-    </td>
-    
-		<td align="middle" style="color:red"  width="100%" ><b>*</b> required fields
-		<button name='return' id='nextBillButton'  name='nextBillButton' class='tbutton'  onKeyDown='buttonAlert(this);'  onClick='nextBill();'>Next Bill</button>
-
-			<%if(ac.equals("ad")){%>
-				<button name='return' class='tbutton' onKeyDown=buttonAlert(this)  onClick=saveAndReturn('sr')>Save & Return</button>
-				<button name='return' class='tbutton' onKeyDown=buttonAlert(this)  onClick=saveAndNext()>Save & Next</button>
-
-				<button name='skip' class='tbutton' onKeyDown=buttonAlert(this)  onClick=skip1()>Skip</button>
-			<%}%>
-			<button name='return' class='tbutton'  onKeyDown=buttonAlert(this) onClick=returnQ()>Return</button>
-	    </td>
-   </tr>
    
- </table>     
  	<input type=hidden name=invCtr id=invCtr <%if(ac.equals("ad")){%>value=1<%}else{%>value=<%=(invoiceCtr-1)%> <%}%> >
  	<input type=hidden name=invRowCtr id=invRowCtr  <%if(ac.equals("ad")){%>value=2<%}else{%>value=<%=invRowCtr%> <%}%> >
  	<input type=hidden name=lineCtr id=lineCtr  <%if(ac.equals("ad")){%>value=0<%}else{%>value=<%=invRowCtr%> <%}%> >
@@ -3267,7 +3328,7 @@ int invRowCtr=2;
 
   <!--End of Invoice Button Row -->
  			
-</table>
+
 
 <!-- HERE -->
 
@@ -3366,18 +3427,12 @@ int invRowCtr=2;
     
     
 </script>
-
-			<table width="100%" border="0" cellspacing="0" cellpadding="0" >
-        <tr>
-          <td valign="top">
-            <div align="center">
-            	<a>Copyright 2010 by DocOrganiz Corporation. All Rights Reserved.</a>            
-            </div>
-          </td>
-        </tr>
-      </table>
-      <input type=hidden name=u id=u value='<%=(String)u%>' >
-      
+             <!-- code added for browser compatibility starts here-->
+			 <input type=hidden name=u id=u value='<%=(String)u%>' >
+      		<div id="footer_des" style="width: 100%; height: 15px; bottom: 0px; position: relative; padding-top: 15px; padding-bottom: 15px; border-top: 1px solid #dbdbdb; font-family:Sans-Serif; font-size: 10px; color:#666666; text-align: center;">
+				Copyright 2010 by DocOrganiz Corporation. All Rights Reserved.
+			</div>
+             <!-- code added for browser compatibility ends here-->
     </div>
 </body>
 </html>

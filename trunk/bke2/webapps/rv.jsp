@@ -36,16 +36,14 @@
    String vid1 = request.getParameter("vid1");
 	 String nxt = request.getParameter("nxt");
 	 String reportIdArrayStr = request.getParameter("reportIdArrayStr");
- 
- 		 if(nxt!=null){
-				System.out.println("nxt has values and vid1 is "+vid1+"  vid is"+vid);
-			  vid=vid1;
-				
-		}else{
-			System.out.println("nxt has no values");
-		}
- 		 
- 		 
+
+	 if(nxt == null) 	{
+	 		
+	 		nxt="0";	 		
+	 	}else{
+	 		System.out.println(" VID1 is "+vid1);
+	 		vid = vid1;
+	 	}
 	 		//System.out.println(" nxt value "+nxt+" Current VID is "+vid);
 	 	
 
@@ -111,7 +109,7 @@
  
  	if((login.length()<4)||(password==null)||(password.length()<2)){
  		System.out.println("Please logon with your credentials 1");
- 		response.sendRedirect("login.jsp?ac=rv&u="+qbid+"&vid="+vid+"&msg=Please logon with your credentials 1");
+ 		response.sendRedirect("/bke2/login.jsp?ac=rv&u="+qbid+"&vid="+vid+"&msg=Please logon with your credentials");
 	 	return;	
 	}
  
@@ -121,21 +119,20 @@
 	
 	if((qbid.length()>0)&&(!qbid.equalsIgnoreCase(login))){	
  		System.out.println("Please logon with your credentials 21");
-		response.sendRedirect("login.jsp?ac=rv&u="+qbid+"&vid="+vid+"&msg=Please logon with your credentials 2");
+		response.sendRedirect("/bke2/login.jsp?ac=rv&u="+qbid+"&vid="+vid+"&msg=Please logon with your credentials");
  		return;	
 	}
 	
 
 	
    	System.out.println("AFTER DL");
-   	ServletContext context = this.getServletContext();  
-	
-	
-	String applicationName = context.getInitParameter( "applicationName" );
 
+String applicationName = "bd77scjh5";
 
-
-	
+        String voucherTableId = "bdy8ms9iq";
+        String allocationTableId = "bd77scjib";
+				String agentTableId = "bdyvk9utf";
+				String userInfoTableId = "bdyvk9utt";	
 
 	//Sufix CID is Column ID
 
@@ -231,7 +228,13 @@
   System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 222"); 	      
   
 	  System.out.println("Just load the page for insert @@@@  should be NULLL   :"+request.getParameter("vendor_id"));  	
-	  
+	  /*
+	  if( (cookieuid1.length()==0)&&(cookieuid2.length()==0)&&(cookiepassword.length()==0) ){ 
+			response.sendRedirect("/bke2/login.jsp?ac=rv&u="+qbid+"&vid="+vid); 
+		}
+		*/
+		//isLogged2QB
+		
 		boolean isAuthenticated;
 	  isAuthenticated = lookup.isAuthenticated(login,password);
 	  System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ isAuthenticated  "+isAuthenticated); 	     
@@ -256,7 +259,7 @@
  		if(!qbid.equalsIgnoreCase(login)){
  			System.out.println("login"+login+"\t  qbid"+qbid+"\t vid "+vid);
  			System.out.println("Please logon with the same credentials that you used in Quick Base Application");
- 			response.sendRedirect("login.jsp?ac=rv&u="+qbid+"&vid="+vid+"&msg=Please logon with the same credentials that you used in Quick Base Application");
+ 			response.sendRedirect("/bke2/login.jsp?ac=rv&u="+qbid+"&vid="+vid+"&msg=Please logon with the same credentials that you used in Quick Base Application");
 	 		return;	
 		}
 		
@@ -270,7 +273,7 @@
 			 
 	
 		//if( (cookieuid1.length()==0)&&(cookieuid2.length()==0)&&(cookiepassword.length()==0) ){ 
-		//	response.sendRedirect("rv.jsp?ac=rv&u="+qbid+"&vid="+vid1); 
+		//	response.sendRedirect("/bke1/rv.jsp?ac=rv&u="+qbid+"&vid="+vid1); 
 		//}
 		
   }
@@ -285,7 +288,7 @@
 	if( request.getParameter("mv")!=null){
 
 		if( request.getParameter("mv").equals("sn") ){
-
+			//response.sendRedirect("/bke1/rv.jsp?ac=rv");
 		}else if( request.getParameter("mv").equals("sr") ){
 				response.sendRedirect("https://docorganiz.quickbase.com/db/"+applicationName);
 		}
