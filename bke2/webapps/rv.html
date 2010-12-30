@@ -88,7 +88,7 @@ String  lineStatusTrail_ColID = "24"; //Status String
 			if(!lookup.isAuthenticated(login,password)){
 				msg1=lookup.getLoginMessage();
 				System.out.println(" Auth failure "+msg1);
-				response.sendRedirect("/bke1/login.jsp?ac=rv&u="+u+"&vid="+vid+"&msg="+msg1);
+				response.sendRedirect("/bke2/login.jsp?ac=rv&u="+u+"&vid="+vid+"&msg="+msg1);
  				return;
  			}else{
  	 	lookup.refresh();
@@ -718,7 +718,7 @@ function insertLineItemRow()
 				var x6=x.insertCell(6)
     		x6.width="3%";
     		x6.align="middle";																						
-     		x6.innerHTML="<IMG id='lineItemComm"+nextCtr+"b' style='align: right; ' height=24 alt='' onclick=commentWindow('Comment.html','lineItemComm"+nextCtr+"');  onselect='commentWindow('Comment.html','lineItemComm"+nextCtr+"');' src='/bke1/images/notes.png' width=20 border=1><input   type='hidden' name='lineItemComm"+nextCtr+"h' id='lineItemComm"+nextCtr+"h' ></input><input type='hidden' name='lineItemComm"+nextCtr+"' id='lineItemComm"+nextCtr+"' ></input>";
+     		x6.innerHTML="<IMG id='lineItemComm"+nextCtr+"b' style='align: right; ' height=24 alt='' onclick=commentWindow('Comment.html','lineItemComm"+nextCtr+"');  onselect='commentWindow('Comment.html','lineItemComm"+nextCtr+"');' src='/bke2/images/notes.png' width=20 border=1><input   type='hidden' name='lineItemComm"+nextCtr+"h' id='lineItemComm"+nextCtr+"h' ></input><input type='hidden' name='lineItemComm"+nextCtr+"' id='lineItemComm"+nextCtr+"' ></input>";
 //alert('>>>>>>>> 8');
 
 
@@ -775,14 +775,14 @@ function insertLineItemRow()
 
 				var x5=x.insertCell(6)
     		x5.width="5%";																						
-     		x5.innerHTML="<IMG id='allocationComm"+aId+"l"+toBinsertedAt+"b' style='align: right; ' height=24 alt='' onclick=commentWindow('Comment.html','allocationComm"+aId+"l"+toBinsertedAt+"');  onselect='commentWindow('Comment.html','allocationComm"+aId+"l"+toBinsertedAt+"');' src='/bke1/images/notes.png' width=20 border=1><input   type='hidden' name='allocationComm"+aId+"l"+toBinsertedAt+"h' id='allocationComm"+aId+"l"+toBinsertedAt+"h' ></input><input type='hidden' name='allocationComm"+aId+"l"+toBinsertedAt+"' id='allocationComm"+aId+"l"+toBinsertedAt+"' ></input>";
+     		x5.innerHTML="<IMG id='allocationComm"+aId+"l"+toBinsertedAt+"b' style='align: right; ' height=24 alt='' onclick=commentWindow('Comment.html','allocationComm"+aId+"l"+toBinsertedAt+"');  onselect='commentWindow('Comment.html','allocationComm"+aId+"l"+toBinsertedAt+"');' src='/bke2/images/notes.png' width=20 border=1><input   type='hidden' name='allocationComm"+aId+"l"+toBinsertedAt+"h' id='allocationComm"+aId+"l"+toBinsertedAt+"h' ></input><input type='hidden' name='allocationComm"+aId+"l"+toBinsertedAt+"' id='allocationComm"+aId+"l"+toBinsertedAt+"' ></input>";
 
 
 
 				var x6=x.insertCell(7)
     		x6.width="5%";																										
     		
- 				var hiddenX6Str="<IMG id='addAgent"+aId+"l"+toBinsertedAt+"'   name='addAgent'addAllocation"+aId+"l"+toBinsertedAt+"' style='align: right; ' height=24 alt='' onclick= src='/bke1/images/popup.png' width=20 border=1>";
+ 				var hiddenX6Str="<IMG id='addAgent"+aId+"l"+toBinsertedAt+"'   name='addAgent'addAllocation"+aId+"l"+toBinsertedAt+"' style='align: right; ' height=24 alt='' onclick= src='/bke2/images/popup.png' width=20 border=1>";
  				hiddenX6Str=hiddenX6Str+" <input   type=hidden name='allocationComm"+aId+"l"+toBinsertedAt+"' id='allocationComm"+aId+"l"+toBinsertedAt+"' ><input type=hidden name='allocationComm"+aId+"l"+toBinsertedAt+"' id='allocationComm"+aId+"l"+toBinsertedAt+"' > <input  type=hidden name='agentId"+aId+"l"+toBinsertedAt+"'  id='agentId"+aId+"l"+toBinsertedAt+"' > <input  type=hidden name='empId"+aId+"l"+toBinsertedAt+"'  id='empId"+aId+"l"+toBinsertedAt+"' > <input  type=hidden name='empName"+aId+"l"+toBinsertedAt+"'  id='empName"+aId+"l"+toBinsertedAt+"'>  <input  type=hidden name='labCat"+aId+"l"+toBinsertedAt+"'  id='labCat"+aId+"l"+toBinsertedAt+"'>  <input type=hidden name='labDesc"+aId+"l"+toBinsertedAt+"'  id='labDesc"+aId+"l"+toBinsertedAt+"'>  <input type=hidden name='hours"+aId+"l"+toBinsertedAt+"'  id='hours"+aId+"l"+toBinsertedAt+"'>	  <input  type=hidden name='agent_amount"+aId+"l"+toBinsertedAt+"'  id='agent_amount"+aId+"l"+toBinsertedAt+"'> <input  type=hidden name='agentComm"+aId+"l"+toBinsertedAt+"'  id='agentComm"+aId+"l"+toBinsertedAt+"'>";
 				
 				x6.innerHTML=hiddenX6Str;
@@ -999,7 +999,7 @@ var voucherVar;
 	{
 	//	alert('invoiceCount '+invoiceCount);
 
-		var url1 = '/bke1/iaded.jsp?uac=<%=ac%>';
+		var url1 = '/bke2/iaded.jsp?uac=<%=ac%>';
 
 
 
@@ -1043,7 +1043,7 @@ var voucherVar;
 		/*** Checking previouse Image and submitting **/
 		//imageSubmitCaller(invoiceCount);
 
-		var url1 = '/bke1/iaded.jsp?ve='+ve1+'&in='+in1+'&uac=<%=ac%>';
+		var url1 = '/bke2/iaded.jsp?ve='+ve1+'&in='+in1+'&uac=<%=ac%>';
 
 		//alert('invoiceImageURL  '+document.getElementById('invoiceImageURL').value);
 
@@ -2394,7 +2394,7 @@ function returnQ(){
 }
 
 function logout(sv1, sv2){
-	window.location = "/bke1/login.jsp?ac=rv&u="+document.getElementById('u').value+"&vid="+sv2;
+	window.location = "/bke2/login.jsp?ac=rv&u="+document.getElementById('u').value+"&vid="+sv2;
 	 imageWindow.close();
 	agentWindow.close();
 }
@@ -3622,12 +3622,12 @@ function duplicate (){
     	         <td style="font-size: 80%"><span id=remainingAmt> </span>   	
     	<input type=hidden name='remainingAmtH' id='remainingAmtH'></td> 
 				 <td style="font-size: 80%">
-				 <IMG id="invoiceCommb" style="align: right;" height=24 alt="" onclick="commentWindow('Comment.html','invoiceComm');"  onselect="commentWindow('Comment.html','invoiceComm');"  <%if ( billNotes.length() >5  ){%>  src="/bke2/images/notes1.png"  <%}else{%> src="/bke1/images/notes.png" <%}%> width=20 border=1>
+				 <IMG id="invoiceCommb" style="align: right;" height=24 alt="" onclick="commentWindow('Comment.html','invoiceComm');"  onselect="commentWindow('Comment.html','invoiceComm');"  <%if ( billNotes.length() >5  ){%>  src="/bke2/images/notes1.png"  <%}else{%> src="/bke2/images/notes.png" <%}%> width=20 border=1>
 	  		<input value="<%=billNotes%>"  type="hidden" name="invoiceCommh" id="invoiceCommh" ></input>    	
     		<input type="hidden" name="invoiceComm" id="invoiceComm" ></input>
 				 </td>
                  <td style="font-size: 80%"><input   value='<%=imageURL%>'  type='hidden' name='invoiceImageURL' id='invoiceImageURL'>
-		           <IMG style="Z-INDEX: 100; align: right; POSITION: 100" height=24 alt="" name="addImage1"  id="addImage1" onClick="popGetImage('1');"  <%if ( imageURL.length() >5 ){%> src="/bke1/images/image1.png"  <%}else{%> src="/bke2/images/image.png" <%}%>  width=20 border=1>
+		           <IMG style="Z-INDEX: 100; align: right; POSITION: 100" height=24 alt="" name="addImage1"  id="addImage1" onClick="popGetImage('1');"  <%if ( imageURL.length() >5 ){%> src="/bke2/images/image1.png"  <%}else{%> src="/bke2/images/image.png" <%}%>  width=20 border=1>
 		         </td>
               </tr>
              </table>
