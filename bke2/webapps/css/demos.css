@@ -1,14 +1,18 @@
 /*
 General CSS for the demos of DHTMLSuite
 */
-table.vouch{
-	font-family: Trebuchet MS, Lucida Sans Unicode, Arial, sans-serif;
-	font-size:0.9em;
+table .InvoiceTbl, .groupTbl{
+	font-family: Verdana;
+    font-size: 11px;
+    font-weight: bold; 
+    color: #5858FA;
 	margin:1px;
 }
 table.allo{
-	font-family: Trebuchet MS, Lucida Sans Unicode, Arial, sans-serif;
-	font-size:0.8em;
+	font-family: Verdana;
+    font-size: 11px;
+    font-weight: bold;
+    color: #5858FA;
 	margin:1px;
 }
 
@@ -17,8 +21,59 @@ a{
 	text-decoration:underline;
 }
 
-button.tbutton  {
-	font-family: Trebuchet MS, Lucida Sans Unicode, Arial, sans-serif;
-	font-size:0.72em;
-	font-weight:bold;
+
+
+<!-- code add for browser compatibility start here -->
+
+body
+{	
+	margin: 0;    
 }
+
+#logo_bar {
+    position: relative;
+    background-color: rgb(0, 128, 0);
+    height: 50px;
+   } 
+   
+ #logo_image
+ {
+   background: url("../images/DocOrganizOnline.jpg");
+   width: 300px;
+   height: 50px;
+   border: 0px solid #000;
+   font-family: Verdana;
+   font-size: 11px;
+   font-weight: bold;
+ }  
+    
+ #logo_imageLeft
+ {
+   background: url("../images/BKE_Logo_Template.jpg");
+   width: 240px;
+   height: 50px;
+   border: 0px solid #000;
+   float: left;
+ }
+ 
+   
+#nav_bar
+{
+	position: relative;
+	background: url('../images/bk_appMenus.png') repeat-x; 
+	width:100%;
+	height: 28px;
+	font-family: Verdana;
+	font-size: 11px;    
+    position: relative;
+	color: #0851A7;		
+}
+
+#table_Spc
+{
+	width: 100%;
+	height:25px;"
+}
+
+
+<!-- code add for browser compatibility end here  -->
